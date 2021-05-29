@@ -24,12 +24,12 @@ What is some additional functionality you can add/remove based on time constrain
 - Bookmark cryptocurrencies of interest
 
 *Standard*
-- Able to trade (purchase/sell) currency (fake)
+- Able to trade (purchase/sell) currency
 - Staking cryptocurrencies
 - Subaccounts/managing others'/friends' crypto
 - Historical portfolio value
 - Portfolio performance visualization
-- Group game (investopedia)
+- Group game (e.g. investopedia)
 - NFT Auctions
 - 2FA/MFA
 
@@ -40,7 +40,7 @@ What is some additional functionality you can add/remove based on time constrain
 - Import data from existing exchanges
 - Technical indicators/complex charting
 - Options trading
-- Simplified vs advanced crypto view (e.g. kraken trade page vs cryptowatch main page)
+- Simplified vs advanced crypto view
 - News
 - Social media (e.g. "Twitter" feed to promote NFTs)
 
