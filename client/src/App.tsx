@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Page from './components/Page';
 import {
     Home,
     Profile
@@ -9,10 +10,14 @@ function App() {
         <Router>
             <Switch>
                 <Route path="/profile">
-                    <Profile />
+                    <Page>
+                        <Profile />
+                    </Page>
                 </Route>
                 <Route path="/">
-                    <Home />
+                    <Page>
+                        <Home />
+                    </Page>
                 </Route>
             </Switch>
         </Router>
