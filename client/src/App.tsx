@@ -1,8 +1,21 @@
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import {
+    Home,
+    Profile
+} from './pages'
+
 function App() {
     return (
-        <div>
-            hi
-        </div>
+        <Router>
+            <Switch>
+                <Route path="/profile">
+                    <Profile />
+                </Route>
+                <Route path="/">
+                    <Home />
+                </Route>
+            </Switch>
+        </Router>
     )
 }
 
