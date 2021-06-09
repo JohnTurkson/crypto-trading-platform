@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 const NavbarContainer = styled.div`
@@ -12,6 +12,7 @@ const StyledLink = styled(Link)`
     color: black;
     text-decoration: none;
     font-size: 1.5em;
+    background-color: ${p => p.selected && '#A6B1A3'};
 
     &:hover {
         background-color: #A6B1A3;
@@ -19,13 +20,16 @@ const StyledLink = styled(Link)`
 `
 
 const Navbar = () => {
+    const location = useLocation()
+    console.log(location)
+
     return (
         <>
             <NavbarContainer>
-                <StyledLink to='/'>
+                <StyledLink selected={location.pathname === '/'} to='/'>
                     Home
                 </StyledLink>
-                <StyledLink to='/profile'>
+                <StyledLink selected={location.pathname === '/profile'} to='/profile'>
                     Profile
                 </StyledLink>
             </NavbarContainer>
