@@ -21,7 +21,6 @@ const StyledLink = styled(Link)`
 
 const Navbar = () => {
     const location = useLocation()
-    console.log(location)
 
     return (
         <>
