@@ -1,10 +1,20 @@
 import Navbar from "./Navbar"
+import styled from 'styled-components'
+
+const MainContentContainer = styled.div`
+    margin-top: 5em;
+    padding: 1em;
+`
 
 const Page = ({ children }) => {
     return (
-        <Navbar>
-            {children}
-        </Navbar>
+        <>
+            <Navbar />
+            <MainContentContainer>
+                {children}
+            </MainContentContainer>
+        </>
+        
     )
 }
 
