@@ -6,7 +6,7 @@ const NavbarContainer = styled.div`
     display: flex;
 `
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(Link)<{ selected: boolean }>`
     padding: 1em;
     font-weight: bold;
     color: black;
