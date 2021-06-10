@@ -31,6 +31,9 @@ const Navbar = () => {
                 <StyledLink selected={location.pathname === "/profile"} to="/profile">
                     Profile
                 </StyledLink>
+                <StyledLink selected={location.pathname === "/prices"} to="/prices">
+                    Prices
+                </StyledLink>
             </NavbarContainer>
         </>
     )
