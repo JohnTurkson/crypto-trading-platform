@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Page from './components/Page';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Page from "./components/Page";
 import {
     Home,
     Profile
-} from './pages'
+} from "./pages"
 
 function App() {
     return (
