@@ -1,4 +1,4 @@
-import React, {Dispatch, FormEvent, SetStateAction} from "react";
+import React from "react";
 
 const Coin = ({ url, name, price }: { url: string, name: string, price: number }) => {
 
