@@ -38,10 +38,7 @@ export function SignUp(props: SignUpProps) {
 
     return (
         <>
-            <AppBar
-                position="static"
-                color="transparent"
-                elevation={0}>
+            <AppBar position="static" color="transparent" elevation={0}>
                 <Toolbar className={classes.navigation}>
                     <Button variant="text" color="primary">Home</Button>
                     <Button variant="outlined" color="primary">Sign In</Button>
@@ -50,7 +47,7 @@ export function SignUp(props: SignUpProps) {
 
             <Container className={classes.container}>
                 <Typography className={classes.title} component="h1" variant="h5">
-                    {"Sign Up"}
+                    Sign Up
                 </Typography>
                 <form className={classes.form}>
                     <TextField
@@ -84,7 +81,7 @@ export function SignUp(props: SignUpProps) {
                         fullWidth
                         color="primary"
                         onClick={props.onSubmit}>
-                        {"Sign Up"}
+                        Sign Up
                     </Button>
                 </form>
             </Container>
