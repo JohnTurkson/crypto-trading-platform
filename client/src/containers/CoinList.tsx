@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-
+import {Coin} from "../components/Coin"
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
@@ -24,7 +24,8 @@ export default function BasicTable() {
 
     const [list, setList] = useState([{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png",name:"Bitcoin",price:30000},
         {url:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png", name:"Ethereum",price:3000},
-        {url: "https://static01.nyt.com/images/2021/05/16/fashion/13DOGECOIN-1/13DOGECOIN-1-mediumSquareAt3X.jpg", name: "Dogecoin", price: 0.50}]);
+        {url: "https://static01.nyt.com/images/2021/05/16/fashion/13DOGECOIN-1/13DOGECOIN-1-mediumSquareAt3X.jpg", name: "Dogecoin", price: 0.50},
+        {url:"https://pbs.twimg.com/profile_images/1387416792126078976/Mw3Sts7T_400x400.png", name:"Tether", price:1}]);
 
     return (
         <TableContainer component={Paper}>
