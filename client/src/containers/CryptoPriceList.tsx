@@ -1,3 +1,4 @@
+import {Button, makeStyles} from "@material-ui/core";
 import {useEffect, useState } from "react"
 import styled from "styled-components"
 import Portfolio from "../components/Portfolio";
@@ -11,7 +12,13 @@ const CryptoContainer = styled.div`
 const createCryptoListing = (cryptos: any[]): JSX.Element => {
     // return Coin components based on JSON data
     return(
-        <div>Coin</div>
+
+        <div>{cryptos.map(
+            crypto =>
+            {
+                return (<p>{crypto.name}</p>)
+            })
+        }</div>
     )
 }
 
@@ -37,7 +44,7 @@ const CryptoPriceList = () => {
     useEffect(() => {
         fetchData()
     }, []);
-    
+
     // TODO: useEffect hook with setCryptos to fetch crypto data
 
     return (

@@ -3,7 +3,7 @@
     {
       "name": "Bitcoin",
       "image": "https://bitcoin.org/img/icons/opengraph.png?1621851118",
-      "price": 30000
+      "price": 30000.00
     }
   ]
 }
