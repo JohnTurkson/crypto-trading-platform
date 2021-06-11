@@ -1,7 +1,7 @@
-import React from "react"
+import React, { Dispatch, FormEvent, SetStateAction } from "react"
 import { Button, Container, makeStyles, TextField, Typography } from "@material-ui/core"
 import { handleStateChange } from "../handlers/Handlers"
-import { SignInProps } from "./props/SignInProps"
+import { SignInData } from "./data/SignInData"
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -18,7 +18,13 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function SignIn(props: SignInProps) {
+export interface SignInProps {
+    data: SignInData
+    onDataChange: Dispatch<SetStateAction<SignInData>>
+    onSubmit: (event: FormEvent) => void
+}
+
+export function SignIn(props: SignInProps) {
     const classes = useStyles()
 
     return (
