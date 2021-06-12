@@ -87,7 +87,7 @@ export function SignIn(props: SignInProps) {
                         variant="contained"
                         fullWidth
                         color="primary"
-                        href="/home">
+                        href="/overview">
                         Sign In
                     </Button>
                 </form>

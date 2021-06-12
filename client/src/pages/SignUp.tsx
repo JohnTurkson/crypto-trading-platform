@@ -95,7 +95,7 @@ export function SignUp(props: SignUpProps) {
                         variant="contained"
                         fullWidth
                         color="primary"
-                        href="/home">
+                        href="/overview">
                         Sign Up
                     </Button>
                 </form>

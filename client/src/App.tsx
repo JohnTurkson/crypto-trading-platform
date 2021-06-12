@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { useState } from "react"
 import Page from "./components/Page"
-import { Home, Profile } from "./pages"
+import { Overview, Profile } from "./pages"
 import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
@@ -25,9 +25,19 @@ function App() {
                         onDataChange={setSignUpData}
                         onSubmit={event => event.preventDefault()}/>
                 </Route>
-                <Route path="/home">
+                <Route path="/overview">
                     <Page>
-                        <Home/>
+                        <Overview/>
+                    </Page>
+                </Route>
+                <Route path="/trade">
+                    <Page>
+                        <Overview/>
+                    </Page>
+                </Route>
+                <Route path="/discover">
+                    <Page>
+                        <Overview/>
                     </Page>
                 </Route>
                 <Route path="/profile">

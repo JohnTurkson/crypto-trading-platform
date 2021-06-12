@@ -1,21 +1,20 @@
-import Navbar from "./Navbar"
+import { Navbar } from "./Navbar"
 import styled from "styled-components"
 import { ReactNode } from "react"
 
 const MainContentContainer = styled.div`
-    margin-top: 5em;
-    padding: 1em;
+  margin-top: 5em;
+  padding: 1em;
 `
 
-const Page = ({ children }: { children: ReactNode }) => {
+const Page = ({children, tabIndex}: { children: ReactNode, tabIndex?: number }) => {
     return (
         <>
-            <Navbar />
+            <Navbar selected={tabIndex}/>
             <MainContentContainer>
                 {children}
             </MainContentContainer>
         </>
-        
     )
 }
 

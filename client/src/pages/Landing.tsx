@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
     joinButton: {
         margin: "8px",
         textTransform: "none",
-    }
+    },
 }))
 
 export interface LandingProps {
@@ -40,7 +40,6 @@ export function Landing(props: LandingProps) {
                         href="/"
                         variant="text"
                         color="primary">
-                        
                     </Button>
                     <Box>
                         <Button
