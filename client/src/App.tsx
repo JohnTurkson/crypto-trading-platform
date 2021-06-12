@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Page from "./components/Page";
 import {
     Home,
+    Prices,
     Profile
 } from "./pages"
 
@@ -9,6 +10,11 @@ function App() {
     return (
         <Router>
             <Switch>
+                <Route path="/prices">
+                    <Page>
+                        <Prices />
+                    </Page>
+                </Route>
                 <Route path="/profile">
                     <Page>
                         <Profile />
