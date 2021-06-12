@@ -36,6 +36,11 @@ export function Navbar({selected}: { selected?: number }) {
                         <Tab
                             className={classes.tabItem}
                             component="a"
+                            label="Prices"
+                            href="/prices"/>
+                        <Tab
+                            className={classes.tabItem}
+                            component="a"
                             label="Discover"
                             href="/discover"/>
                         <Tab
@@ -50,7 +55,7 @@ export function Navbar({selected}: { selected?: number }) {
                         href="/"
                         variant="outlined"
                         color="inherit">
-                        Log Out
+                        Sign Out
                     </Button>
                 </Toolbar>
             </AppBar>

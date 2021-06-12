@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import { useState } from "react"
 import Page from "./components/Page"
-import { Overview, Profile } from "./pages"
+import { Overview, Prices, Profile } from "./pages"
 import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
+import CryptoPriceList from "./containers/CryptoPriceList"
+import { Trade } from "./pages/Trade"
 
 function App() {
     const [signInData, setSignInData] = useState({email: "", password: ""})
@@ -27,12 +29,17 @@ function App() {
                 </Route>
                 <Route path="/overview">
                     <Page>
-                        <Overview/>
+                        <CryptoPriceList/>
                     </Page>
                 </Route>
                 <Route path="/trade">
                     <Page>
-                        <Overview/>
+                        <Trade/>
+                    </Page>
+                </Route>
+                <Route path="/prices">
+                    <Page>
+                        <Prices/>
                     </Page>
                 </Route>
                 <Route path="/discover">
