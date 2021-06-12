@@ -25,7 +25,7 @@ const Navbar = () => {
     return (
         <>
             <NavbarContainer>
-                <StyledLink selected={location.pathname === "/"} to="/">
+                <StyledLink selected={location.pathname === "/home"} to="/home">
                     Home
                 </StyledLink>
                 <StyledLink selected={location.pathname === "/profile"} to="/profile">
