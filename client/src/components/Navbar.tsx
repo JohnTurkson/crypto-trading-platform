@@ -1,42 +1,59 @@
-import { Link, useLocation } from "react-router-dom"
-import styled from "styled-components"
+import { AppBar, Button, makeStyles, Tab, Tabs, Toolbar } from "@material-ui/core"
 
-const NavbarContainer = styled.div`
-    background-color: #B7C2B4;
-    display: flex;
-`
+const useStyles = makeStyles(theme => ({
+    navigation: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    tabItem: {
+        textTransform: "none",
+    },
+    logoutButton: {
+        margin: "8px",
+        textTransform: "none",
+    },
+}))
 
-const StyledLink = styled(Link)<{ selected: boolean }>`
-    padding: 1em;
-    font-weight: bold;
-    color: black;
-    text-decoration: none;
-    font-size: 1.5em;
-    background-color: ${p => p.selected && "#A6B1A3"};
-
-    &:hover {
-        background-color: #A6B1A3;
-    }
-`
-
-const Navbar = () => {
-    const location = useLocation()
+export function Navbar({selected}: { selected?: number }) {
+    const classes = useStyles()
 
     return (
         <>
-            <NavbarContainer>
-                <StyledLink selected={location.pathname === "/"} to="/">
-                    Home
-                </StyledLink>
-                <StyledLink selected={location.pathname === "/profile"} to="/profile">
-                    Profile
-                </StyledLink>
-                <StyledLink selected={location.pathname === "/prices"} to="/prices">
-                    Prices
-                </StyledLink>
-            </NavbarContainer>
+            <AppBar position="static" color="primary" elevation={0}>
+                <Toolbar className={classes.navigation}>
+                    <Tabs value={selected ?? false}>
+                        <Tab
+                            className={classes.tabItem}
+                            component="a"
+                            label="Portfolio"
+                            href="/overview"/>
+                        <Tab
+                            className={classes.tabItem}
+                            component="a"
+                            label="Trade"
+                            href="/trade"/>
+                        <Tab
+                            className={classes.tabItem}
+                            component="a"
+                            label="Discover"
+                            href="/discover"/>
+                        <Tab
+                            className={classes.tabItem}
+                            component="a"
+                            label="NFTs"
+                            href="nfts"/>
+                    </Tabs>
+
+                    <Button
+                        className={classes.logoutButton}
+                        href="/"
+                        variant="outlined"
+                        color="inherit">
+                        Log Out
+                    </Button>
+                </Toolbar>
+            </AppBar>
         </>
     )
 }
-
-export default Navbar

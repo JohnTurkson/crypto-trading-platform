@@ -1,8 +1,4 @@
-import Navbar from "./Navbar"
-import styled from "styled-components"
-import { ReactNode } from "react"
-import {Box, Button, Container, createMuiTheme, makeStyles, Typography} from "@material-ui/core"
-import { flexbox } from '@material-ui/system';
+import { Box, Button, makeStyles, Typography } from "@material-ui/core"
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -21,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 
 // TODO: swap this out later on
 function numberWithCommas(valueStr: string) {
-    return valueStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return valueStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 // TODO: change any type
