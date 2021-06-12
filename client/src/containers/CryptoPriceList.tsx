@@ -1,4 +1,4 @@
-import {Button, makeStyles} from "@material-ui/core";
+import {Box, Button, makeStyles} from "@material-ui/core";
 import {useEffect, useState } from "react"
 import styled from "styled-components"
 import Portfolio from "../components/Portfolio";
@@ -13,15 +13,16 @@ const createCryptoListing = (cryptos: any[]): JSX.Element => {
     // return Coin components based on JSON data
     return(
 
-        <div>{cryptos.map(
+        <Box ml={5} display={"flex"} flexDirection={"column"}>{cryptos.map(
             crypto =>
             {
                 return (<p>{crypto.name}</p>)
             })
-        }</div>
+        }</Box>
     )
 }
 
+// TODO: change any type
 const createPortfolio = (cryptos: any[]): JSX.Element => {
     // return Coin components based on JSON data
     return(
