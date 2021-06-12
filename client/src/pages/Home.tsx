@@ -6,6 +6,8 @@ import Coin from "../components/Coin";
 // TODO: add more components to home page
 export default () => {
     return (
+        <div>
         <CoinList/>
+        </div>
     )
 }

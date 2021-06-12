@@ -21,7 +21,6 @@ const useStyles = makeStyles({
 
 export default function BasicTable() {
     const classes = useStyles();
-
     const [list, setList] = useState([{url:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png",name:"Bitcoin",price:30000},
         {url:"https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png", name:"Ethereum",price:3000},
         {url: "https://static01.nyt.com/images/2021/05/16/fashion/13DOGECOIN-1/13DOGECOIN-1-mediumSquareAt3X.jpg", name: "Dogecoin", price: 0.50}]);
