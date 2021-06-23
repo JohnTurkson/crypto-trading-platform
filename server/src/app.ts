@@ -1,6 +1,10 @@
 import express from "express"
+import initializeDb from "./config/db" 
+
+initializeDb()
 
 const app = express()
+app.use(express.json())
 
 const port = 7000
 app.get("/", (req, res) => {
