@@ -1,10 +1,17 @@
-import * as mongoose from "mongoose"
+import { Schema, model, Document } from "mongoose"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import express from "express"
 
 dotenv.config()
 
-const UserSchema = new mongoose.Schema({
+interface User extends Document {
+    email: string;
+    password: string;
+    sendToken: (res: express.Response) => void;
+}
+
+const UserSchema = new Schema<User>({
     email: {
         type: String,
         required: true,
@@ -20,9 +27,9 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-UserSchema.methods.sendToken = function(res) {
+UserSchema.methods.sendToken = function(res: express.Response) {
     const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET!, { expiresIn: "1d" })
     res.status(200).json({ success: true, token, user: this })
 }
 
-export const UserModel = mongoose.model("user", UserSchema)
+export const UserModel = model<User>("user", UserSchema)

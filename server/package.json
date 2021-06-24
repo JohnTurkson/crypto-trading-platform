@@ -11,6 +11,7 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.12",
     "@types/jsonwebtoken": "^8.5.2",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^12.20.14",
     "bcryptjs": "^2.4.3",
     "debug": "~2.6.9",
