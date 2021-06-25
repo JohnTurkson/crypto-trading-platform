@@ -3,13 +3,10 @@ import dotenv from "dotenv"
 
 dotenv.config()
 
-const initializeDb = async (): Promise<void> => {
+export default async function initializeDatabase(): Promise<void> {
     await mongoose.connect(process.env.MONGO_URI!, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true
     })
-    console.log("Established connection with mongoDB")
 }
-
-export default initializeDb
