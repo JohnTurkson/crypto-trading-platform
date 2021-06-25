@@ -46,7 +46,6 @@ export function Coin(props: CoinProps) {
     const [volatility, setVolatility] = useState(0)
     const [allTimeHigh, setAllTimeHigh] = useState(0)
 
-
     return (
         <Card className={classes.root}>
             <CardContent>
