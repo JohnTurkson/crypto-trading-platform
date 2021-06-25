@@ -1,4 +1,4 @@
-import React, {Dispatch, FormEvent, SetStateAction} from "react"
+import React, {Dispatch, FormEvent, SetStateAction, useState} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Card from "@material-ui/core/Card"
 import CardActions from "@material-ui/core/CardActions"
@@ -34,6 +34,18 @@ export interface CoinProps {
 export function Coin(props: CoinProps) {
     const classes = useStyles()
     const bull = <span className={classes.bullet}>•</span>
+
+    const [price, setPrice] = useState(0)
+    const [dailyPercentChange, setDailyPercentChange] = useState(0)
+    const [dailyNetChange, setDailyNetChange] = useState(0)
+    const [dailyVolume, setDailyVolume] = useState(0)
+    const [dailyLow, setDailyLow] = useState(0)
+    const [dailyHigh, setDailyHigh] = useState(0)
+    const [dailyOpen, setDailyOpen] = useState(0)
+    const [marketCap, setMarketCap] = useState(0)
+    const [volatility, setVolatility] = useState(0)
+    const [allTimeHigh, setAllTimeHigh] = useState(0)
+
 
     return (
         <Card className={classes.root}>
