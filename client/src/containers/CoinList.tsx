@@ -63,31 +63,5 @@ export default function BasicTable() {
             </Table>
         </TableContainer>
 
-        /*
-        <TableContainer component={Paper}>
-            <Table className={classes.root} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Coin</TableCell>
-                        <TableCell align="right">Name</TableCell>
-                        <TableCell align="right">Price&nbsp;(USD$)</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {list.map((row) => (
-
-                        <TableRow key={row.name}>
-                            <TableCell component="th" scope="row">
-                                <img src={row.url} className={classes.icon}></img>
-                            </TableCell>
-                            <TableCell align="right">{row.name}</TableCell>
-                            <TableCell align="right">{row.price}</TableCell>
-                        </TableRow>
-                            <Coin name = {row.name} url={row.url} price = {row.price}></Coin>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer> */
-
     )
 }
