@@ -7,15 +7,19 @@ import TableContainer from "@material-ui/core/TableContainer"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
+import {Card} from "@material-ui/core"
+import Coin from "../components/data/Coin"
 
 const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
     },
     icon: {
         minWidth: 50,
         width: 10
-    }
+    },
 })
 
 
@@ -38,8 +42,30 @@ export default function BasicTable() {
         }])
 
     return (
+
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
+            <Table aria-label="collapsible table">
+                <TableHead>
+                    <TableRow>
+                        <TableCell />
+                        <TableCell>Coin</TableCell>
+                        <TableCell align="right">Name</TableCell>
+                        <TableCell align="right">Price (USD$)</TableCell>
+                        <TableCell align="right">Daily Change (%)</TableCell>
+                        <TableCell align="right">Daily Net Change (USD$)</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {list.map((row) => (
+                        <Coin name = {row.name} url={row.url}></Coin>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+
+        /*
+        <TableContainer component={Paper}>
+            <Table className={classes.root} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>Coin</TableCell>
@@ -49,6 +75,7 @@ export default function BasicTable() {
                 </TableHead>
                 <TableBody>
                     {list.map((row) => (
+
                         <TableRow key={row.name}>
                             <TableCell component="th" scope="row">
                                 <img src={row.url} className={classes.icon}></img>
@@ -56,9 +83,11 @@ export default function BasicTable() {
                             <TableCell align="right">{row.name}</TableCell>
                             <TableCell align="right">{row.price}</TableCell>
                         </TableRow>
+                            <Coin name = {row.name} url={row.url} price = {row.price}></Coin>
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer> */
+
     )
 }
