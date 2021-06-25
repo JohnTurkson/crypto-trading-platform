@@ -1,17 +1,13 @@
 import express from "express"
-import initializeDb from "./config/db"
+import initializeDb from "./config/DatabaseConfig"
 import routesHandler from "./routes/index"
 
-initializeDb()
+initializeDb().then(() => console.log("Established connection with mongoDB"))
 
 const app: express.Application = express()
 app.use(express.json())
 
 const port = 7000
-
-app.get("/", (req, res) => {
-    res.send("Hello World")
-})
 
 routesHandler(app)
 
