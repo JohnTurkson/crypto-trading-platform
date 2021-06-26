@@ -8,7 +8,8 @@ import {
 import {
     authenticateSignupRequest,
     authorizeSignupRequest,
-    processSignupRequest, validateSignupRequest
+    processSignupRequest,
+    validateSignupRequest
 } from "../handlers/HandleSignupRequest"
 
 export default (app: express.Application) => {

@@ -1,7 +1,5 @@
 import SignupRequest from "../requests/SignupRequest"
 import SignupResponse from "../responses/SignupResponse"
-import ErrorResponse from "../responses/ErrorResponse"
-import LoginRequest from "../requests/LoginRequest"
 import createUser from "../functions/CreateUser"
 import createUserCredentials from "../functions/CreateUserCredentials"
 import generateUserToken from "../functions/GenerateUserToken"
@@ -20,13 +18,13 @@ export async function authorizeSignupRequest(request: any): Promise<SignupReques
 
 export async function processSignupRequest(request: SignupRequest): Promise<SignupResponse> {
     // TODO check if email exists
-    
+
     const user = await createUser(request.name, request.email)
     const userCredentials = await createUserCredentials(user.id, request.password)
     const userToken = await generateUserToken(user.id)
-    
+
     // TODO add user, credentials, token to database
-    
+
     return {
         type: "SignupResponse",
         id: user.id,
