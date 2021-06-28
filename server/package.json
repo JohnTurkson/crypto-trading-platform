@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "rm -rf ./dist && npm run build && node dist/app.js",
+        "start": "node src/app.js",
         "build": "tsc --build",
         "dev": "nodemon src/app.ts"
     },
