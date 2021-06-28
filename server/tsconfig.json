@@ -4,7 +4,6 @@
         "lib": ["esnext"],
         "allowJs": false,
         "skipLibCheck": true,
-        "outDir": "dist",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "strict": true,
@@ -12,7 +11,6 @@
         "noFallthroughCasesInSwitch": true,
         "module": "commonjs",
         "moduleResolution": "node",
-        "resolveJsonModule": true,
         "isolatedModules": true
     },
     "include": ["src"]

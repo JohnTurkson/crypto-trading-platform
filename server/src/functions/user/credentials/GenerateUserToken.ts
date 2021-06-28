@@ -1,4 +1,4 @@
-export default async function generateUserId(): Promise<string> {
+export default async function generateUserToken(): Promise<string> {
     // TODO replace with random number generator
     return Date.now().toString()
 }
