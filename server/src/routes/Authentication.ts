@@ -1,23 +1,16 @@
 import express from "express"
-import {
-    authenticateSignupRequest,
-    authorizeSignupRequest,
-    processSignupRequest,
-    validateSignupRequest
-} from "../handlers/HandleSignupRequest"
 import DefaultDatabaseProxy from "../database/DefaultDatabaseClient"
 import LoginHandler from "../handlers/LoginHandler"
+import SignupHandler from "../handlers/SignupHandler"
 
 const database = new DefaultDatabaseProxy()
 
 export default (app: express.Application) => {
     app.post("/signup", async (request, response) => {
-        validateSignupRequest(request.body)
-            .then(signupRequest => authenticateSignupRequest(signupRequest))
-            .then(signupRequest => authorizeSignupRequest(signupRequest))
-            .then(signupRequest => processSignupRequest(signupRequest))
+        const handler = new SignupHandler(database)
+        handler.handleRequest(request.body)
             .then(signupResponse => response.status(200).json(signupResponse))
-            .catch(error => response.status(400).json({error: error.message}))
+            .catch(errorResponse => response.status(400).json(errorResponse))
     })
 
     app.post("/login", async (request, response) => {
