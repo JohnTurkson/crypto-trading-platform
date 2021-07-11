@@ -1,11 +1,12 @@
 import DatabaseProxy from "./DatabaseProxy"
 import User from "../data/User"
-import { ClientSession, Collection, MongoClient, TransactionOptions } from "mongodb"
+import { ClientSession, Collection, Condition, MongoClient, TransactionOptions } from "mongodb"
 import UserData from "../data/UserData"
 import UserCredentials from "../data/UserCredentials"
 import Resource from "../data/Resource"
 import UserToken from "../data/UserToken"
 import { ResourceFilter } from "../data/filters/ResourceFilter"
+import generateId from "../functions/user/credentials/GenerateId"
 
 export default class DefaultDatabaseProxy implements DatabaseProxy {
     private readonly client = this.provideDatabaseClient()
@@ -32,10 +33,26 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
 
     async createUser(name: string, email: string, password: string): Promise<User> {
         const createUserTransaction = async (session: ClientSession): Promise<User> => {
-            const users = await this.userDataCollection
+            const users = await this.userCollection
             const userCredentials = await this.userCredentialCollection
-            const user = await users.insertOne(
+
+            const exists = await users.findOne(
                 {
+                    email: email
+                },
+                {
+                    session: session
+                })
+                .then(user => user !== null)
+
+            if (exists) {
+                throw "User already exists"
+            }
+            
+            const id = generateId()
+            await users.insertOne(
+                {
+                    id: id,
                     name: name,
                     email: email
                 },
@@ -43,7 +60,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
                     session: session
                 }
             )
-            const id = user.insertedId.toHexString()
 
             await userCredentials.insertOne(
                 {
@@ -63,7 +79,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         }
 
         return this.executeTransaction(createUserTransaction)
-            .catch(error => error)
     }
 
     async createUserToken(userId: string, token: string): Promise<UserToken> {
@@ -72,7 +87,7 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         })
 
         if (user === null) {
-            throw Error("Invalid User")
+            throw "Invalid user"
         }
 
         const userTokens = await this.userTokenCollection
@@ -86,12 +101,12 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
             token: token
         }
     }
-    
+
     async getUser(filter: ResourceFilter<User>): Promise<User | null> {
         const users = await this.userCollection
-        return users.findOne(filter)
+        return await users.findOne(filter)
     }
-    
+
     async getUserCredentials(filter: ResourceFilter<UserCredentials>): Promise<UserCredentials | null> {
         const userCredentials = await this.userCredentialCollection
         return userCredentials.findOne(filter)
@@ -116,8 +131,8 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         return client.db(database).collection(collection)
     }
 
-    private async executeTransaction(transaction: (clientSession: ClientSession) => Promise<Resource>): Promise<Resource> {
-        let result: Promise<Resource>
+    private async executeTransaction<T extends Resource>(transaction: (clientSession: ClientSession) => Promise<T>): Promise<T> {
+        let result: Promise<T>
 
         const clientSession = await this.provideDatabaseSession()
         const transactionBlock = async () => {
@@ -134,7 +149,8 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         }
 
         await clientSession.withTransaction(transactionBlock, transactionOptions)
-            .finally(() => clientSession.endSession())
+        // TODO fix    
+        // .finally(() => clientSession.endSession())
 
         // @ts-ignore
         return result

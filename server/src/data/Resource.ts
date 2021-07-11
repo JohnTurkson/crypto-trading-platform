@@ -1,1 +1,3 @@
-export default interface Resource {}
+export default interface Resource {
+    // id: string,
+}

@@ -19,41 +19,37 @@ export default class LoginHandler extends DefaultHandler<LoginRequest, LoginResp
     }
 
     async processRequest(request: LoginRequest): Promise<LoginResponse> {
-        const user = await this.database.getUser({
-            email: request.email
-        })
-
         const error: ErrorResponse = {
             type: "ErrorResponse",
-            error: "Invalid Credentials"
+            message: "Invalid Credentials"
         }
 
-        if (user === null) {
-            throw error
-        }
-
-        const userCredentials = await this.database.getUserCredentials({
-            user: user.id
-        })
-
-        if (userCredentials === null) {
-            // TODO log error - should not be possible to have a user without credentials
-            throw error
-        }
-
-        const passwordMatches = await verifyUserPassword(userCredentials, request.password)
-
-        if (!passwordMatches) {
-            throw error
-        }
-
-        const token = await generateUserToken()
-        await this.database.createUserToken(user.id, token)
-
-        return {
-            type: "LoginResponse",
-            id: user.id,
-            token: token,
-        }
+        return this.database.getUser({email: request.email})
+            .then(user => {
+                if (user == null) {
+                    throw error
+                }
+                return user
+            })
+            .then(user => this.database.getUserCredentials({user: user.id}))
+            .then(credentials => {
+                if (credentials === null) {
+                    throw error
+                }
+                return credentials
+            })
+            .then(credentials => {
+                const matches = verifyUserPassword(credentials, request.password)
+                if (!matches) {
+                    throw error
+                }
+                return credentials
+            })
+            .then(credentials => this.database.createUserToken(credentials.user, generateUserToken()))
+            .then(token => ({
+                type: "LoginResponse",
+                id: token.user,
+                token: token.token,
+            }))
     }
 }
