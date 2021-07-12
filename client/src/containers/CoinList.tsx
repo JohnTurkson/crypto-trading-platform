@@ -30,6 +30,7 @@ export default function BasicTable() {
         url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png",
         name: "Bitcoin",
         price: 30000
+
     },
         {
             url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png",
@@ -58,7 +59,7 @@ export default function BasicTable() {
                 </TableHead>
                 <TableBody>
                     {list.map((row) => (
-                        <Coin name = {row.name} url={row.url}></Coin>
+                        <Coin name = {row.name} url={row.url} price = {row.price} amountOwned = {0} portfolio = {false}></Coin>
                     ))}
                 </TableBody>
             </Table>

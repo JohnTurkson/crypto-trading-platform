@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { Route, Switch, useLocation, useParams} from "react-router-dom"
 import { useState } from "react"
 import Page from "./components/Page"
 import { Overview, Prices, Profile } from "./pages"
@@ -7,13 +7,23 @@ import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
 import CryptoPriceList from "./containers/CryptoPriceList"
 import { Trade } from "./pages/Trade"
+import Discover from "./pages/Discover"
+import CoinPage from "./pages/CoinPage"
+
 
 function App() {
     const [signInData, setSignInData] = useState({email: "", password: ""})
     const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
+    let location = useLocation()
+    //const {name} : any = useParams()
+    const s : any = location.state
+    //const url = state.url
+    let name
+    if (s != undefined) name = s.name
+
+
 
     return (
-        <Router>
             <Switch>
                 <Route path="/sign-in">
                     <SignIn
@@ -29,7 +39,7 @@ function App() {
                 </Route>
                 <Route path="/overview">
                     <Page>
-                        <CryptoPriceList/>
+                        <Overview/>
                     </Page>
                 </Route>
                 <Route path="/trade">
@@ -44,7 +54,7 @@ function App() {
                 </Route>
                 <Route path="/discover">
                     <Page>
-                        <Overview/>
+                        <Discover/>
                     </Page>
                 </Route>
                 <Route path="/profile">
@@ -52,11 +62,16 @@ function App() {
                         <Profile/>
                     </Page>
                 </Route>
-                <Route path="/">
+                <Route exact path="/">
                     <Landing/>
                 </Route>
+                <Route path= {"/coin/" + name}  >
+                    <Page>
+                        <CoinPage  name = {name}/>
+                    </Page>
+
+                </Route>
             </Switch>
-        </Router>
     )
 }
 
