@@ -19,6 +19,9 @@ const useStyles = makeStyles({
             borderBottom: 'unset',
         },
     },
+    row: {
+        display: "inline-block"
+    },
     bullet: {
         display: "inline-block",
         margin: "0 2px",
@@ -42,8 +45,6 @@ export interface CoinProps {
     price: number
     amountOwned: number
     portfolio: boolean
-
-
 
 }
 
@@ -81,10 +82,11 @@ export function Coin(props: CoinProps) {
         pathname: "/coin/" + props.name,
         state: { url: props.url, name: props.name}
     };
-
+    //            <TableRow className={classes.root}>
+    //<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
     return (
         <React.Fragment>
-            <TableRow className={classes.root}>
+            <TableRow>
                 <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -96,9 +98,11 @@ export function Coin(props: CoinProps) {
                     </Link>
                 </TableCell>
                 <TableCell align = "right">{props.name}</TableCell>
+
                 {props.portfolio ? <React.Fragment><TableCell align = "right">{props.amountOwned}</TableCell>
                     <TableCell align = "right">{props.amountOwned * price}</TableCell>
                 </React.Fragment>: <React.Fragment></React.Fragment>}
+
                 <TableCell align = "right">{price}</TableCell>
                 <TableCell align = "right">{dailyPercentChange}</TableCell>
                 <TableCell align = "right">{dailyNetChange}</TableCell>

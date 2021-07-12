@@ -6,7 +6,7 @@ import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
 import CryptoPriceList from "./containers/CryptoPriceList"
-import { Trade } from "./pages/Trade"
+import { TradePage } from "./pages/TradePage"
 import Discover from "./pages/Discover"
 import CoinPage from "./pages/CoinPage"
 
@@ -15,11 +15,11 @@ function App() {
     const [signInData, setSignInData] = useState({email: "", password: ""})
     const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
     let location = useLocation()
-    //const {name} : any = useParams()
     const s : any = location.state
-    //const url = state.url
     let name
     if (s != undefined) name = s.name
+    //let url
+    //if (s != undefined) url = s.url
 
 
 
@@ -44,7 +44,7 @@ function App() {
                 </Route>
                 <Route path="/trade">
                     <Page>
-                        <Trade/>
+                        <TradePage/>
                     </Page>
                 </Route>
                 <Route path="/prices">
@@ -67,7 +67,7 @@ function App() {
                 </Route>
                 <Route path= {"/coin/" + name}  >
                     <Page>
-                        <CoinPage  name = {name}/>
+                        <CoinPage name = {name}/>
                     </Page>
 
                 </Route>

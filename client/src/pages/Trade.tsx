@@ -32,9 +32,11 @@ export function Trade() {
     const currencies = [
         "BTC",
         "ETH",
-        "ADA",
+        //"ADA",
         "DOGE",
     ]
+
+
 
     return (
         <>
@@ -69,6 +71,11 @@ export function Trade() {
                     Trade
                 </Button>
             </Container>
+
         </>
+
     )
+
 }
+
+export default Trade;

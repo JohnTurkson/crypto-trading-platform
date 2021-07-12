@@ -32,35 +32,14 @@ const createPortfolio = (cryptos: any[]): JSX.Element => {
 
 
 const CryptoPriceList = () => {
-    const [cryptos, setCryptos] = useState([
-        {
-        url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png",
-        name: "Bitcoin",
-        price: 30000,
-        amountOwned: 2,
+    const [cryptos, setCryptos] = useState([])
 
-    },
-        {
-            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png",
-            name: "Ethereum",
-            price: 3000,
-            amountOwned: 3
-        },
-        {
-            url: "https://static01.nyt.com/images/2021/05/16/fashion/13DOGECOIN-1/13DOGECOIN-1-mediumSquareAt3X.jpg",
-            name: "Dogecoin",
-            price: 0.50,
-            amountOwned: 10000
-        }])
-
-        /*
     async function fetchData() {
-        let url = "data/coins.json";
+        let url = "/data/coins.json";
         const response = await fetch(url)
         const json = await response.json()
         setCryptos(json["coins"])
     }
-
 
 
     useEffect(() => {
@@ -68,7 +47,6 @@ const CryptoPriceList = () => {
     }, []);
 
 
-         */
     // TODO: useEffect hook with setCryptos to fetch crypto data
 //            {createCryptoListing(cryptos)}
     return (
