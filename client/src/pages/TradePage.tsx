@@ -1,5 +1,5 @@
 import CoinList from "../containers/CoinList"
-import {Trade} from "./Trade"
+import {Trade} from "../components/Trade"
 
 
 

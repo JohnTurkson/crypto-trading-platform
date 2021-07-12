@@ -2,7 +2,7 @@ import CoinList from "../containers/CoinList"
 import { createChart } from "lightweight-charts"
 import {useState} from "react"
 import Chart from "../components/data/Chart"
-import Trade from "./Trade"
+import Trade from "../components/Trade"
 
 export interface CoinProps {
     //url: string
