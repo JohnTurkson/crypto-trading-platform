@@ -1,0 +1,18 @@
+{
+    "name": "crypto-trading-platform-data-stream",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node src/app.js",
+        "build": "tsc --build"
+    },
+    "dependencies": {
+        "mongodb": "^3.6.9",
+        "ws": "^7.5.3"
+    },
+    "devDependencies": {
+        "@types/mongodb": "^3.6.18",
+        "@types/node": "^12.20.14",
+        "@types/ws": "^7.4.6"
+    }
+}
