@@ -34,15 +34,15 @@ What is some additional functionality you can add/remove based on time constrain
 - 2FA/MFA
 - Group game (e.g. investopedia)
 - Subaccounts/managing others'/friends' crypto
-~~- Trading with real crypto/money~~
-~~- Payment integration for cash deposits~~
+- ~~Trading with real crypto/money~~
+- ~~Payment integration for cash deposits~~
 - Complex closing options (conditional buy/sell)
 - Import data from existing exchanges
 - Technical indicators/complex charting
 - Options trading
 - Simplified vs advanced crypto view
-~~- News~~
-~~- Social media (e.g. "Twitter" feed to promote NFTs)~~
+- ~~News~~
+- ~~Social media (e.g. "Twitter" feed to promote NFTs)~~
 
 **Breakdown**
 
