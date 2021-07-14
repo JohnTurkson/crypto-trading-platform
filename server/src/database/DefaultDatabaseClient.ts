@@ -1,6 +1,6 @@
 import DatabaseProxy from "./DatabaseProxy"
 import User from "../data/User"
-import { ClientSession, Collection, Condition, MongoClient, TransactionOptions } from "mongodb"
+import { ClientSession, Collection, MongoClient, TransactionOptions } from "mongodb"
 import UserData from "../data/UserData"
 import UserCredentials from "../data/UserCredentials"
 import Resource from "../data/Resource"
@@ -149,8 +149,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         }
 
         await clientSession.withTransaction(transactionBlock, transactionOptions)
-        // TODO fix    
-        // .finally(() => clientSession.endSession())
 
         // @ts-ignore
         return result
