@@ -1,24 +1,27 @@
-import {
-    ApiGatewayManagementApiClient,
-    ApiGatewayManagementApiClientConfig,
-    PostToConnectionCommand,
-    PostToConnectionCommandInput
-} from "@aws-sdk/client-apigatewaymanagementapi"
-import { TextEncoder } from "util"
+import { PutItemCommand } from "@aws-sdk/client-dynamodb"
+import { dynamoDBClient, mongoClient } from "./Clients"
+import { MongoClient } from "mongodb"
 
-const config: ApiGatewayManagementApiClientConfig = {
-    region: "us-west-2",
-    endpoint: process.env.DATA_STREAM_ENDPOINT
-}
-const client = new ApiGatewayManagementApiClient(config)
+const a = new MongoClient('a')
 
 export async function handler(event: any) {
-    const commandInput: PostToConnectionCommandInput = {
-        ConnectionId: "",
-        Data: new TextEncoder().encode("AddConnection"),
-    }
-    const command = new PostToConnectionCommand(commandInput)
-    await client.send(command)
+    const addConnectionCommand = new PutItemCommand({
+        TableName: "CryptoDataStreamConnections",
+        Item: {
+            "connectionId": {S: event.requestContext.connectionId}
+        }
+    })
+    await dynamoDBClient.send(addConnectionCommand)
+    
+    await mongoClient.db("CryptoDataStream").collection("Connections")
+        .insertOne({"connectionId": event.requestContext.connectionId})
+
+    // const commandInput: PostToConnectionCommandInput = {
+    //     ConnectionId: "",
+    //     Data: new TextEncoder().encode("AddConnection"),
+    // }
+    // const command = new PostToConnectionCommand(commandInput)
+    // await client.send(command)
 
     return {
         statusCode: 200,

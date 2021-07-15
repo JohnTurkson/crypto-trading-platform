@@ -3,7 +3,8 @@ module.exports = {
     context: path.join(__dirname, "src", "functions"),
     entry: {
         "AddConnection": "./AddConnection.js",
-        "RemoveConnection" : "./RemoveConnection.js"
+        "RemoveConnection" : "./RemoveConnection.js",
+        "Clients": "./Clients.js"
     },
     mode: "development",
     target: "node",

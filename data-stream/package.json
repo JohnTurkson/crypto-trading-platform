@@ -3,17 +3,16 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "start": "node src/app.js",
         "build": "tsc --build && webpack && cd build && jar -cfM index.zip -C webpack ."
     },
     "dependencies": {
         "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0",
-        "mongodb": "^3.6.9",
-        "ws": "^7.5.3"
+        "@aws-sdk/client-dynamodb": "^3.21.0",
+        "mongodb": "^4.0.0",
+        "mongodb-client-encryption": "^1.2.6"
     },
     "devDependencies": {
         "@types/node": "^14.14.31",
-        "@types/ws": "^7.4.6",
         "webpack": "^5.44.0",
         "webpack-cli": "^4.7.2"
     }

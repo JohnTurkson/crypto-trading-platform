@@ -1,24 +1,26 @@
-import {
-    ApiGatewayManagementApiClient,
-    ApiGatewayManagementApiClientConfig,
-    PostToConnectionCommand,
-    PostToConnectionCommandInput
-} from "@aws-sdk/client-apigatewaymanagementapi"
-import { TextEncoder } from "util"
-
-const config: ApiGatewayManagementApiClientConfig = {
-    region: "us-west-2",
-    endpoint: process.env.DATA_STREAM_ENDPOINT
-}
-const client = new ApiGatewayManagementApiClient(config)
+import { DeleteItemCommand } from "@aws-sdk/client-dynamodb"
+import { dynamoDBClient, mongoClient } from "./Clients"
 
 export async function handler(event: any) {
-    const commandInput: PostToConnectionCommandInput = {
-        ConnectionId: "",
-        Data: new TextEncoder().encode("Remove Connection"),
-    }
-    const command = new PostToConnectionCommand(commandInput)
-    await client.send(command)
+    const removeConnectionCommand = new DeleteItemCommand({
+        TableName: "CryptoDataStreamConnections",
+        Key: {
+            "connectionId": {S: event.requestContext.connectionId}
+        }
+    })
+
+    await dynamoDBClient.send(removeConnectionCommand)
+    await mongoClient.db("CryptoDataStream").collection("Connections")
+        .deleteOne({"connectionId": event.requestContext.connectionId})
+
+    // await databaseClient.send(addConnectionCommand)
+    //
+    // const commandInput: PostToConnectionCommandInput = {
+    //     ConnectionId: "",
+    //     Data: new TextEncoder().encode("Remove Connection"),
+    // }
+    // const command = new PostToConnectionCommand(commandInput)
+    // await client.send(command)
 
     return {
         statusCode: 200,
