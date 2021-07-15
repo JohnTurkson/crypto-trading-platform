@@ -4,15 +4,17 @@
     "private": true,
     "scripts": {
         "start": "node src/app.js",
-        "build": "tsc --build"
+        "build": "tsc --build && webpack && cd build && mkdir lambda && cd webpack && jar -cfM ../lambda/index.zip *.js"
     },
     "dependencies": {
+        "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0",
         "mongodb": "^3.6.9",
         "ws": "^7.5.3"
     },
     "devDependencies": {
-        "@types/mongodb": "^3.6.18",
-        "@types/node": "^12.20.14",
-        "@types/ws": "^7.4.6"
+        "@types/node": "^14.14.31",
+        "@types/ws": "^7.4.6",
+        "webpack": "^5.44.0",
+        "webpack-cli": "^4.7.2"
     }
 }
