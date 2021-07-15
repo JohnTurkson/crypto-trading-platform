@@ -7,9 +7,7 @@
     },
     "dependencies": {
         "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0",
-        "@aws-sdk/client-dynamodb": "^3.21.0",
-        "mongodb": "^4.0.0",
-        "mongodb-client-encryption": "^1.2.6"
+        "@aws-sdk/client-dynamodb": "^3.21.0"
     },
     "devDependencies": {
         "@types/node": "^14.14.31",
