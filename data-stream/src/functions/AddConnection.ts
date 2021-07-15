@@ -13,9 +13,8 @@ const config: ApiGatewayManagementApiClientConfig = {
 const client = new ApiGatewayManagementApiClient(config)
 
 export async function handler(event: any) {
-    const a = process.env.DATA_STREAM_ENDPOINT
     const commandInput: PostToConnectionCommandInput = {
-        ConnectionId: "...=",
+        ConnectionId: "",
         Data: new TextEncoder().encode("AddConnection"),
     }
     const command = new PostToConnectionCommand(commandInput)

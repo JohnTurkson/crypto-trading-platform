@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "node src/app.js",
-        "build": "tsc --build && webpack && cd build && mkdir lambda && cd webpack && jar -cfM ../lambda/index.zip *.js"
+        "build": "tsc --build && webpack && cd build && jar -cfM index.zip -C webpack ."
     },
     "dependencies": {
         "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0",
