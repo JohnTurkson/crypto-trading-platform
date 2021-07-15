@@ -1,4 +1,4 @@
 node_modules
-*.js
+build
+src/*/*.js
 .env
-dist/
