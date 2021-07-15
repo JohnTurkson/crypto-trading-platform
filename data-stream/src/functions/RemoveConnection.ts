@@ -14,7 +14,7 @@ const client = new ApiGatewayManagementApiClient(config)
 
 export async function handler(event: any) {
     const commandInput: PostToConnectionCommandInput = {
-        ConnectionId: "...=",
+        ConnectionId: "",
         Data: new TextEncoder().encode("Remove Connection"),
     }
     const command = new PostToConnectionCommand(commandInput)
