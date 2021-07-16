@@ -65,7 +65,7 @@ export function SignIn() {
                 <Typography className={classes.title} component="h1" variant="h5">
                     Sign In
                 </Typography>
-                <form className={classes.form} onSubmit={(e) => submitHandler(e)}>
+                <form className={classes.form} onSubmit={e => submitHandler(e)}>
                     <TextField
                         variant="outlined"
                         margin="normal"

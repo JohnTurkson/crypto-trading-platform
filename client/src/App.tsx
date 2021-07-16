@@ -10,8 +10,6 @@ import { Trade } from "./pages/Trade"
 import { AuthProvider } from "./context/Auth"
 
 function App() {
-    const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
-
     return (
         <AuthProvider>
             <Router>
@@ -20,10 +18,7 @@ function App() {
                         <SignIn />
                     </Route>
                     <Route path="/sign-up">
-                        <SignUp
-                            data={signUpData}
-                            onDataChange={setSignUpData}
-                            onSubmit={event => event.preventDefault()}/>
+                        <SignUp />
                     </Route>
                     <Route path="/overview">
                         <Page>
