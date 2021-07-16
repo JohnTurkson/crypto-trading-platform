@@ -7,6 +7,7 @@ interface AuthContextType {
     userId: string | null
     login: (e: string, p: string) => Promise<UserToken | undefined>
     signUp: (e: string, p: string) => Promise<UserToken | undefined>
+    logout: () => void
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
@@ -55,6 +56,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
     }
 
+    const logout = (): void => {
+        localStorage.removeItem("authToken")
+        localStorage.removeItem("userId")
+        setToken(null)
+        setUserId(null)
+    }
+
     const userTokenHandler = ({ token, userId }: UserToken) => {
         setToken(token)
         setUserId(userId)
@@ -66,7 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return (
         loading ? 
         <div>Loading</div> :
-        <AuthContext.Provider value={{ isAuthed: !!token && !!userId, userId, login, signUp }}>
+        <AuthContext.Provider value={{ isAuthed: !!token && !!userId, userId, login, signUp, logout }}>
             {children}
         </AuthContext.Provider>
     )
