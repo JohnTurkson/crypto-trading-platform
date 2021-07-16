@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import { useState } from "react"
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom"
+import { ReactNode } from "react"
 import Page from "./components/Page"
 import { Overview, Prices, Profile } from "./pages"
 import { Landing } from "./pages/Landing"
@@ -7,47 +7,69 @@ import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
 import CryptoPriceList from "./containers/CryptoPriceList"
 import { Trade } from "./pages/Trade"
-import { AuthProvider } from "./context/Auth"
+import { AuthProvider, useAuth } from "./context/Auth"
+
+const PrivateRoute = ({ path, children }: { path: string, children: ReactNode }) => {
+    const { isAuthed } = useAuth()
+    return (
+        isAuthed ? 
+        <Route path={path}>
+            {children}
+        </Route> :
+        <Redirect to="/sign-in" />
+    )
+}
+
+const NoAuthRoute = ({ path, children }: { path: string, children: ReactNode }) => {
+    const { isAuthed } = useAuth()
+    return (
+        !isAuthed ? 
+        <Route path={path}>
+            {children}
+        </Route> :
+        <Redirect to="/overview" />
+    )
+}
 
 function App() {
     return (
         <AuthProvider>
             <Router>
                 <Switch>
-                    <Route path="/sign-in">
+                    <NoAuthRoute path="/sign-in">
                         <SignIn />
-                    </Route>
-                    <Route path="/sign-up">
+                    </NoAuthRoute>
+                    <NoAuthRoute path="/sign-up">
                         <SignUp />
-                    </Route>
-                    <Route path="/overview">
+                    </NoAuthRoute>
+                    <PrivateRoute path="/overview">
                         <Page>
                             <CryptoPriceList/>
                         </Page>
-                    </Route>
-                    <Route path="/trade">
+                    </PrivateRoute>
+                    <PrivateRoute path="/trade">
                         <Page>
                             <Trade/>
                         </Page>
-                    </Route>
-                    <Route path="/prices">
+                    </PrivateRoute>
+                    <PrivateRoute path="/prices">
                         <Page>
                             <Prices/>
                         </Page>
-                    </Route>
-                    <Route path="/discover">
+                    </PrivateRoute>
+                    <PrivateRoute path="/discover">
                         <Page>
                             <Overview/>
                         </Page>
-                    </Route>
-                    <Route path="/profile">
+                    </PrivateRoute>
+                    <PrivateRoute path="/profile">
                         <Page>
                             <Profile/>
                         </Page>
-                    </Route>
-                    <Route path="/">
+                    </PrivateRoute>
+                    <NoAuthRoute path="/">
                         <Landing/>
-                    </Route>
+                    </NoAuthRoute>
                 </Switch>
             </Router>
         </AuthProvider>
