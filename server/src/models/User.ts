@@ -29,7 +29,7 @@ const UserSchema = new Schema<User>({
 
 UserSchema.methods.sendToken = function(res: express.Response) {
     const token = jwt.sign({ id: this._id }, process.env.JWT_SECRET!, { expiresIn: "1d" })
-    res.status(200).json({ success: true, token, user: this })
+    res.status(200).json({ success: true, token, userId: this._id })
 }
 
 export const UserModel = model<User>("user", UserSchema)
