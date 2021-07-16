@@ -30,7 +30,7 @@ export default (app: express.Application) => {
 
             if (!user) throw new Error("User does not exist")
 
-            const isMatch = await bcrypt.compare(password, user.password)
+            const isMatch = password == user.password
             if (!isMatch) throw new Error("Wrong password")
 
             user.sendToken(res)

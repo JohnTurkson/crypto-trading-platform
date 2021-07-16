@@ -18,10 +18,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
-        const token = localStorage.getItem('authToken')
-        const userId = localStorage.getItem('userId')
+    console.log(token)
 
+    useEffect(() => {
+        const token = localStorage.getItem("authToken")
+        const userId = localStorage.getItem("userId")
+        console.log("hi")
         if (token != null && userId != null) {
             setToken(token)
             setUserId(userId)
@@ -33,12 +35,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(true)
         try {
             const res = await loginRequest(email, password)
+
             setToken(res.token)
             setUserId(res.userId)
-            setLoading(false)
+
+            localStorage.setItem("authToken", res.token)
+            localStorage.setItem("userId", res.userId)
+            
             return res
         } catch (error) {
             setError(error.message)
+        } finally {
             setLoading(false)
         }
     }
