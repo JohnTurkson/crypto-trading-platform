@@ -7,5 +7,11 @@ export async function postApi<T, B>(url: string, body: B): Promise<T> {
         body: JSON.stringify(body)
     })
 
-    return res.json()
+    const jsonData = await res.json()
+
+    if (!res.ok) {
+        throw new Error(jsonData.message)
+    }
+
+    return jsonData
 }
