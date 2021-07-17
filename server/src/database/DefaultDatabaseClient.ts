@@ -10,7 +10,7 @@ import generateId from "../functions/user/credentials/GenerateId"
 
 export default class DefaultDatabaseProxy implements DatabaseProxy {
     private readonly client = this.provideDatabaseClient()
-    private readonly databaseName = "crypto"
+    private readonly databaseName = "CryptoTradingPlatform"
     private readonly userCollectionName = "Users"
     private readonly userCredentialsCollectionName = "UserCredentials"
     private readonly userTokenCollectionName = "UserTokens"
