@@ -1,0 +1,18 @@
+{
+    "name": "crypto-trading-platform-handlers",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "build": "tsc --build && webpack && cd build && jar -cfM index.zip -C webpack ."
+    },
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.21.0",
+        "@aws-sdk/client-sns": "^3.21.0",
+        "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0"
+    },
+    "devDependencies": {
+        "@types/node": "^14.14.31",
+        "webpack": "^5.44.0",
+        "webpack-cli": "^4.7.2"
+    }
+}
