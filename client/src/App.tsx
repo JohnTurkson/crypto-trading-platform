@@ -1,33 +1,35 @@
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom"
 import { ReactNode } from "react"
 import Page from "./components/Page"
 import { Overview, Prices, Profile } from "./pages"
 import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
-import CryptoPriceList from "./containers/CryptoPriceList"
-import { Trade } from "./pages/Trade"
+import { TradePage } from "./pages/TradePage"
+import Discover from "./pages/Discover"
+import CoinPage from "./pages/CoinPage"
+
 import { AuthProvider, useAuth } from "./context/Auth"
 
-const PrivateRoute = ({ path, children }: { path: string, children: ReactNode }) => {
-    const { isAuthed } = useAuth()
+const PrivateRoute = ({path, children}: { path: string, children: ReactNode }) => {
+    const {isAuthed} = useAuth()
     return (
-        isAuthed ? 
-        <Route path={path}>
-            {children}
-        </Route> :
-        <Redirect to="/sign-in" />
+        isAuthed ?
+            <Route path={path}>
+                {children}
+            </Route> :
+            <Redirect to="/sign-in"/>
     )
 }
 
-const NoAuthRoute = ({ path, children }: { path: string, children: ReactNode }) => {
-    const { isAuthed } = useAuth()
+const NoAuthRoute = ({path, children}: { path: string, children: ReactNode }) => {
+    const {isAuthed} = useAuth()
     return (
-        !isAuthed ? 
-        <Route path={path}>
-            {children}
-        </Route> :
-        <Redirect to="/overview" />
+        !isAuthed ?
+            <Route path={path}>
+                {children}
+            </Route> :
+            <Redirect to="/overview"/>
     )
 }
 
@@ -37,19 +39,19 @@ function App() {
             <Router>
                 <Switch>
                     <NoAuthRoute path="/sign-in">
-                        <SignIn />
+                        <SignIn/>
                     </NoAuthRoute>
                     <NoAuthRoute path="/sign-up">
-                        <SignUp />
+                        <SignUp/>
                     </NoAuthRoute>
                     <PrivateRoute path="/overview">
                         <Page>
-                            <CryptoPriceList/>
+                            <Overview/>
                         </Page>
                     </PrivateRoute>
                     <PrivateRoute path="/trade">
                         <Page>
-                            <Trade/>
+                            <TradePage/>
                         </Page>
                     </PrivateRoute>
                     <PrivateRoute path="/prices">
@@ -59,12 +61,17 @@ function App() {
                     </PrivateRoute>
                     <PrivateRoute path="/discover">
                         <Page>
-                            <Overview/>
+                            <Discover/>
                         </Page>
                     </PrivateRoute>
                     <PrivateRoute path="/profile">
                         <Page>
                             <Profile/>
+                        </Page>
+                    </PrivateRoute>
+                    <PrivateRoute path="/coin/:name">
+                        <Page>
+                            <CoinPage/>
                         </Page>
                     </PrivateRoute>
                     <NoAuthRoute path="/">

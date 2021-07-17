@@ -50,7 +50,7 @@ export function Navbar({selected}: { selected?: number }) {
                             className={classes.tabItem}
                             component="a"
                             label="NFTs"
-                            href="nfts"/>
+                            href="/nfts"/>
                     </Tabs>
 
                     <Button
