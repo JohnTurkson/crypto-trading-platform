@@ -15,6 +15,10 @@ import Resource from "../data/Resource"
 import UserToken from "../data/UserToken"
 import { ResourceFilter } from "../data/filters/ResourceFilter"
 import generateId from "../functions/user/credentials/GenerateId"
+import Portfolio from "../data/Portfolio";
+import PortfolioData from "../data/PortfolioData";
+import Coin from "../data/Coin";
+import AssetData from "../data/AssetData";
 
 export default class DefaultDatabaseProxy implements DatabaseProxy {
     private readonly client = this.provideDatabaseClient()
@@ -22,6 +26,7 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
     private readonly userCollectionName = "Users"
     private readonly userCredentialsCollectionName = "UserCredentials"
     private readonly userTokenCollectionName = "UserTokens"
+    private readonly portfolioCollectionName = "Portfolios"
     private readonly userCollection = this.provideDatabaseCollection<User>(
         this.databaseName,
         this.userCollectionName
@@ -38,6 +43,62 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         this.databaseName,
         this.userTokenCollectionName
     )
+    private readonly portfolioCollection = this.provideDatabaseCollection<Portfolio>(
+        this.databaseName,
+        this.portfolioCollectionName
+    )
+    private readonly portfolioDataCollection = this.provideDatabaseCollection<PortfolioData>(
+        this.databaseName,
+        this.portfolioCollectionName
+    )
+
+    async createPortfolio(userId: string): Promise<Portfolio> {
+        const portfolios = await this.portfolioCollection
+        const id = generateId()
+        const portfolio = {
+            userId: userId,
+            assets: [],
+            id: id
+        }
+        await portfolios.insertOne(portfolio)
+        return portfolio
+    }
+
+    async purchaseAsset(userId: string, coinName: string, amountPurchased: string): Promise<AssetData> {
+        const portfolios = await this.portfolioCollection
+        const userPortfolio = await portfolios.findOne({userId: userId})
+
+        if(userPortfolio !== undefined) {
+            const asset = userPortfolio.assets.find((asset) => {
+                return asset.coinName === coinName
+            })
+            const newAssetList = userPortfolio.assets.filter((asset) => {
+                return asset.coinName !== coinName
+            }) ?? []
+
+            if (asset !== undefined) {
+                newAssetList.push({amountOwned: asset.amountOwned + amountPurchased, coinName: asset.coinName})
+            } else {
+                newAssetList.push({amountOwned: amountPurchased, coinName: coinName})
+            }
+
+            const portfolio: Portfolio = {assets: newAssetList, userId: userPortfolio.userId, id: userPortfolio.id}
+            await portfolios.replaceOne({id: userPortfolio.id}, portfolio)
+
+            return {amountOwned: amountPurchased, coinName: coinName}
+        }
+
+        throw "Missing User Portfolio!"
+    }
+
+    async getPortfolio(userId: string): Promise<Portfolio> {
+        const portfolios = await this.portfolioCollection
+        const userPortfolio = await portfolios.findOne({userId: userId})
+        if(userPortfolio !== undefined) {
+            return userPortfolio
+        }
+        throw "Missing User Portfolio!"
+    }
 
     async createUser(name: string, email: string, password: string): Promise<User> {
         const createUserTransaction = async (session: ClientSession): Promise<User> => {
@@ -51,7 +112,9 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
                 {
                     session: session
                 })
-                .then(user => user !== undefined)
+                .then((user: User) => {
+                    return user !== undefined;
+                })
 
             if (exists) {
                 throw "User already exists"
@@ -78,6 +141,8 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
                     session: session
                 }
             )
+
+            await this.createPortfolio(id)
 
             return {
                 id: id,
