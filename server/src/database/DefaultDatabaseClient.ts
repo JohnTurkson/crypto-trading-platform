@@ -113,7 +113,7 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
     }
 
     private async provideDatabaseClient(): Promise<MongoClient> {
-        const url = process.env.MONGO_URL!
+        const url = encodeURI(process.env.MONGO_URL!)
         const client = new MongoClient(url, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
