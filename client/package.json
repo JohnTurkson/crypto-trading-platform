@@ -49,5 +49,5 @@
     "@types/react": "^17.0.9",
     "@types/react-dom": "^17.0.6"
   },
-  "proxy": "http://localhost:7000"
+  "proxy": "https://crypto.johnturkson.com"
 }
