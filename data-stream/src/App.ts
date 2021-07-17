@@ -1,7 +1,7 @@
 import WebSocket from "ws"
 import { PublishCommand } from "@aws-sdk/client-sns"
-import { PriceData } from "./PriceData"
-import { snsClient } from "./Clients"
+import { PriceData } from "./data/PriceData"
+import { snsClient } from "./resources/Clients"
 
 const connection = new WebSocket("wss://ws-feed.pro.coinbase.com")
 
