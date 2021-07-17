@@ -35,7 +35,7 @@ const CryptoPriceList = () => {
     const [cryptos, setCryptos] = useState([])
 
     async function fetchData() {
-        let url = "data/coins.json";
+        let url = "/data/coins.json";
         const response = await fetch(url)
         const json = await response.json()
         setCryptos(json["coins"])
@@ -46,12 +46,12 @@ const CryptoPriceList = () => {
         fetchData()
     }, []);
 
-    // TODO: useEffect hook with setCryptos to fetch crypto data
 
+    // TODO: useEffect hook with setCryptos to fetch crypto data
+//            {createCryptoListing(cryptos)}
     return (
         <CryptoContainer>
             {createPortfolio(cryptos)}
-            {createCryptoListing(cryptos)}
         </CryptoContainer>
     )
 }

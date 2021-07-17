@@ -1,62 +1,85 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import { useState } from "react"
+import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom"
+import { ReactNode } from "react"
 import Page from "./components/Page"
 import { Overview, Prices, Profile } from "./pages"
 import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
-import CryptoPriceList from "./containers/CryptoPriceList"
-import { Trade } from "./pages/Trade"
+import { TradePage } from "./pages/TradePage"
+import Discover from "./pages/Discover"
+import CoinPage from "./pages/CoinPage"
+
+import { AuthProvider, useAuth } from "./context/Auth"
+
+const PrivateRoute = ({path, children}: { path: string, children: ReactNode }) => {
+    const {isAuthed} = useAuth()
+    return (
+        isAuthed ?
+            <Route path={path}>
+                {children}
+            </Route> :
+            <Redirect to="/sign-in"/>
+    )
+}
+
+const NoAuthRoute = ({path, children}: { path: string, children: ReactNode }) => {
+    const {isAuthed} = useAuth()
+    return (
+        !isAuthed ?
+            <Route path={path}>
+                {children}
+            </Route> :
+            <Redirect to="/overview"/>
+    )
+}
 
 function App() {
-    const [signInData, setSignInData] = useState({email: "", password: ""})
-    const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
-
     return (
-        <Router>
-            <Switch>
-                <Route path="/sign-in">
-                    <SignIn
-                        data={signInData}
-                        onDataChange={setSignInData}
-                        onSubmit={event => event.preventDefault()}/>
-                </Route>
-                <Route path="/sign-up">
-                    <SignUp
-                        data={signUpData}
-                        onDataChange={setSignUpData}
-                        onSubmit={event => event.preventDefault()}/>
-                </Route>
-                <Route path="/overview">
-                    <Page>
-                        <CryptoPriceList/>
-                    </Page>
-                </Route>
-                <Route path="/trade">
-                    <Page>
-                        <Trade/>
-                    </Page>
-                </Route>
-                <Route path="/prices">
-                    <Page>
-                        <Prices/>
-                    </Page>
-                </Route>
-                <Route path="/discover">
-                    <Page>
-                        <Overview/>
-                    </Page>
-                </Route>
-                <Route path="/profile">
-                    <Page>
-                        <Profile/>
-                    </Page>
-                </Route>
-                <Route path="/">
-                    <Landing/>
-                </Route>
-            </Switch>
-        </Router>
+        <AuthProvider>
+            <Router>
+                <Switch>
+                    <NoAuthRoute path="/sign-in">
+                        <SignIn/>
+                    </NoAuthRoute>
+                    <NoAuthRoute path="/sign-up">
+                        <SignUp/>
+                    </NoAuthRoute>
+                    <PrivateRoute path="/overview">
+                        <Page>
+                            <Overview/>
+                        </Page>
+                    </PrivateRoute>
+                    <PrivateRoute path="/trade">
+                        <Page>
+                            <TradePage/>
+                        </Page>
+                    </PrivateRoute>
+                    <PrivateRoute path="/prices">
+                        <Page>
+                            <Prices/>
+                        </Page>
+                    </PrivateRoute>
+                    <PrivateRoute path="/discover">
+                        <Page>
+                            <Discover/>
+                        </Page>
+                    </PrivateRoute>
+                    <PrivateRoute path="/profile">
+                        <Page>
+                            <Profile/>
+                        </Page>
+                    </PrivateRoute>
+                    <PrivateRoute path="/coin/:name">
+                        <Page>
+                            <CoinPage/>
+                        </Page>
+                    </PrivateRoute>
+                    <NoAuthRoute path="/">
+                        <Landing/>
+                    </NoAuthRoute>
+                </Switch>
+            </Router>
+        </AuthProvider>
     )
 }
 

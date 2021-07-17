@@ -1,16 +1,20 @@
 {
-  "name": "crypto-trading-platform-server",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "start": "node src/app.js",
-    "build": "tsc --build"
-  },
-  "dependencies": {
-    "@types/express": "^4.17.12",
-    "@types/node": "^12.20.14",
-    "debug": "~2.6.9",
-    "express": "~4.16.1"
-  }
+    "name": "crypto-trading-platform-server",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "start": "node src/app.js",
+        "build": "tsc --build"
+    },
+    "dependencies": {
+        "typescript": "^4.3.5",
+        "bcryptjs": "^2.4.3",
+        "express": "^4.17.1",
+        "mongodb": "^4.0.0"
+    },
+    "devDependencies": {
+        "@types/node": "^14.17.5",
+        "@types/bcryptjs": "^2.4.2",
+        "@types/express": "^4.17.13"
+    }
 }

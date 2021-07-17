@@ -1,7 +1,11 @@
-import CryptoPriceList from "../containers/CryptoPriceList"
+import CoinPage from "./CoinPage"
 
 export default () => {
     return (
-        <CryptoPriceList />
+        <div>
+        <CoinPage name = {"Bitcoin"}/>
+        <CoinPage name = {"Ethereum"}/>
+        <CoinPage name = {"Doge Coin"}/>
+        </div>
     )
 }
