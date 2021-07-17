@@ -1,7 +1,8 @@
-import React, { Dispatch, FormEvent, SetStateAction } from "react"
+import React, { Dispatch, FormEvent, SetStateAction, useState } from "react"
 import { AppBar, Button, Container, makeStyles, TextField, Toolbar, Typography } from "@material-ui/core"
 import { handleStateChange } from "../handlers/Handlers"
 import { SignUpData } from "../components/data/SignUpData"
+import { useAuth } from "../context/Auth"
 
 const useStyles = makeStyles(theme => ({
     navigation: {
@@ -30,14 +31,15 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export interface SignUpProps {
-    data: SignUpData
-    onDataChange: Dispatch<SetStateAction<SignUpData>>
-    onSubmit: (event: FormEvent) => void
-}
-
-export function SignUp(props: SignUpProps) {
+export function SignUp() {
+    const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
+    const { signUp } = useAuth()
     const classes = useStyles()
+
+    const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        await signUp(signUpData.email, signUpData.password)
+    }
 
     return (
         <>
@@ -64,22 +66,22 @@ export function SignUp(props: SignUpProps) {
                 <Typography className={classes.title} component="h1" variant="h5">
                     Sign Up
                 </Typography>
-                <form className={classes.form}>
+                <form className={classes.form} onSubmit={e => submitHandler(e)}>
                     <TextField
                         variant="outlined"
                         margin="normal"
                         fullWidth
                         label="Name"
-                        value={props.data.name}
-                        onChange={handleStateChange("name", props.data, props.onDataChange)}
+                        value={signUpData.name}
+                        onChange={handleStateChange("name", signUpData, setSignUpData)}
                     />
                     <TextField
                         variant="outlined"
                         margin="normal"
                         fullWidth
                         label="Email"
-                        value={props.data.email}
-                        onChange={handleStateChange("email", props.data, props.onDataChange)}
+                        value={signUpData.email}
+                        onChange={handleStateChange("email", signUpData, setSignUpData)}
                     />
                     <TextField
                         variant="outlined"
@@ -87,15 +89,15 @@ export function SignUp(props: SignUpProps) {
                         fullWidth
                         type="password"
                         label="Password"
-                        value={props.data.password}
-                        onChange={handleStateChange("password", props.data, props.onDataChange)}
+                        value={signUpData.password}
+                        onChange={handleStateChange("password", signUpData, setSignUpData)}
                     />
                     <Button
                         className={classes.button}
                         variant="contained"
                         fullWidth
                         color="primary"
-                        href="/overview">
+                        type="submit">
                         Sign Up
                     </Button>
                 </form>
