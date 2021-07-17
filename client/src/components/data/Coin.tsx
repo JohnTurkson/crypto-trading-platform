@@ -11,12 +11,16 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import { Link, NavLink} from "react-router-dom"
 
 const useStyles = makeStyles({
     root: {
         '& > *': {
             borderBottom: 'unset',
         },
+    },
+    row: {
+        display: "inline-block"
     },
     bullet: {
         display: "inline-block",
@@ -38,14 +42,20 @@ const useStyles = makeStyles({
 export interface CoinProps {
     url: string
     name: string
-    // price: number
+    price: number
+    amountOwned: number
+    portfolio: boolean
+
 }
 
 export function Coin(props: CoinProps) {
     const classes = useStyles()
     const bull = <span className={classes.bullet}>•</span>
+    const [amountOwned, setAmountOwned] = useState(0)
+    const [totalValueOwned, setTotalValueOwned] = useState(0)
 
-    const [price, setPrice] = useState(0)
+
+    const [price, setPrice] = useState(props.price)
     const [dailyPercentChange, setDailyPercentChange] = useState(0)
     const [dailyNetChange, setDailyNetChange] = useState(0)
     const [dailyVolume, setDailyVolume] = useState(0)
@@ -68,19 +78,31 @@ export function Coin(props: CoinProps) {
         setDailyOpen(Math.floor(Math.random() * 1000) + 1)
         setMarketCap(Math.floor(Math.random() * 1000) + 1)
     }
-
+    const newTo = {
+        pathname: "/coin/" + props.name,
+        state: { url: props.url, name: props.name}
+    };
+    //            <TableRow className={classes.root}>
+    //<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
     return (
         <React.Fragment>
-            <TableRow className={classes.root}>
+            <TableRow>
                 <TableCell>
                     <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
+                    <Link to = {newTo} >
                     <img src = {props.url} className = {classes.icon}></img>
+                    </Link>
                 </TableCell>
                 <TableCell align = "right">{props.name}</TableCell>
+
+                {props.portfolio ? <React.Fragment><TableCell align = "right">{props.amountOwned}</TableCell>
+                    <TableCell align = "right">{props.amountOwned * price}</TableCell>
+                </React.Fragment>: <React.Fragment></React.Fragment>}
+
                 <TableCell align = "right">{price}</TableCell>
                 <TableCell align = "right">{dailyPercentChange}</TableCell>
                 <TableCell align = "right">{dailyNetChange}</TableCell>

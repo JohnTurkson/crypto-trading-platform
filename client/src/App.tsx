@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { Route, Switch, useLocation, useParams} from "react-router-dom"
 import { useState } from "react"
 import Page from "./components/Page"
 import { Overview, Prices, Profile } from "./pages"
@@ -6,14 +6,24 @@ import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
 import CryptoPriceList from "./containers/CryptoPriceList"
-import { Trade } from "./pages/Trade"
+import { TradePage } from "./pages/TradePage"
+import Discover from "./pages/Discover"
+import CoinPage from "./pages/CoinPage"
+
 
 function App() {
     const [signInData, setSignInData] = useState({email: "", password: ""})
     const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
+    let location = useLocation()
+    const s : any = location.state
+    let name
+    if (s != undefined) name = s.name
+    //let url
+    //if (s != undefined) url = s.url
+
+
 
     return (
-        <Router>
             <Switch>
                 <Route path="/sign-in">
                     <SignIn
@@ -29,12 +39,12 @@ function App() {
                 </Route>
                 <Route path="/overview">
                     <Page>
-                        <CryptoPriceList/>
+                        <Overview/>
                     </Page>
                 </Route>
                 <Route path="/trade">
                     <Page>
-                        <Trade/>
+                        <TradePage/>
                     </Page>
                 </Route>
                 <Route path="/prices">
@@ -44,7 +54,7 @@ function App() {
                 </Route>
                 <Route path="/discover">
                     <Page>
-                        <Overview/>
+                        <Discover/>
                     </Page>
                 </Route>
                 <Route path="/profile">
@@ -52,11 +62,16 @@ function App() {
                         <Profile/>
                     </Page>
                 </Route>
-                <Route path="/">
+                <Route exact path="/">
                     <Landing/>
                 </Route>
+                <Route path= {"/coin/" + name}  >
+                    <Page>
+                        <CoinPage name = {name}/>
+                    </Page>
+
+                </Route>
             </Switch>
-        </Router>
     )
 }
 

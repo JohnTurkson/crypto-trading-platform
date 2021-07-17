@@ -1,6 +1,14 @@
 import { Box, Button, makeStyles, Typography } from "@material-ui/core"
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {randomInt} from "crypto";
+import TableContainer from "@material-ui/core/TableContainer"
+import Paper from "@material-ui/core/Paper"
+import Table from "@material-ui/core/Table"
+import TableHead from "@material-ui/core/TableHead"
+import TableRow from "@material-ui/core/TableRow"
+import TableCell from "@material-ui/core/TableCell"
+import TableBody from "@material-ui/core/TableBody"
+import Coin from "./data/Coin"
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -23,7 +31,7 @@ function calculatePortfolioValue(cryptos: any[]): number {
 
     let value = 0
     cryptos.forEach(crypto => {
-        value += crypto.price
+        value += crypto.price * crypto.amountOwned
     })
 
     return value
@@ -53,6 +61,7 @@ const Portfolio = (props: any) => {
     })
 
     return (
+        <div>
         <Box display="flex" flexDirection="column" component={"div"}>
             <Typography variant="h6">
                 {"Current Balance"}
@@ -72,7 +81,30 @@ const Portfolio = (props: any) => {
             </Typography>
             <Button variant="contained" onClick={() => setValueChange(5000 + Math.random() * (-10000))}>Refresh</Button>
         </Box>
-        // TODO: Display list of cryptos recieved (user's portfolio of cryptos)
+
+            <TableContainer component={Paper}>
+                <Table aria-label="collapsible table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell />
+                            <TableCell>Coin</TableCell>
+                            <TableCell align="right">Name</TableCell>
+                            <TableCell align="right">Amount Owned</TableCell>
+                            <TableCell align="right">Total Value Owned</TableCell>
+                            <TableCell align="right">Price (USD$)</TableCell>
+                            <TableCell align="right">Daily Change (%)</TableCell>
+                            <TableCell align="right">Daily Net Change (USD$)</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {props.data.map((row : any) => (
+                            <Coin name = {row.name} url={row.url} price={row.price} amountOwned={row.amountOwned} portfolio ={true}></Coin>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+        </div>
     )
 }
 
