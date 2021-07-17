@@ -26,14 +26,14 @@ export default class LoginHandler extends DefaultHandler<LoginRequest, LoginResp
 
         return this.database.getUser({email: request.email})
             .then(user => {
-                if (user == null) {
+                if (user === undefined) {
                     throw error
                 }
                 return user
             })
             .then(user => this.database.getUserCredentials({user: user.id}))
             .then(credentials => {
-                if (credentials === null) {
+                if (credentials === undefined) {
                     throw error
                 }
                 return credentials
