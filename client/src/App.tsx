@@ -1,7 +1,5 @@
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router, Redirect, Route, Switch, useLocation } from "react-router-dom"
 import { ReactNode } from "react"
-import {  Route, Switch, useLocation} from "react-router-dom"
-import { useState } from "react"
 import Page from "./components/Page"
 import { Overview, Prices, Profile } from "./pages"
 import { Landing } from "./pages/Landing"
@@ -13,49 +11,38 @@ import CoinPage from "./pages/CoinPage"
 
 import { AuthProvider, useAuth } from "./context/Auth"
 
-const PrivateRoute = ({ path, children }: { path: string, children: ReactNode }) => {
-    const { isAuthed } = useAuth()
+const PrivateRoute = ({path, children}: { path: string, children: ReactNode }) => {
+    const {isAuthed} = useAuth()
     return (
-        isAuthed ? 
-        <Route path={path}>
-            {children}
-        </Route> :
-        <Redirect to="/sign-in" />
+        isAuthed ?
+            <Route path={path}>
+                {children}
+            </Route> :
+            <Redirect to="/sign-in"/>
     )
 }
 
-const NoAuthRoute = ({ path, children }: { path: string, children: ReactNode }) => {
-    const { isAuthed } = useAuth()
+const NoAuthRoute = ({path, children}: { path: string, children: ReactNode }) => {
+    const {isAuthed} = useAuth()
     return (
-        !isAuthed ? 
-        <Route path={path}>
-            {children}
-        </Route> :
-        <Redirect to="/overview" />
+        !isAuthed ?
+            <Route path={path}>
+                {children}
+            </Route> :
+            <Redirect to="/overview"/>
     )
 }
 
 function App() {
-    const [signInData, setSignInData] = useState({email: "", password: ""})
-    const [signUpData, setSignUpData] = useState({name: "", email: "", password: ""})
-    let location = useLocation()
-    const s : any = location.state
-    let name
-    if (s != undefined) name = s.name
-    //let url
-    //if (s != undefined) url = s.url
-
-
-
     return (
         <AuthProvider>
             <Router>
                 <Switch>
                     <NoAuthRoute path="/sign-in">
-                        <SignIn />
+                        <SignIn/>
                     </NoAuthRoute>
                     <NoAuthRoute path="/sign-up">
-                        <SignUp />
+                        <SignUp/>
                     </NoAuthRoute>
                     <PrivateRoute path="/overview">
                         <Page>
@@ -82,9 +69,9 @@ function App() {
                             <Profile/>
                         </Page>
                     </PrivateRoute>
-                    <PrivateRoute path= {"/coin/" + name}  >
+                    <PrivateRoute path="/coin/:name">
                         <Page>
-                            <CoinPage name = {name}/>
+                            <CoinPage/>
                         </Page>
                     </PrivateRoute>
                     <NoAuthRoute path="/">
