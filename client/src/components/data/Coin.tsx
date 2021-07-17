@@ -1,4 +1,4 @@
-import React, {Dispatch, FormEvent, SetStateAction, useState} from "react"
+import React, {Dispatch, FormEvent, SetStateAction, useEffect, useState} from "react"
 import {makeStyles} from "@material-ui/core/styles"
 import Button from "@material-ui/core/Button"
 import TableRow from "@material-ui/core/TableRow"
@@ -48,14 +48,27 @@ export interface CoinProps {
 
 }
 
+const connection = new WebSocket("wss://crypto-data-stream.johnturkson.com")
+
 export function Coin(props: CoinProps) {
     const classes = useStyles()
     const bull = <span className={classes.bullet}>•</span>
     const [amountOwned, setAmountOwned] = useState(0)
     const [totalValueOwned, setTotalValueOwned] = useState(0)
 
-
+    //const [price, setPrice] = useState(props.price)
     const [price, setPrice] = useState(props.price)
+
+        useEffect(() => {
+            if (props.name === "Bitcoin") {
+            connection.onmessage = message => {
+                console.log(message)
+                let json = JSON.parse(message.data)
+                setPrice(parseFloat(json["price"]))
+            }
+            }
+        })
+
     const [dailyPercentChange, setDailyPercentChange] = useState(0)
     const [dailyNetChange, setDailyNetChange] = useState(0)
     const [dailyVolume, setDailyVolume] = useState(0)
@@ -137,5 +150,9 @@ export function Coin(props: CoinProps) {
         </React.Fragment>
     );
 }
+
+/*
+
+ */
 
 export default Coin
