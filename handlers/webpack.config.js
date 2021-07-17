@@ -4,9 +4,10 @@ module.exports = {
     entry: {
         "AddConnection": "./AddConnection.js",
         "RemoveConnection" : "./RemoveConnection.js",
-        "Clients": "./Clients.js"
+        "BroadcastUpdate": "./BroadcastUpdate.js",
+        "SaveUpdate": "./SaveUpdate.js"
     },
-    mode: "development",
+    mode: "production",
     target: "node",
     devtool: false,
     output: {
