@@ -48,7 +48,7 @@ export default class LoginHandler extends DefaultHandler<LoginRequest, LoginResp
             .then(credentials => this.database.createUserToken(credentials.user, generateUserToken()))
             .then(token => ({
                 type: "LoginResponse",
-                id: token.user,
+                id: token.userId,
                 token: token.token,
             }))
     }

@@ -100,12 +100,12 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
 
         const userTokens = await this.userTokenCollection
         await userTokens.insertOne({
-            user: userId,
+            userId: userId,
             token: token
         })
 
         return {
-            user: userId,
+            userId: userId,
             token: token
         }
     }

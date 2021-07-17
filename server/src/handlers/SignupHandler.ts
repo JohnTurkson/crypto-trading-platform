@@ -25,7 +25,7 @@ export default class SignupHandler extends DefaultHandler<SignupRequest, SignupR
             .then(token => {
                 const response: SignupResponse = {
                     type: "SignupResponse",
-                    id: token.user,
+                    userId: token.userId,
                     token: token.token,
                 }
                 return response
