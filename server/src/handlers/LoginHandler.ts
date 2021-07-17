@@ -38,8 +38,8 @@ export default class LoginHandler extends DefaultHandler<LoginRequest, LoginResp
                 }
                 return credentials
             })
-            .then(credentials => {
-                const matches = verifyUserPassword(credentials, request.password)
+            .then(async credentials => {
+                const matches = await verifyUserPassword(credentials, request.password)
                 if (!matches) {
                     throw error
                 }
