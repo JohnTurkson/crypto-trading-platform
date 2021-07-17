@@ -1,5 +1,5 @@
 export default interface LoginResponse {
     readonly type: "LoginResponse"
-    readonly id: string,
+    readonly userId: string,
     readonly token: string,
 }

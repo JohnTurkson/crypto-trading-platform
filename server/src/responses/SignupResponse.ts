@@ -1,5 +1,5 @@
 export default interface SignupResponse {
     readonly type: "SignupResponse",
-    readonly id: string,
+    readonly userId: string,
     readonly token: string,
 }
