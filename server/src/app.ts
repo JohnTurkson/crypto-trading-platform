@@ -4,6 +4,7 @@ import SignupHandler from "./handlers/SignupHandler";
 import CreatePortfolioHandler from "./handlers/CreatePortfolioHandler";
 import DefaultDatabaseProxy from "./database/DefaultDatabaseClient";
 import PurchaseAssetHandler from "./handlers/PurchaseAssetHandler";
+import GetPortfolioHandler from "./handlers/GetPortfolioHandler";
 
 const app = express()
 app.use(express.json())
@@ -33,7 +34,10 @@ app.post("/PurchaseAsset", async (request , response) => {
 })
 
 app.get("/GetPortfolio", async (request, response) => {
-    
+    const handler = new GetPortfolioHandler(database)
+    handler.handleRequest(request.body)
+        .then(createPortfolioResponse => response.status(200).json(createPortfolioResponse))
+        .catch(errorResponse => response.status(400).json(errorResponse))
 })
 
 app.listen(port, async () => {

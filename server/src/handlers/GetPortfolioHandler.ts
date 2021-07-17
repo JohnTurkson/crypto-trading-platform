@@ -5,7 +5,7 @@ import generateUserToken from "../functions/user/credentials/GenerateUserToken"
 import ErrorResponse from "../responses/ErrorResponse"
 import generatePasswordHash from "../functions/user/credentials/GeneratePasswordHash"
 
-export default class CreatePortfolioHandler extends DefaultHandler<GetPortfolioRequest, GetPortfolioResponse> {
+export default class GetPortfolioHandler extends DefaultHandler<GetPortfolioRequest, GetPortfolioResponse> {
     async validateRequest(request: any): Promise<GetPortfolioRequest> {
         return request
     }
