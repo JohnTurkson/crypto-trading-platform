@@ -4,7 +4,7 @@ import routesHandler from "./routes/index"
 const app = express()
 app.use(express.json())
 
-const port = 7000
+const port = process.env.CRYPTO_TRADING_PLATFORM_PORT
 
 routesHandler(app)
 
