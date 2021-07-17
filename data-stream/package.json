@@ -3,15 +3,15 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "build": "tsc --build && webpack && cd build && jar -cfM index.zip -C webpack ."
+        "start": "node src/App.js",
+        "build": "tsc --build"
     },
     "dependencies": {
-        "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0",
-        "@aws-sdk/client-dynamodb": "^3.21.0"
+        "ws": "^7.5.3",
+        "@aws-sdk/client-sns": "^3.21.0"
     },
     "devDependencies": {
         "@types/node": "^14.14.31",
-        "webpack": "^5.44.0",
-        "webpack-cli": "^4.7.2"
+        "@types/ws": "^7.4.6"
     }
 }
