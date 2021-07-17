@@ -1,6 +1,14 @@
 import DatabaseProxy from "./DatabaseProxy"
 import User from "../data/User"
-import { ClientSession, Collection, MongoClient, TransactionOptions } from "mongodb"
+import {
+    ClientSession,
+    Collection,
+    MongoClient,
+    ReadConcern,
+    ReadPreference,
+    TransactionOptions,
+    WriteConcern
+} from "mongodb"
 import UserData from "../data/UserData"
 import UserCredentials from "../data/UserCredentials"
 import Resource from "../data/Resource"
@@ -43,7 +51,7 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
                 {
                     session: session
                 })
-                .then(user => user !== null)
+                .then(user => user !== undefined)
 
             if (exists) {
                 throw "User already exists"
@@ -102,22 +110,19 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         }
     }
 
-    async getUser(filter: ResourceFilter<User>): Promise<User | null> {
+    async getUser(filter: ResourceFilter<User>): Promise<User | undefined> {
         const users = await this.userCollection
         return await users.findOne(filter)
     }
 
-    async getUserCredentials(filter: ResourceFilter<UserCredentials>): Promise<UserCredentials | null> {
+    async getUserCredentials(filter: ResourceFilter<UserCredentials>): Promise<UserCredentials | undefined> {
         const userCredentials = await this.userCredentialCollection
         return userCredentials.findOne(filter)
     }
 
     private async provideDatabaseClient(): Promise<MongoClient> {
         const url = encodeURI(process.env.MONGO_URL!)
-        const client = new MongoClient(url, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        })
+        const client = new MongoClient(url)
         return client.connect()
     }
 
@@ -139,13 +144,13 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
             result = transaction(clientSession)
         }
         const transactionOptions: TransactionOptions = {
-            readPreference: "primary",
-            readConcern: {
+            readPreference: ReadPreference.fromString(ReadPreference.PRIMARY),
+            readConcern: ReadConcern.fromOptions({
                 level: "local"
-            },
-            writeConcern: {
+            }),
+            writeConcern: WriteConcern.fromOptions({
                 w: "majority"
-            }
+            })
         }
 
         await clientSession.withTransaction(transactionBlock, transactionOptions)

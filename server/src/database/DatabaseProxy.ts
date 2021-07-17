@@ -8,7 +8,7 @@ export default interface DatabaseProxy {
 
     createUserToken(userId: string, token: string): Promise<UserToken>
 
-    getUser(filter: ResourceFilter<User>): Promise<User | null>
+    getUser(filter: ResourceFilter<User>): Promise<User | undefined>
 
-    getUserCredentials(filter: ResourceFilter<UserCredentials>): Promise<UserCredentials | null>
+    getUserCredentials(filter: ResourceFilter<UserCredentials>): Promise<UserCredentials | undefined>
 }
