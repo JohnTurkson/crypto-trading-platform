@@ -1,4 +1,6 @@
 import { AppBar, Button, makeStyles, Tab, Tabs, Toolbar } from "@material-ui/core"
+import { FormEvent } from "react"
+import { useAuth } from "../context/Auth"
 
 const useStyles = makeStyles(theme => ({
     navigation: {
@@ -17,6 +19,7 @@ const useStyles = makeStyles(theme => ({
 
 export function Navbar({selected}: { selected?: number }) {
     const classes = useStyles()
+    const { logout } = useAuth()
 
     return (
         <>
@@ -52,7 +55,7 @@ export function Navbar({selected}: { selected?: number }) {
 
                     <Button
                         className={classes.logoutButton}
-                        href="/"
+                        onClick={() => logout()}
                         variant="outlined"
                         color="inherit">
                         Sign Out

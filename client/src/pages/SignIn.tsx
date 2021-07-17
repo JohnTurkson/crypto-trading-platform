@@ -1,7 +1,7 @@
-import React, { Dispatch, FormEvent, SetStateAction } from "react"
+import { Dispatch, FormEvent, SetStateAction, useState } from "react"
 import { AppBar, Button, Container, makeStyles, TextField, Toolbar, Typography } from "@material-ui/core"
 import { handleStateChange } from "../handlers/Handlers"
-import { SignInData } from "../components/data/SignInData"
+import { useAuth } from "../context/Auth"
 
 const useStyles = makeStyles(theme => ({
     navigation: {
@@ -30,14 +30,15 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export interface SignInProps {
-    data: SignInData
-    onDataChange: Dispatch<SetStateAction<SignInData>>
-    onSubmit: (event: FormEvent) => void
-}
-
-export function SignIn(props: SignInProps) {
+export function SignIn() {
+    const [signInData, setSignInData] = useState({email: "", password: ""})
+    const { login } = useAuth()
     const classes = useStyles()
+
+    const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        await login(signInData.email, signInData.password)
+    }
 
     return (
         <>
@@ -64,14 +65,14 @@ export function SignIn(props: SignInProps) {
                 <Typography className={classes.title} component="h1" variant="h5">
                     Sign In
                 </Typography>
-                <form className={classes.form}>
+                <form className={classes.form} onSubmit={e => submitHandler(e)}>
                     <TextField
                         variant="outlined"
                         margin="normal"
                         fullWidth
                         label="Email"
-                        value={props.data.email}
-                        onChange={handleStateChange("email", props.data, props.onDataChange)}
+                        value={signInData.email}
+                        onChange={handleStateChange("email", signInData, setSignInData)}
                     />
                     <TextField
                         variant="outlined"
@@ -79,15 +80,15 @@ export function SignIn(props: SignInProps) {
                         fullWidth
                         type="password"
                         label="Password"
-                        value={props.data.password}
-                        onChange={handleStateChange("password", props.data, props.onDataChange)}
+                        value={signInData.password}
+                        onChange={handleStateChange("password", signInData, setSignInData)}
                     />
                     <Button
                         className={classes.button}
                         variant="contained"
                         fullWidth
                         color="primary"
-                        href="/overview">
+                        type="submit">
                         Sign In
                     </Button>
                 </form>
