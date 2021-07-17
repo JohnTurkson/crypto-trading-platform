@@ -1,20 +1,13 @@
 import express from "express"
-import initializeDb from "./config/db"
 import routesHandler from "./routes/index"
 
-initializeDb()
-
-const app: express.Application = express()
+const app = express()
 app.use(express.json())
 
-const port = 7000
-
-app.get("/", (req, res) => {
-    res.send("Hello World")
-})
+const port = process.env.CRYPTO_TRADING_PLATFORM_PORT
 
 routesHandler(app)
 
-app.listen(port, () => {
+app.listen(port, async () => {
     return console.log(`server is listening on ${port}`)
 })
