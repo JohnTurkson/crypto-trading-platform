@@ -50,6 +50,5 @@
     "@types/react-highcharts": "^16.0.3",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^5.1.10"
-  },
-  "proxy": "https://crypto.johnturkson.com"
+  }
 }
