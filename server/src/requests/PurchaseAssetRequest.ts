@@ -6,4 +6,5 @@ export default interface PurchaseAssetRequest extends Request {
     readonly userId: string,
     readonly coinName: string,
     readonly amountPurchased: string,
+    readonly price: string,
 }

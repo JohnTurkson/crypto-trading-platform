@@ -2,6 +2,8 @@ import {Box, Button, makeStyles} from "@material-ui/core";
 import {useEffect, useState } from "react"
 import styled from "styled-components"
 import Portfolio from "../components/Portfolio";
+import {getPortfolioRequest} from "../requests/PortfolioRequests";
+import AssetData from "../../../server/src/data/AssetData";
 
 const CryptoContainer = styled.div`
     display: flex;
@@ -23,7 +25,7 @@ const createCryptoListing = (cryptos: any[]): JSX.Element => {
 }
 
 // TODO: change any type
-const createPortfolio = (cryptos: any[]): JSX.Element => {
+const createPortfolio = (cryptos: AssetData[]): JSX.Element => {
     // return Coin components based on JSON data
     return(
         <Portfolio data={cryptos} />
@@ -35,10 +37,8 @@ const CryptoPriceList = () => {
     const [cryptos, setCryptos] = useState([])
 
     async function fetchData() {
-        let url = "/data/coins.json";
-        const response = await fetch(url)
-        const json = await response.json()
-        setCryptos(json["coins"])
+        const response = await getPortfolioRequest(localStorage.getItem("userId"))
+        setCryptos(response.assets)
     }
 
 

@@ -1,4 +1,4 @@
-import { Box, Button, makeStyles, Typography } from "@material-ui/core"
+import {Box, Button, makeStyles, setRef, Typography} from "@material-ui/core"
 import React, {useEffect, useState} from "react";
 import {randomInt} from "crypto";
 import TableContainer from "@material-ui/core/TableContainer"
@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import TableBody from "@material-ui/core/TableBody"
 import Coin from "./data/Coin"
+import {AssetData, getPortfolioRequest} from "../requests/PortfolioRequests";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -27,11 +28,11 @@ function numberWithCommas(valueStr: string) {
 }
 
 // TODO: change any type
-function calculatePortfolioValue(cryptos: any[]): number {
+function calculatePortfolioValue(cryptos: AssetData[]): number {
 
     let value = 0
     cryptos.forEach(crypto => {
-        value += crypto.price * crypto.amountOwned
+        value += parseInt(crypto.amountOwned) * parseInt(crypto.price)
     })
 
     return value
@@ -44,6 +45,13 @@ const Portfolio = (props: any) => {
     const [changeColor, setChangeColor] = useState("")
     const [changeSign, setChangeSign] = useState("")
     const [percentChangeSign, setPercentChangeSign] = useState("")
+    const [cryptos, setCryptos] = useState(props.data)
+    const [refresh, setRefresh] = useState(0)
+
+    async function fetchData() {
+        const response = await getPortfolioRequest(localStorage.getItem("userId"))
+        setCryptos(response.assets)
+    }
 
     useEffect(() => {
 
@@ -57,6 +65,11 @@ const Portfolio = (props: any) => {
             setChangeColor("red")
             setChangeSign("-")
             setPercentChangeSign("↓")
+        }
+
+        if(refresh === 1) {
+            fetchData()
+            setRefresh(0)
         }
     })
 
@@ -73,13 +86,16 @@ const Portfolio = (props: any) => {
                 </Typography>
 
                 <Button variant="contained" className={classes.changeComponent} style={{backgroundColor: changeColor}}>
-                    {(valueChange / calculatePortfolioValue(props.data) * 100).toFixed(2) + "%" + " " + percentChangeSign}
+                    {(valueChange / calculatePortfolioValue(cryptos) * 100).toFixed(2) + "%" + " " + percentChangeSign}
                 </Button>
             </Box>
             <Typography variant="h6" style={{color: changeColor}}>
                 {changeSign + "$" + Math.abs(valueChange).toFixed(2)}
             </Typography>
-            <Button variant="contained" onClick={() => setValueChange(5000 + Math.random() * (-10000))}>Refresh</Button>
+            <Button variant="contained" onClick={() => {
+                setValueChange(5000 + Math.random() * (-10000))
+                setRefresh(1)
+            }}>Refresh</Button>
         </Box>
 
             <TableContainer component={Paper}>
@@ -97,8 +113,8 @@ const Portfolio = (props: any) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {props.data.map((row : any) => (
-                            <Coin name = {row.name} url={row.url} price={row.price} amountOwned={row.amountOwned} portfolio ={true}></Coin>
+                        {props.data.map((row : AssetData) => (
+                            <Coin name = {row.coinName} url={""} price={parseInt(row.price)} amountOwned={parseInt(row.amountOwned)} portfolio ={true}/>
                         ))}
                     </TableBody>
                 </Table>
