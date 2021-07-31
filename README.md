@@ -38,10 +38,10 @@ What is some additional functionality you can add/remove based on time constrain
 - [x] Deployment to AWS
 - [x] Graph Visualization in real time of cryptocurrency prices
 - [x] WebSockets connection to Kraken API and Coinbase API for pulling latest crypto data
-- [x] SNS,SQS, Lambda serverless (additional AWS backend)
-- Able to trade (purchase/sell) currency
+- [] Able to trade (purchase/sell) currency
 
 *Stretch*
+- [x] SNS,SQS, Lambda serverless (additional AWS backend)
 - Historical portfolio value
 - Historical Graph data
 - AWS ec2 automated deployment via github
