@@ -3,9 +3,7 @@
 
 High-level Description (Project Milestone 5)
 
-Our project is a Trading platform for Cryptocurriences. We envision it to be a place for experienced crypto traders, and beginners alike
-to discover the top cryptocurrecies in real time, and to be able to trade crypto, maintaining an investment portfolio in the hopes of 
-becoming the latest crypto-millionaire! Thanks for checking out our project! :)
+Our project is a Trading platform for cryptocurrencies. We envision it to be a place for experienced crypto traders, and beginners alike to discover the top cryptocurrencies in real time, and to be able to trade crypto, maintaining an investment portfolio in the hopes of becoming the latest crypto-millionaire! Thanks for checking out our project! :)
 
 Who is it for?
 
