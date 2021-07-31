@@ -112,7 +112,7 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
                 {
                     session: session
                 })
-                .then((user: User) => {
+                .then((user) => {
                     return user !== undefined;
                 })
 
