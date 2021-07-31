@@ -1,0 +1,38 @@
+Deployment Overview
+
+NO HEROKU - salesforce sucks
+But more seriously, we CAN'T use heroku (the free tier, at least)
+why?? because we rely A LOT on WEBSOCKETS to get REAL TIME PRICES
+this is an issue with the heroku free tier because the instances go to sleep after 30 minutes,
+so any long-running conncetions would get terminated after that, which isn't ideal when you want to maintain many websocket connections
+
+There are ways around this, like offloading API/websocket connections to an external service (like AWS API Websocket Gateway - which we already use),
+and having just the static content served from heroku, but we didn't wanna deal with multiple cloud providers (having atlas is bad enough),
+so we went all-in with AWS.
+
+Last workshop, we already outlined how we use various AWS services, like AWS Lambda, EC2, SNS, SQS and Lambda to host our APIs,
+and specifically deliver price updates in real time, while also being able to scale to more numbers of users than we could ever think of.
+Today, we're going to talk about how we're leveraging AWS CodeDeploy and CodePipeline, with Route53 to automatically deploy and host
+our website on a custom domain.
+
+The first step in hosting our website is to actually have a website in the first place. We already happened to have a domain (under my (John's) name),
+so we just decided to use that. The domain is registered via AWS Route 53, and we have our endpoints configured via AWS API Gateway to get free TLS termination
+(and also having to avoid ulgy VM IPs like 35.160.51.70). In order for AWS API Gateway to direct requests to our app, we need to configure DNS records to 
+point to our AWS EC2 instance in the cloud, and then attach that as an API integration in API Gateway. The tricky part here is that since our app is essentially a monrepo 
+(containing all our various services, like clientside resources, backend APIs, and data ingestion services), the client and server are started with two different scripts,
+one being a simple node script (build from typescript and start), while the other uses react-scritps start to serve the client-side of things. This means that we have
+two different services running on two different ports on the same virtual machine, which are responsible for two different parts of the app. So, in order for API Gateway to 
+serve the correct resources, we needed to set up a $default route that handles the react resources, while attaching the API routes individually. 
+
+On the virtual machine, we have scripts running via systemd that build and run the project, which are run every time the releases branch of our repo is updated.
+This is done through AWS CodeDeploy and CodePipeline integrations. Unlike Heroku, AWS Codedeploy does not use GitHub Actions to automatically deploy your app,
+but rather relies on an appspec.yml file to configure the deployment, which also requiring some extra setup to tell CodeDeploy where to deploy the project to.
+CodeDeploy supports deploying to EC2, Lambda, and even your own on-premise virtual machines, after setting up the AWS codedeploy-agent, which makes it a bit more flexible
+than other GitHub Actions-based deployment processes, at the cost of slightly more setup. Behind the scenes, CodeDeploy clones our repo and copies it to an S3 bucket 
+(which can be configured), and then copies that folder into our deployment destinations,
+but these are all implementation details that we don't have to concern ourselves with. 
+
+When configuring AWS CodeDeploy, we needed to first create new Service Roles, Users, and Policies via AWS IAM so that CodeDeploy has authorization to deploy to our VM instances.
+The easiest way to register a Deployment location is through the AWS CodeDeploy service panel, configuring a deployment group with our EC2 instance that we're deploying on. 
+After this we created our appspec.yml file to copy our project to a specific directory on our VM, and then run the setup scripts for both the client and server after that.
+Finally, we also needed to grant AWS CodeDeploy to GitHub to be able to clone our repo and detect changes to our release branch.
