@@ -35,6 +35,7 @@ connection.on("message", data => {
                     TopicArn: process.env.DATA_STREAM_TOPIC!,
                     Message: JSON.stringify(update)
                 }))
+                console.log(update)
             }
             lastUpdateTime = update.time
         })
