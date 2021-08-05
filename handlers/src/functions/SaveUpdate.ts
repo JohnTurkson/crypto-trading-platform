@@ -2,7 +2,6 @@ import { PutItemCommand } from "@aws-sdk/client-dynamodb"
 import { dynamoDBClient } from "../resources/Clients"
 
 export async function handler(event: any) {
-    // TODO types
     const updates: string[] = event.Records
         .map((record: any) => record.Sns.Message as string)
     
@@ -12,7 +11,11 @@ export async function handler(event: any) {
             Item: {
                 "time": {N: update.time.toString()},
                 "source": {S: update.source},
-                "currency": {S: update.currency},
+                "open": {S: update.open},
+                "high": {S: update.high},
+                "low": {S: update.low},
+                "volume": {S: update.volume},
+                "asset": {S: update.asset},
                 "price": {S: update.price}
             }
         }))
