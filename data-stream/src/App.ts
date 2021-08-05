@@ -21,13 +21,16 @@ connection.on("message", data => {
         .filter(update => update.type === "ticker")
         .map(update => ({
             source: "Coinbase",
-            currency: update.product_id,
+            asset: update.product_id,
             price: update.price,
+            open: update.open_24h,
+            high: update.high_24h,
+            low: update.low_24h,
+            volume: update.volume_24h,
             time: Math.floor(Date.now() / updateInterval)
         }))
         .forEach((update: PriceData) => {
             if (update.time > lastUpdateTime) {
-                console.log(update)
                 snsClient.send(new PublishCommand({
                     TopicArn: process.env.DATA_STREAM_TOPIC!,
                     Message: JSON.stringify(update)

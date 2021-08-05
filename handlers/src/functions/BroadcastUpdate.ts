@@ -4,7 +4,6 @@ import { apiGatewayManagementApiClient, dynamoDBClient } from "../resources/Clie
 import { textEncoder } from "../resources/Tools"
 
 export async function handler(event: any) {
-    // TODO types
     const updates: string[] = event.Records
         .map((record: any) => record.Sns.Message as string)
     
