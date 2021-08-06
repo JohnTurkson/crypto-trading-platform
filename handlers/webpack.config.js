@@ -5,7 +5,9 @@ module.exports = {
         "AddConnection": "./AddConnection.js",
         "RemoveConnection" : "./RemoveConnection.js",
         "BroadcastUpdate": "./BroadcastUpdate.js",
-        "SaveUpdate": "./SaveUpdate.js"
+        "SaveUpdate": "./SaveUpdate.js",
+        "GetSupportedAssets": "./GetSupportedAssets.js",
+        "GetSupportedCurrencies": "./GetSupportedCurrencies.js"
     },
     mode: "production",
     target: "node",
