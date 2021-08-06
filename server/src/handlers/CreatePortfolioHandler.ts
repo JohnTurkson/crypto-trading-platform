@@ -1,6 +1,6 @@
 import DefaultHandler from "./DefaultHandler"
-import CreatePortfolioRequest from "../requests/CreatePortfolioRequest"
-import CreatePortfolioResponse from "../responses/CreatePortfolioResponse"
+import { CreatePortfolioRequest } from "../requests/CreatePortfolioRequest"
+import { CreatePortfolioResponse } from "../responses/CreatePortfolioResponse"
 
 // TODO remove
 export default class CreatePortfolioHandler extends DefaultHandler<CreatePortfolioRequest, CreatePortfolioResponse> {
@@ -18,7 +18,6 @@ export default class CreatePortfolioHandler extends DefaultHandler<CreatePortfol
 
     async processRequest(request: CreatePortfolioRequest): Promise<CreatePortfolioResponse> {
         return {
-            type: "CreatePortfolioResponse",
             id: "",
             user: "",
             name: "",

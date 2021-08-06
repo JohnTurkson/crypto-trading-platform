@@ -1,6 +1,6 @@
 import { generateId, getEventBody } from "../resources/Utils"
 import { dynamoDBDocumentClient } from "../resources/Clients"
-import CreatePortfolioResponse from "../../../server/src/responses/CreatePortfolioResponse"
+import { CreatePortfolioResponse } from "../../../server/src/responses/CreatePortfolioResponse"
 
 export async function handler(event: any): Promise<CreatePortfolioResponse> {
     const request = getEventBody(event)
@@ -16,8 +16,5 @@ export async function handler(event: any): Promise<CreatePortfolioResponse> {
         Item: portfolio
     })
     
-    return {
-        type: "CreatePortfolioResponse",
-        ...portfolio,
-    }
+    return portfolio
 }

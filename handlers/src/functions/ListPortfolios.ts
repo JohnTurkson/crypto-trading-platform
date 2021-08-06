@@ -1,7 +1,7 @@
 import { getEventBody } from "../resources/Utils"
 import { dynamoDBDocumentClient } from "../resources/Clients"
-import ListPortfoliosResponse from "../../../server/src/responses/ListPortfoliosResponse"
 import Portfolio from "../../../server/src/data/Portfolio"
+import { ListPortfoliosResponse } from "../../../server/src/responses/ListPortfoliosResponse"
 
 export async function handler(event: any): Promise<ListPortfoliosResponse> {
     const request = getEventBody(event)
@@ -17,12 +17,5 @@ export async function handler(event: any): Promise<ListPortfoliosResponse> {
         }
     })
     
-    const items = await response
-        .then(response => response.Items ?? [])
-        .then(items => items as Portfolio[])
-    
-    return {
-        type: "ListPortfoliosResponse",
-        portfolios: items
-    }
+    return response.then(response => response.Items ?? []) as Promise<Portfolio[]>
 }

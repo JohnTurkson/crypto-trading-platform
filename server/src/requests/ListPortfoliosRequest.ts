@@ -1,4 +1,3 @@
-export default interface ListPortfoliosRequest {
-    readonly type: "ListPortfoliosRequest"
+export interface ListPortfoliosRequest {
     readonly user: string
 }
