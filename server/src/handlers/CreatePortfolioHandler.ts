@@ -1,10 +1,8 @@
 import DefaultHandler from "./DefaultHandler"
 import CreatePortfolioRequest from "../requests/CreatePortfolioRequest"
 import CreatePortfolioResponse from "../responses/CreatePortfolioResponse"
-import generateUserToken from "../functions/user/credentials/GenerateUserToken"
-import ErrorResponse from "../responses/ErrorResponse"
-import generatePasswordHash from "../functions/user/credentials/GeneratePasswordHash"
 
+// TODO remove
 export default class CreatePortfolioHandler extends DefaultHandler<CreatePortfolioRequest, CreatePortfolioResponse> {
     async validateRequest(request: any): Promise<CreatePortfolioRequest> {
         return request
@@ -19,10 +17,16 @@ export default class CreatePortfolioHandler extends DefaultHandler<CreatePortfol
     }
 
     async processRequest(request: CreatePortfolioRequest): Promise<CreatePortfolioResponse> {
-        const portfolio = await this.database.createPortfolio(request.userId)
         return {
-            portfolio: portfolio,
             type: "CreatePortfolioResponse",
+            id: "",
+            user: "",
+            name: "",
         }
+        // const portfolio = await this.database.createPortfolio(request.userId)
+        // return {
+        //     portfolio: portfolio,
+        //     type: "CreatePortfolioResponse",
+        // }
     }
 }

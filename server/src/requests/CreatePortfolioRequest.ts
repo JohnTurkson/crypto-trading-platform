@@ -1,6 +1,5 @@
-import Request from "./Request"
-
-export default interface GetPortfolioRequest extends Request {
-    readonly type: "GetPortfolioRequest",
-    readonly userId: string,
+export default interface CreatePortfolioRequest {
+    readonly type: "CreatePortfolioRequest"
+    readonly user: string
+    readonly name: string
 }

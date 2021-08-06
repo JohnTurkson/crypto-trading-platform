@@ -1,6 +1,6 @@
-import Portfolio from "../data/Portfolio";
-
 export default interface CreatePortfolioResponse {
-    readonly portfolio: Portfolio,
     readonly type: "CreatePortfolioResponse"
+    readonly id: string
+    readonly user: string
+    readonly name: string
 }
