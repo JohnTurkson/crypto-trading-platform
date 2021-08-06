@@ -7,7 +7,9 @@ module.exports = {
         "BroadcastUpdate": "./BroadcastUpdate.js",
         "SaveUpdate": "./SaveUpdate.js",
         "GetSupportedAssets": "./GetSupportedAssets.js",
-        "GetSupportedCurrencies": "./GetSupportedCurrencies.js"
+        "GetSupportedCurrencies": "./GetSupportedCurrencies.js",
+        "ListPortfolios": "./ListPortfolios.js",
+        "CreatePortfolio": "./CreatePortfolio.js"
     },
     mode: "production",
     target: "node",

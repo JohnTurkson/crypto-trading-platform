@@ -1,12 +1,11 @@
-import { dynamoDBClient } from "../resources/Clients"
-import { ScanCommand } from "@aws-sdk/client-dynamodb"
+import { dynamoDBDocumentClient } from "../resources/Clients"
 
 export async function handler(event: any) {
-    const command = new ScanCommand({
+    const response = dynamoDBDocumentClient.scan({
         TableName: "CryptoSupportedCurrencies"
     })
     
-    return dynamoDBClient.send(command)
+    return response
         .then(response => response.Items ?? [])
-        .then(items => items.map(item => item.name.S))
+        .then(items => items.map(item => item.name))
 }
