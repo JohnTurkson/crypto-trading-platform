@@ -21,7 +21,7 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
         TableName: "CryptoPortfolios",
         Key: {
             "user": user,
-            "id": request.destination
+            "id": request.portfolio
         }
     })
     
@@ -35,7 +35,7 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
     const asset = dynamoDBDocumentClient.get({
         TableName: "CryptoAssets",
         Key: {
-            portfolio: request.destination,
+            portfolio: request.portfolio,
             name: request.asset
         }
     })
@@ -65,7 +65,7 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
     await dynamoDBDocumentClient.update({
         TableName: "CryptoAssets",
         Key: {
-            portfolio: request.destination,
+            portfolio: request.portfolio,
             name: request.asset
         },
         ConditionExpression: conditionExpression,
