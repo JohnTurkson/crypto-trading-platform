@@ -9,9 +9,12 @@ module.exports = {
         "GetSupportedAssets": "./GetSupportedAssets.js",
         "GetSupportedCurrencies": "./GetSupportedCurrencies.js",
         "ListPortfolios": "./ListPortfolios.js",
-        "CreatePortfolio": "./CreatePortfolio.js"
+        "CreatePortfolio": "./CreatePortfolio.js",
+        "ListPortfolioAssets": "./ListPortfolioAssets.js",
+        "DepositAsset": "./DepositAsset.js",
+        "WithdrawAsset": "./WithdrawAsset.js"
     },
-    mode: "production",
+    mode: "development",
     target: "node",
     devtool: false,
     output: {

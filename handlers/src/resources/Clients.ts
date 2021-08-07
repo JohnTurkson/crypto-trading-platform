@@ -7,6 +7,13 @@ export const apiGatewayManagementApiClient = new ApiGatewayManagementApiClient({
     endpoint: process.env.DATA_STREAM_ENDPOINT,
 })
 
-export const dynamoDBDocumentClient = DynamoDBDocument.from(new DynamoDBClient({
-    region: process.env.AWS_REGION,
-}))
+export const dynamoDBDocumentClient = DynamoDBDocument.from(
+    new DynamoDBClient({
+        region: process.env.AWS_REGION,
+    }),
+    {
+        marshallOptions: {
+            removeUndefinedValues: true
+        }
+    }
+)

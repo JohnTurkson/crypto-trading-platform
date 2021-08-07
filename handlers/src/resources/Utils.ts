@@ -12,3 +12,16 @@ export function getEventBody(event: any): any {
 export function generateId(): string {
     return crypto.randomBytes(16).toString("hex")
 }
+
+export function generateConditionExpression(
+    expressionAttributeName: string,
+    comparison: string,
+    expressionAttributeValueName: string,
+    expressionAttributeValue: string | undefined
+): string {
+    if (expressionAttributeValue !== undefined) {
+        return `${expressionAttributeName} ${comparison} ${expressionAttributeValueName}`
+    } else {
+        return `attribute_not_exists(${expressionAttributeName})`
+    }
+}
