@@ -10,5 +10,10 @@ export const apiGatewayManagementApiClient = new ApiGatewayManagementApiClient({
 export const dynamoDBDocumentClient = DynamoDBDocument.from(
     new DynamoDBClient({
         region: process.env.AWS_REGION,
-    })
+    }),
+    {
+        marshallOptions: {
+            removeUndefinedValues: true
+        }
+    }
 )

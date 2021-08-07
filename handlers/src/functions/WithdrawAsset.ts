@@ -79,8 +79,7 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
                 "#amount": "amount"
             },
             ExpressionAttributeValues: {
-                ":previousAmount": previousAmount,
-                ":totalAmount": totalAmount
+                ":previousAmount": previousAmount.toString()
             }
         })
     } else {
@@ -96,8 +95,8 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
                 "#amount": "amount"
             },
             ExpressionAttributeValues: {
-                ":previousAmount": previousAmount,
-                ":totalAmount": totalAmount
+                ":previousAmount": previousAmount.toString(),
+                ":totalAmount": totalAmount.toString()
             }
         })
     }

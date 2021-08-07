@@ -74,7 +74,7 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
             "#amount": "amount"
         },
         ExpressionAttributeValues: {
-            ":previousAmount": previousAmount.toString(),
+            ":previousAmount": previousAmount.isZero() ? undefined : previousAmount.toString(),
             ":totalAmount": totalAmount.toString()
         }
     })
