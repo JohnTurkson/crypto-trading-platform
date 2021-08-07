@@ -12,7 +12,10 @@ module.exports = {
         "CreatePortfolio": "./CreatePortfolio.js",
         "ListPortfolioAssets": "./ListPortfolioAssets.js",
         "DepositAsset": "./DepositAsset.js",
-        "WithdrawAsset": "./WithdrawAsset.js"
+        "WithdrawAsset": "./WithdrawAsset.js",
+        "CreateTrade": "./CreateTrade.js",
+        "CancelTrade": "./CancelTrade.js",
+        "ListTrades": "./ListTrades.js"
     },
     mode: "development",
     target: "node",

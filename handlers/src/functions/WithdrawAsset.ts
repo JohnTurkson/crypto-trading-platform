@@ -46,7 +46,7 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
     const depositAmount = new Decimal(request.amount)
     const totalAmount = previousAmount.minus(depositAmount)
     
-    if (depositAmount.isNegative()) {
+    if (depositAmount.isNegative() || depositAmount.isZero()) {
         return {
             success: false,
             error: "Invalid Amount"
@@ -71,8 +71,8 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
         await dynamoDBDocumentClient.delete({
             TableName: "CryptoAssets",
             Key: {
-                portfolio: request.portfolio,
-                name: request.asset
+                "portfolio": request.portfolio,
+                "name": request.asset
             },
             ConditionExpression: conditionExpression,
             ExpressionAttributeNames: {
@@ -86,8 +86,8 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
         await dynamoDBDocumentClient.update({
             TableName: "CryptoAssets",
             Key: {
-                portfolio: request.portfolio,
-                name: request.asset
+                "portfolio": request.portfolio,
+                "name": request.asset
             },
             ConditionExpression: conditionExpression,
             UpdateExpression: "SET #amount = :totalAmount",

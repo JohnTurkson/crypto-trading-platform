@@ -1,7 +1,8 @@
-export interface TradeRequest {
+export interface CreateTradeRequest {
     readonly authorization: string
     readonly portfolio: string
     readonly ticker: string
-    readonly price: string
+    readonly type: string
     readonly amount: string
+    readonly price: string
 }

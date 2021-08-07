@@ -3,7 +3,6 @@ import { dynamoDBDocumentClient } from "../resources/Clients"
 import { DepositAssetRequest } from "../../../server/src/requests/DepositAssetRequest"
 import { DepositAssetResponse } from "../../../server/src/responses/DepositAssetResponse"
 import Decimal from "decimal.js"
-import { Deposit } from "../../../server/src/data/Deposit"
 
 export async function handler(event: any): Promise<DepositAssetResponse> {
     const request = getEventBody(event) as DepositAssetRequest
@@ -36,8 +35,8 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
     const asset = dynamoDBDocumentClient.get({
         TableName: "CryptoAssets",
         Key: {
-            portfolio: request.portfolio,
-            name: request.asset
+            "portfolio": request.portfolio,
+            "name": request.asset
         }
     })
     
@@ -47,7 +46,7 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
     const depositAmount = new Decimal(request.amount)
     const totalAmount = previousAmount.plus(depositAmount)
     
-    if (depositAmount.isNegative()) {
+    if (depositAmount.isNegative() || depositAmount.isZero()) {
         return {
             success: false,
             error: "Invalid Amount"
@@ -66,8 +65,8 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
     await dynamoDBDocumentClient.update({
         TableName: "CryptoAssets",
         Key: {
-            portfolio: request.portfolio,
-            name: request.asset
+            "portfolio": request.portfolio,
+            "name": request.asset
         },
         ConditionExpression: conditionExpression,
         UpdateExpression: updateExpression,
