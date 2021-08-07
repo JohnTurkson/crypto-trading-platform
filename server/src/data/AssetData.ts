@@ -1,7 +1,4 @@
-import Resource from "./Resource"
-import Coin from "./Coin";
-
-export default interface AssetData extends Resource {
+export default interface AssetData {
     readonly name: string
     readonly amount: string
 }
