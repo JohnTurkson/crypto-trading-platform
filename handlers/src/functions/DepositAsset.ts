@@ -7,6 +7,13 @@ import Decimal from "decimal.js"
 export async function handler(event: any): Promise<DepositAssetResponse> {
     const request = getEventBody(event) as DepositAssetRequest
     
+    if (Number.isNaN(request.amount)) {
+        return {
+            success: false,
+            error: "Invalid Amount"
+        }
+    }
+    
     // TODO get user from api token
     const user = "1"
     
@@ -33,14 +40,27 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
         }
     })
     
-    const previousAmount = await asset.then(response => response.Item).then(asset => asset?.amount)
-    const totalAmount = new Decimal(previousAmount ?? "0").plus(new Decimal(request.amount)).toString()
+    const previousAmount = await asset.then(response => response.Item)
+        .then(asset => asset?.amount ?? "0")
+        .then(amount => new Decimal(amount))
+    const depositAmount = new Decimal(request.amount)
+    const totalAmount = previousAmount.plus(depositAmount)
+    
+    if (depositAmount.isNegative()) {
+        return {
+            success: false,
+            error: "Invalid Amount"
+        }
+    }
+    
     const conditionExpression = generateConditionExpression(
         "#amount",
         "=",
         ":previousAmount",
-        previousAmount
+        previousAmount.isZero() ? undefined : previousAmount.toString()
     )
+    
+    const updateExpression = "SET #amount = :totalAmount"
     
     await dynamoDBDocumentClient.update({
         TableName: "CryptoAssets",
@@ -49,13 +69,13 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
             name: request.asset
         },
         ConditionExpression: conditionExpression,
-        UpdateExpression: "SET #amount = :totalAmount",
+        UpdateExpression: updateExpression,
         ExpressionAttributeNames: {
             "#amount": "amount"
         },
         ExpressionAttributeValues: {
-            ":previousAmount": previousAmount,
-            ":totalAmount": totalAmount
+            ":previousAmount": previousAmount.toString(),
+            ":totalAmount": totalAmount.toString()
         }
     })
     
