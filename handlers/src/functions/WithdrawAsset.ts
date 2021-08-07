@@ -1,5 +1,5 @@
 import { WithdrawAssetResponse } from "../../../server/src/responses/WithdrawAssetResponse"
-import { generateConditionExpression, getEventBody } from "../resources/Utils"
+import { generateConditionExpression, generateId, getEventBody } from "../resources/Utils"
 import { WithdrawAssetRequest } from "../../../server/src/requests/WithdrawAssetRequest"
 import { dynamoDBDocumentClient } from "../resources/Clients"
 import Decimal from "decimal.js"
@@ -101,7 +101,20 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
         })
     }
     
+    const withdrawal = {
+        id: generateId(),
+        portfolio: request.portfolio,
+        asset: request.asset,
+        amount: request.amount
+    }
+    
+    await dynamoDBDocumentClient.put({
+        TableName: "CryptoWithdrawals",
+        Item: withdrawal
+    })
+    
     return {
-        success: true
+        success: true,
+        withdrawal: withdrawal
     }
 }

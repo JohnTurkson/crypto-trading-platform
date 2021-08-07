@@ -1,8 +1,9 @@
-import { generateConditionExpression, getEventBody } from "../resources/Utils"
+import { generateConditionExpression, generateId, getEventBody } from "../resources/Utils"
 import { dynamoDBDocumentClient } from "../resources/Clients"
 import { DepositAssetRequest } from "../../../server/src/requests/DepositAssetRequest"
 import { DepositAssetResponse } from "../../../server/src/responses/DepositAssetResponse"
 import Decimal from "decimal.js"
+import { Deposit } from "../../../server/src/data/Deposit"
 
 export async function handler(event: any): Promise<DepositAssetResponse> {
     const request = getEventBody(event) as DepositAssetRequest
@@ -79,7 +80,20 @@ export async function handler(event: any): Promise<DepositAssetResponse> {
         }
     })
     
+    const deposit = {
+        id: generateId(),
+        portfolio: request.portfolio,
+        asset: request.asset,
+        amount: request.amount
+    }
+    
+    await dynamoDBDocumentClient.put({
+        TableName: "CryptoDeposits",
+        Item: deposit
+    })
+    
     return {
-        success: true
+        success: true,
+        deposit: deposit
     }
 }
