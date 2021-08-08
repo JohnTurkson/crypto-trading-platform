@@ -7,7 +7,8 @@ export async function handler(event: any) {
     const update = JSON.parse(event.Records[0].Sns.Message) as Trade
     
     const response = await dynamoDBDocumentClient.query({
-        TableName: "CryptoTradeStreamConnectionsUserIndex",
+        TableName: "CryptoTradeStreamConnections",
+        IndexName: "CryptoTradeStreamConnectionsUserIndex",
         KeyConditionExpression: "#user = :user",
         ExpressionAttributeNames: {
             "#user": "user"
