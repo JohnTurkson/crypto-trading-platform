@@ -1,5 +1,5 @@
 import { PostToConnectionCommand } from "@aws-sdk/client-apigatewaymanagementapi"
-import { apiGatewayManagementApiClient, dynamoDBDocumentClient } from "../resources/Clients"
+import { dataStreamClient, dynamoDBDocumentClient } from "../resources/Clients"
 import { textEncoder } from "../resources/Tools"
 
 export async function handler(event: any) {
@@ -15,7 +15,7 @@ export async function handler(event: any) {
                 ConnectionId: connection.connectionId,
                 Data: textEncoder.encode(update)
             })
-        ).map(broadcastUpdateCommand => apiGatewayManagementApiClient.send(broadcastUpdateCommand))
+        ).map(broadcastUpdateCommand => dataStreamClient.send(broadcastUpdateCommand))
     }) ?? []
     
     return Promise.all(broadcasts)

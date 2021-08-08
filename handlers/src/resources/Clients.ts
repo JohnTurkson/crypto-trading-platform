@@ -3,9 +3,14 @@ import { ApiGatewayManagementApiClient } from "@aws-sdk/client-apigatewaymanagem
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 import { SNSClient } from "@aws-sdk/client-sns"
 
-export const apiGatewayManagementApiClient = new ApiGatewayManagementApiClient({
+export const dataStreamClient = new ApiGatewayManagementApiClient({
     region: process.env.AWS_REGION,
     endpoint: process.env.DATA_STREAM_ENDPOINT,
+})
+
+export const tradeStreamClient = new ApiGatewayManagementApiClient({
+    region: process.env.AWS_REGION,
+    endpoint: process.env.TRADE_STREAM_ENDPOINT,
 })
 
 export const dynamoDBDocumentClient = DynamoDBDocument.from(
@@ -20,5 +25,5 @@ export const dynamoDBDocumentClient = DynamoDBDocument.from(
 )
 
 export const snsClient = new SNSClient({
-    region: process.env.AWS_REGION!
+    region: process.env.AWS_REGION
 })
