@@ -7,7 +7,7 @@ export async function handler(event: any) {
     const request = getEventBody(event) as SubscribeToTradeUpdatesRequest
     
     await dynamoDBDocumentClient.put({
-        TableName: "CryptoDataStreamConnections",
+        TableName: "CryptoTradeStreamConnections",
         Item: {
             "id": event.requestContext.connectionId,
             "user": request.user
