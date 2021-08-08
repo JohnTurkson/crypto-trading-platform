@@ -15,7 +15,8 @@ module.exports = {
         "WithdrawAsset": "./WithdrawAsset.js",
         "CreateTrade": "./CreateTrade.js",
         "CancelTrade": "./CancelTrade.js",
-        "ListTrades": "./ListTrades.js"
+        "ListTrades": "./ListTrades.js",
+        "ProcessOpenTrades": "./ProcessOpenTrades.js"
     },
     mode: "development",
     target: "node",
