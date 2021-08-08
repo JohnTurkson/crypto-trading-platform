@@ -5,6 +5,7 @@ import { dynamoDBDocumentClient } from "../resources/Clients"
 import Decimal from "decimal.js"
 
 export async function handler(event: any): Promise<CreateTradeResponse> {
+    // TODO authenticate user
     const request = getEventBody(event) as CreateTradeRequest
     
     if (Number.isNaN(request.amount)) {
@@ -41,6 +42,7 @@ export async function handler(event: any): Promise<CreateTradeResponse> {
     const trade = {
         id: generateId(),
         status: "open",
+        user: request.user,
         portfolio: request.portfolio,
         ticker: request.ticker,
         type: request.type,

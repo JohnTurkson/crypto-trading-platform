@@ -30,6 +30,7 @@ async function processTrade(update: PriceData, trade: Trade) {
     const closedTrade: Trade = {
         id: trade.id,
         status: "closed",
+        user: trade.user,
         portfolio: trade.portfolio,
         ticker: trade.ticker,
         type: trade.type,
