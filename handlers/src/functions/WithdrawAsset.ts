@@ -67,7 +67,22 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
         previousAmount.isZero() ? undefined : previousAmount.toString()
     )
     
-    if (totalAmount.isPositive()) {
+    if (totalAmount.isZero()) {
+        await dynamoDBDocumentClient.delete({
+            TableName: "CryptoAssets",
+            Key: {
+                "portfolio": request.portfolio,
+                "name": request.asset
+            },
+            ConditionExpression: conditionExpression,
+            ExpressionAttributeNames: {
+                "#amount": "amount"
+            },
+            ExpressionAttributeValues: {
+                ":previousAmount": previousAmount.toString()
+            }
+        })
+    } else if (totalAmount.isPositive()) {
         await dynamoDBDocumentClient.update({
             TableName: "CryptoAssets",
             Key: {
@@ -82,21 +97,6 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
             ExpressionAttributeValues: {
                 ":previousAmount": previousAmount.toString(),
                 ":totalAmount": totalAmount.toString()
-            }
-        })
-    } else if (totalAmount.isZero()) {
-        await dynamoDBDocumentClient.delete({
-            TableName: "CryptoAssets",
-            Key: {
-                "portfolio": request.portfolio,
-                "name": request.asset
-            },
-            ConditionExpression: conditionExpression,
-            ExpressionAttributeNames: {
-                "#amount": "amount"
-            },
-            ExpressionAttributeValues: {
-                ":previousAmount": previousAmount.toString()
             }
         })
     }
