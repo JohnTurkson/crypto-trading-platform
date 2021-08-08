@@ -159,4 +159,4 @@ Explore new cryptocurrencies and Trade Crypto
 - Display cryptocurrency information (price,daily high, low, etc)
 - Buy and sell cryptos to your portfolio
 
-@put link to prototype image
+![Screenshot](prototypes.png)
