@@ -1,10 +1,10 @@
 import { dynamoDBDocumentClient } from "../resources/Clients"
 
 export async function handler(event: any) {
-    await dynamoDBDocumentClient.put({
+    await dynamoDBDocumentClient.delete({
         TableName: "CryptoDataStreamConnections",
-        Item: {
-            "connectionId": event.requestContext.connectionId
+        Key: {
+            "id": event.requestContext.connectionId
         }
     })
     
