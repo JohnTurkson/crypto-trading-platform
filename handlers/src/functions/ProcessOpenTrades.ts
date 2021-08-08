@@ -1,9 +1,10 @@
-import { dynamoDBDocumentClient } from "../resources/Clients"
+import { dynamoDBDocumentClient, snsClient } from "../resources/Clients"
 import { Trade } from "../../../server/src/data/Trade"
 import { PriceData } from "../../../data-stream/src/data/PriceData"
 import Decimal from "decimal.js"
 import Asset from "../../../server/src/data/Asset"
 import { generateConditionExpression } from "../resources/Utils"
+import { PublishCommand } from "@aws-sdk/client-sns"
 
 export async function handler(event: any) {
     const update = JSON.parse(event.Records[0].Sns.Message) as PriceData
@@ -141,6 +142,11 @@ async function processTrade(update: PriceData, trade: Trade) {
                     "id": trade.id
                 }
             })
+            
+            await snsClient.send(new PublishCommand({
+                TopicArn: process.env.TRADE_STREAM_TOPIC!,
+                Message: JSON.stringify(closedTrade)
+            }))
         }
     } else if (trade.type === "sell" && price.lessThanOrEqualTo(update.price)) {
         const previousAssetBalance = new Decimal(asset?.amount ?? "0")
@@ -227,6 +233,11 @@ async function processTrade(update: PriceData, trade: Trade) {
                     "id": trade.id
                 }
             })
+            
+            await snsClient.send(new PublishCommand({
+                TopicArn: process.env.TRADE_STREAM_TOPIC!,
+                Message: JSON.stringify(closedTrade)
+            }))
         }
     }
 }
