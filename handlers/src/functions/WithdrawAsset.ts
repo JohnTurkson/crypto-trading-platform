@@ -14,13 +14,10 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
         }
     }
     
-    // TODO get user from api token
-    const user = "1"
-    
     const portfolio = dynamoDBDocumentClient.get({
         TableName: "CryptoPortfolios",
         Key: {
-            "user": user,
+            "user": request.user,
             "id": request.portfolio
         }
     })
@@ -103,6 +100,7 @@ export async function handler(event: any): Promise<WithdrawAssetResponse> {
     
     const withdrawal = {
         id: generateId(),
+        user: request.user,
         portfolio: request.portfolio,
         asset: request.asset,
         amount: request.amount
