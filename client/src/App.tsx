@@ -71,7 +71,7 @@ function App() {
                     </PrivateRoute>
                     <PrivateRoute path="/coin/:name">
                         <Page>
-                            <CoinPage/>
+                            <CoinPage name = {"/coin/:name".split('/')[1]}/>
                         </Page>
                     </PrivateRoute>
                     <NoAuthRoute path="/">

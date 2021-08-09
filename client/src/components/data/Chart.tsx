@@ -93,13 +93,18 @@ export function Chart(props: ChartProps) {
             },
             data: data,
             tooltip: {
-                valueDecimals: 2
+                valueDecimals: props.name == "Dogecoin" ? 4 : 2
             },
 
         }
         ]
     })
 
+    //if (props.name == "Dogecoin") {
+    //    let newConfig = config
+    //    newConfig.series[0].tooltip.valueDecimals = 4
+    //    setConfig(newConfig)
+    //}
 
     useEffect(() => {
         connection.onmessage = message => {
@@ -110,7 +115,17 @@ export function Chart(props: ChartProps) {
             // + 1654100
             // * 1000
             // + 1.8e+7
-            if (json["asset"] != "BTC-USD") return
+            //if (json["asset"] != "BTC-USD") return
+
+            console.log(props.name)
+
+            if (props.name == "Bitcoin") {
+                if (json["asset"] != "BTC-USD") return
+            } else if (props.name == "Ethereum") {
+                if (json["asset"] != "ETH-USD") return
+            } else if (props.name == "Dogecoin") {
+                if (json["asset"] != "DOGE-USD") return
+            }
 
             currData.push([json["time"] - 2.52e+7, parseFloat(json["price"])])
             //console.log(currData)
