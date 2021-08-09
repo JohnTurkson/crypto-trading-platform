@@ -19,7 +19,7 @@ Our project is a Trading platform for cryptocurrencies. We envision it to be a p
 - [x] Deployment to AWS
 - [x] Graph Visualization in real time of cryptocurrency prices
 - [x] WebSockets connection to Kraken API and Coinbase API for pulling latest crypto data
-- [] Able to trade (purchase/sell) currency
+- [x] Able to trade (purchase/sell) currency
 
 *Stretch*
 - [x] SNS,SQS, Lambda serverless (additional AWS backend)
@@ -27,12 +27,6 @@ Our project is a Trading platform for cryptocurrencies. We envision it to be a p
 - [] Historical Graph data
 - [] AWS ec2 automated deployment via github
 - [] 2FA/MFA
-- [] NFT Auctions
-- [] Complex closing options (conditional buy/sell)
-- [] Trading with real money/ payment integration for cash deposits
-- [] Import data from existing exchanges
-- [] Dark Mode
-- [] Support for different languages
 
 **3. Description on how tech from Unit 1-5 are used**
 
@@ -41,7 +35,15 @@ Usage of tech includes best practices. Code is clean and clear. Description of u
 
 Unit 1: HTML, CSS, JS
 
+Our application front-end and back-end is written in Typescript, (basically all our files are .tsx) which is a superset of Javascript. (essentially Javascript but with type-checking) We chose Typescript since it has compile-time type-checking, so we can be certain that any inputs are of the correct type. Also note that Typescript is a compiled language, while Javascript is an interpreted language. This greatly helps us when debugging, since we can immediately see why some functionality is not working as intended, or does not compile. 
 
+We also wrote plenty of JSX (which is a mix of HTML and JS) in our Functional Components for React. This JSX code is used to describe what the UI will look like, typically written in the return() function of components which render the JSX code on the application. 
+
+We mainly used Material UI to style the components on our application with a modern taste, however we also used custom CSS to arrange the layouts of the components, in particular for the portfolio page, since Material UI is a 3rd party library it was a bit too restricting for what we wanted to do.
+
+We did not write much plain HTML since using React + Typescript + JSX leads to a much faster, maintainable, and scaleable application and codebase. Coding with HTML would lead to a lot of repetitive code and the styling would be basic, while using React + Material UI + custom CSS our lives are much easier, as we can utilize reuseable components to reduce repeating code and help modularize and reason about our design, as well as make our application have a more modern look.
+
+So while raw HTML, CSS, JS can be used in creating basic full-stack web applications, we moreso utilized React + Typescript + JSX for it's numerous advantages listed above.
 
 Unit 2: React
 
@@ -65,7 +67,26 @@ To compare with similar tech, there are some alternatives to Node and Express, s
 
 Unit 4: MongoDB
 
-Unit 5: Release Engineering
+Our application uses MongoDB as a NoSQL database to store data such as user account information, crypto prices, user portfolios, and more. Using a separate database like MongoDB to house our data has significant advantages, since otherwise if we just stored our data locally we would not be able to scale quickly, our code would get cluttered, and it would be difficult to parse, not to mention there would more security concerns. Also, if we simply stored the data locally on every time the user visits the website, their data could potentially get lost or reset, but using MongoDB we can safely store this data externally. 
+
+We chose to use MongoDB which is a NoSQL database (non-relational) rather than an SQL database (relational) such as MySQL, since NoSQL has more flexible data models as there is no need for a schema, also for its ability to horizontally scale on multiple servers quickly, as well as high availability and fault tolerance, which are important for a quickly growing cryptocurrency application that needs to always have it's data quickly available.
+
+MongoDB definitely has a important purpose in creating a production-level full-stack web application, since storing large amounts of data and being able to retrieve it quickly is crucial for many such applications.
+
+Unit 5: Release Engineering 
+
+-perhaps talk about mono-repo, using Git, CI/CD, deployment on AWS
+
+Our application is deployed using AWS. This is in contrast to the course suggestion to use Heroku for a few reasons, such as: we are already using various AWS services for hosting our APIs so it is quite seamless to use AWS for deployment, also that since it's on our own virtual machine there are no start-up times, while using Heroku for the assignment we noticed significant start up times. 
+
+For our application codebase, we chose to use a mono-repo rather than a many-repo because our code-base is quite small, also some of us on the team are working full-stack so it is easier for them to access the entire code-base this way. In addition we wanted to remove the possibility of diamond dependencies (dependency hell) associated with many-repos.
+
+We also (clearly) are using Git for Version Control since we have a relatively small project with 4 contributors, and Git is very popular so there is a lot of support on sites like StackOverflow, and detailed documentation. Version control is important since we want to be able to work collaboratively, and to be able to save old work, and not create multiple versions of a current file we are editing.
+
+We are hosting using AWS... (@John you can talk about more AWS stuff here too)
+
+Overall using Git and AWS for release engineering has an important purpose in creating a production-level full-stack web application, since they help address issues such as managing and building maintainable code, and making collaboration among contributers easier, which is important when scaling the application.
+
 
 **4. Description of ‘Above and Beyond’ functionality **
 
@@ -80,15 +101,17 @@ Project goes beyond the basic requirements by incorporating one to a few “extr
 
 -AWS (can talk about a lot of stuff here) (@John)
 
--React Highcharts API for Charts Component
+-WebSockets (@John)
 
+-React Highcharts API for Charts Component (@Ryan)
 
+-More cool backend stuff (@John)
 
--WebSockets
+-Trade (@Andy Ma?)
 
 -Login Auth (@Andy Kwan)
 
--(external APIs, kraken? and more)
+-(external APIs, kraken? and more) (@John)
 
 -Fully responsive, fully accessible
 
@@ -102,7 +125,7 @@ What would you do next to further improve the app, or add additional relevant fu
 [3:
 Documentation clearly describes specific, relevant goals that would continue to improve upon the functionality or usability of the app. It is clear how this would be incorporated into the existing app.]
 
-To further improve the app, we would finish our remaining stretch goals, which includes: we could store each user's historical portfolio value, as well as historical crypto price data, and display and visualize it in the form of a chart, as we already have the chart component. Also, we could add features such as implementing conditional trading options, (buy/ sell crypto when some condition is satisfied) cash deposit integration for real money trading on the blockchain, as well as the ability to import your portfolio data from other trading applications to ease the transition to using our platform. (In addition, more support for accessibility would be finished, such as a Dark Mode, and the option to switch languages.)
+To further improve the app, we would finish some additional features which includes: we could store each user's historical portfolio value, as well as historical crypto price data, and display and visualize it in the form of a chart, as we already have the chart component. Also, we could add features such as implementing conditional trading options, (buy/ sell crypto when some condition is satisfied) cash deposit integration for real money trading on the blockchain, as well as the ability to import your portfolio data from other trading applications to ease the transition to using our platform. (In addition, more support for accessibility would be finished, such as a Dark Mode, and the option to switch languages.)
 
 **6. List of contributions **
 
