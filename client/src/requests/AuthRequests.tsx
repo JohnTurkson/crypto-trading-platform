@@ -12,12 +12,12 @@ interface AuthRequest {
 
 export const loginRequest = async (email: string, password: string): Promise<UserToken> => {
     const loginRequest: AuthRequest = { email, password }
-    const data = postApi<UserToken, AuthRequest>("https://crypto.johnturkson.com/login", loginRequest)
+    const data = postApi<UserToken, AuthRequest>("/login", loginRequest)
     return data;
 }
 
 export const signupRequest = async (email: string, password: string): Promise<UserToken> => {
     const loginRequest: AuthRequest = { email, password }
-    const data = postApi<UserToken, AuthRequest>("https://crypto.johnturkson.com/signup", loginRequest)
+    const data = postApi<UserToken, AuthRequest>("/signup", loginRequest)
     return data;
 }
