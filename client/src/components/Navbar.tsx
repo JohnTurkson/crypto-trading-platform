@@ -44,11 +44,6 @@ export function Navbar({selected}: { selected?: number }) {
                         <Tab
                             className={classes.tabItem}
                             component="a"
-                            label="Discover"
-                            href="/discover"/>
-                        <Tab
-                            className={classes.tabItem}
-                            component="a"
                             label="NFTs"
                             href="/nfts"/>
                     </Tabs>
