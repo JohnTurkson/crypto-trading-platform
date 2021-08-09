@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react"
+import {useEffect, useState} from "react"
 import ReactHighcharts from "react-highcharts/ReactHighstock.src"
-import priceData from "./btcdata.json"
 
 export interface ChartProps {
     //url: string
@@ -14,15 +13,11 @@ export function Chart(props: ChartProps) {
     const options = {style: "currency", currency: "USD"}
     const numberFormat = new Intl.NumberFormat("en-US", options)
 
-    //const [data, setData] = useState(priceData)
     const [data, setData] = useState([])
     const [config, setConfig] = useState({
 
         yAxis: [{
             offset: 6,
-            //max:50000,
-           // min:30000,
-
             labels: {
                 x: -15,
                 style: {
@@ -36,6 +31,7 @@ export function Chart(props: ChartProps) {
         tooltip: {
             shared: true,
         },
+
         plotOptions: {
             series: {
                 showInNavigator: true,
@@ -44,15 +40,13 @@ export function Chart(props: ChartProps) {
             }
         },
 
-        //rangeSelector: {
-        //    selected: 1
-        //},
         title: {
             text: props.name
         },
         chart: {
             height: 600,
         },
+
 
         credits: {
             enabled: false
@@ -61,9 +55,9 @@ export function Chart(props: ChartProps) {
         legend: {
             enabled: true
         },
+
         xAxis: {
             type: "date",
-            //max:1000,
 
         },
         rangeSelector: {
@@ -94,7 +88,9 @@ export function Chart(props: ChartProps) {
             name: "Price",
             type: "spline",
 
-            //data: priceData,
+            dataSorting: {
+                enabled: true
+            },
             data: data,
             tooltip: {
                 valueDecimals: 2
@@ -107,13 +103,17 @@ export function Chart(props: ChartProps) {
 
     useEffect(() => {
         connection.onmessage = message => {
-            //console.log(message)
-            let currData = data;
+            console.log(message)
+            let currData = data
             let json = JSON.parse(message.data)
+            console.log(json)
             // + 1654100
+            // * 1000
             // + 1.8e+7
-            currData.push([json["time"]*1000 + 1.8e+7, parseFloat(json["price"])])
-            console.log(currData)
+            if (json["asset"] != "BTC-USD") return
+
+            currData.push([json["time"] - 2.52e+7, parseFloat(json["price"])])
+            //console.log(currData)
             setData([data,currData])
             setData(currData)
 

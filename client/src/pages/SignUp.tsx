@@ -1,4 +1,4 @@
-import React, { Dispatch, FormEvent, SetStateAction, useState } from "react"
+import { Dispatch, FormEvent, SetStateAction, useState } from "react"
 import { AppBar, Button, Container, makeStyles, TextField, Toolbar, Typography } from "@material-ui/core"
 import { handleStateChange } from "../handlers/Handlers"
 import { SignUpData } from "../components/data/SignUpData"
