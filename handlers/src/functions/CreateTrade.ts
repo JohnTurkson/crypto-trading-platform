@@ -39,6 +39,21 @@ export async function handler(event: any): Promise<CreateTradeResponse> {
         }
     }
     
+    const portfolio = dynamoDBDocumentClient.get({
+        TableName: "CryptoPortfolios",
+        Key: {
+            "user": request.user,
+            "id": request.portfolio
+        }
+    })
+    
+    if (await portfolio.then(response => response.Item) === undefined) {
+        return {
+            success: false,
+            error: "Invalid Portfolio"
+        }
+    }
+    
     const trade = {
         id: generateId(),
         status: "open",
