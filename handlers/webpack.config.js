@@ -7,9 +7,21 @@ module.exports = {
         "BroadcastUpdate": "./BroadcastUpdate.js",
         "SaveUpdate": "./SaveUpdate.js",
         "GetSupportedAssets": "./GetSupportedAssets.js",
-        "GetSupportedCurrencies": "./GetSupportedCurrencies.js"
+        "GetSupportedCurrencies": "./GetSupportedCurrencies.js",
+        "ListPortfolios": "./ListPortfolios.js",
+        "CreatePortfolio": "./CreatePortfolio.js",
+        "ListPortfolioAssets": "./ListPortfolioAssets.js",
+        "DepositAsset": "./DepositAsset.js",
+        "WithdrawAsset": "./WithdrawAsset.js",
+        "CreateTrade": "./CreateTrade.js",
+        "CancelTrade": "./CancelTrade.js",
+        "ListTrades": "./ListTrades.js",
+        "ProcessOpenTrades": "./ProcessOpenTrades.js",
+        "AddTradeStreamConnection": "./AddTradeStreamConnection.js",
+        "RemoveTradeStreamConnection": "./RemoveTradeStreamConnection.js",
+        "BroadcastTradeUpdate": "./BroadcastTradeUpdate.js"
     },
-    mode: "production",
+    mode: "development",
     target: "node",
     devtool: false,
     output: {

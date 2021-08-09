@@ -1,25 +1,23 @@
-import { PutItemCommand } from "@aws-sdk/client-dynamodb"
-import { dynamoDBClient } from "../resources/Clients"
+import { dynamoDBDocumentClient } from "../resources/Clients"
 
 export async function handler(event: any) {
     const updates: string[] = event.Records
         .map((record: any) => record.Sns.Message as string)
     
     const commands = updates.map(update => JSON.parse(update))
-        .map(update => new PutItemCommand({
+        .map(update => dynamoDBDocumentClient.put({
             TableName: "CryptoData",
             Item: {
-                "time": {N: update.time.toString()},
-                "source": {S: update.source},
-                "open": {S: update.open},
-                "high": {S: update.high},
-                "low": {S: update.low},
-                "volume": {S: update.volume},
-                "asset": {S: update.asset},
-                "price": {S: update.price}
+                "time": update.time,
+                "source": update.source,
+                "open": update.open,
+                "high": update.high,
+                "low": update.low,
+                "volume": update.volume,
+                "asset": update.asset,
+                "price": update.price
             }
         }))
-        .map(command => dynamoDBClient.send(command))
     
     return Promise.all(commands)
 }

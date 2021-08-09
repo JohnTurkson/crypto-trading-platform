@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react"
 import ReactHighcharts from "react-highcharts/ReactHighstock.src"
-import priceData from "./btcdata.json"
 
 export interface ChartProps {
     //url: string
