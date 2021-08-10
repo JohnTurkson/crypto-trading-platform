@@ -70,7 +70,6 @@ export function Trade() {
     const [quantity, setQuantity] = useState("")
     const [userAssets, setUserAssets] = useState([])
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(true)
-    const [selectedPortfolioUSD, setSelectedPortfolioUSD] = useState("")
     const [showWarning, setShowWarning] = useState(false)
 
     const ws = useRef(null)
@@ -112,7 +111,6 @@ export function Trade() {
                     const assets = await getPortfolioAssets(data[0].id)
                     console.log(assets)
                     setUserAssets(assets)
-                    setSelectedPortfolioUSD(assets.find((asset) => asset.name === "USD").amount)
                 }
             }
         }
@@ -154,13 +152,6 @@ export function Trade() {
                         quantity,
                         priceData[selectedCurrency].toString())
 
-                    if(parseFloat(quantity) * priceData[selectedCurrency] > parseFloat(selectedPortfolioUSD)) {
-                        setShowWarning(true)
-                        setTimeout(() => {
-                            setShowWarning(false);
-                        }, 5000);
-                    }
-
                     break
                 case TradeCode.SELL:
                     await createTrade(userId, authToken,
@@ -186,13 +177,6 @@ export function Trade() {
             const assets = await getPortfolioAssets(value)
             console.log(assets)
             setUserAssets(assets)
-            const usdAsset = assets.find((asset) => asset.name === "USD")
-            if(usdAsset !== undefined) {
-                setSelectedPortfolioUSD(usdAsset.amount)
-            }
-            else {
-                setSelectedPortfolioUSD("0")
-            }
         }
         handleAssets(value)
     }
