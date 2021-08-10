@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
-import Button from "@material-ui/core/Button"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import Box from "@material-ui/core/Box"
@@ -40,63 +39,42 @@ const useStyles = makeStyles({
 })
 
 export interface CoinProps {
+    json: any
     url: string
     name: string
     price: number
     amountOwned: number
     portfolio: boolean
-    
 }
-
-const connection = new WebSocket("wss://crypto-data-stream.johnturkson.com")
 
 export function Coin(props: CoinProps) {
     const classes = useStyles()
-    const bull = <span className={classes.bullet}>•</span>
-    const [amountOwned, setAmountOwned] = useState(0)
-    const [totalValueOwned, setTotalValueOwned] = useState(0)
-    
-    //const [price, setPrice] = useState(props.price)
-    const [price, setPrice] = useState(props.price)
-    
-    useEffect(() => {
-        if (props.name === "Bitcoin") {
-            connection.onmessage = message => {
-                let json = JSON.parse(message.data)
-                setPrice(parseFloat(json["price"]))
-            }
-        }
-    })
-    
+    const [price, setPrice] = useState(0)
     const [dailyPercentChange, setDailyPercentChange] = useState(0)
     const [dailyNetChange, setDailyNetChange] = useState(0)
     const [dailyVolume, setDailyVolume] = useState(0)
     const [dailyLow, setDailyLow] = useState(0)
     const [dailyHigh, setDailyHigh] = useState(0)
     const [dailyOpen, setDailyOpen] = useState(0)
-    const [marketCap, setMarketCap] = useState(0)
-    const [volatility, setVolatility] = useState(0)
-    const [allTimeHigh, setAllTimeHigh] = useState(0)
-    
-    // const { row } = props;
     const [open, setOpen] = useState(false)
-    
-    function update() {
-        setPrice(Math.floor(Math.random() * 1000) + 1)
-        setDailyPercentChange(Math.floor(Math.random() * 1000) + 1)
-        setDailyNetChange(Math.floor(Math.random() * 1000) + 1)
-        setDailyLow(Math.floor(Math.random() * 1000) + 1)
-        setDailyHigh(Math.floor(Math.random() * 1000) + 1)
-        setDailyOpen(Math.floor(Math.random() * 1000) + 1)
-        setMarketCap(Math.floor(Math.random() * 1000) + 1)
-    }
-    
+
+    useEffect(() => {
+        let json = props.json
+        if (json == undefined) return
+        setPrice(json["price"])
+        setDailyOpen(json["open"])
+        setDailyPercentChange(Math.round(((price - dailyOpen) / dailyOpen * 100) * 100) / 100)
+        setDailyNetChange(Math.round((price - dailyOpen) * 100) / 100)
+        setDailyLow(json["low"])
+        setDailyHigh(json["high"])
+        setDailyVolume(Math.round(json["volume"] * 100) / 100)
+    })
+
     const newTo = {
         pathname: "/coin/" + props.name,
         state: {url: props.url, name: props.name}
     }
-    //            <TableRow className={classes.root}>
-    //<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+    
     return (
         <>
             <TableRow>
@@ -107,7 +85,7 @@ export function Coin(props: CoinProps) {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Link to={newTo}>
-                        <img src={props.url} className={classes.icon}></img>
+                        <img src={props.url} className={classes.icon}/>
                     </Link>
                 </TableCell>
                 <TableCell align="right">{props.name}</TableCell>
@@ -131,7 +109,7 @@ export function Coin(props: CoinProps) {
                                         <TableCell>Daily Low</TableCell>
                                         <TableCell>Daily High</TableCell>
                                         <TableCell align="right">Daily Open</TableCell>
-                                        <TableCell align="right">Market Cap</TableCell>
+                                        <TableCell align="right">Daily Volume</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -139,19 +117,15 @@ export function Coin(props: CoinProps) {
                                         <TableCell>{dailyLow}</TableCell>
                                         <TableCell>{dailyHigh}</TableCell>
                                         <TableCell align="right">{dailyOpen}</TableCell>
-                                        <TableCell align="right">{marketCap}</TableCell>
+                                        <TableCell align="right">{dailyVolume}</TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
-                            <Button variant="contained" onClick={() => {
-                                update()
-                            }}>Update</Button>
                         </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>
         </>
-    
     )
 }
 

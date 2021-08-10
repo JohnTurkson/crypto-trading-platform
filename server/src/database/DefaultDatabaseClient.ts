@@ -9,13 +9,11 @@ import {
     TransactionOptions,
     WriteConcern
 } from "mongodb"
-import { UserData } from "../data/UserData"
 import { UserCredentials } from "../data/UserCredentials"
 import { UserToken } from "../data/UserToken"
 import { ResourceFilter } from "../data/filters/ResourceFilter"
 import generateId from "../functions/user/credentials/GenerateId"
 import { Portfolio } from "../data/Portfolio"
-import { PortfolioData } from "../data/PortfolioData"
 
 export default class DefaultDatabaseProxy implements DatabaseProxy {
     private readonly client = this.provideDatabaseClient()
@@ -28,10 +26,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         this.databaseName,
         this.userCollectionName
     )
-    private readonly userDataCollection = this.provideDatabaseCollection<UserData>(
-        this.databaseName,
-        this.userCollectionName
-    )
     private readonly userCredentialCollection = this.provideDatabaseCollection<UserCredentials>(
         this.databaseName,
         this.userCredentialsCollectionName
@@ -41,10 +35,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
         this.userTokenCollectionName
     )
     private readonly portfolioCollection = this.provideDatabaseCollection<Portfolio>(
-        this.databaseName,
-        this.portfolioCollectionName
-    )
-    private readonly portfolioDataCollection = this.provideDatabaseCollection<PortfolioData>(
         this.databaseName,
         this.portfolioCollectionName
     )
@@ -99,7 +89,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
             await users.insertOne(
                 {
                     id: id,
-                    name: name,
                     email: email
                 },
                 {
@@ -121,7 +110,6 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
             
             return {
                 id: id,
-                name: name,
                 email: email
             }
         }

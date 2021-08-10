@@ -6,9 +6,8 @@ import { Landing } from "./pages/Landing"
 import { SignIn } from "./pages/SignIn"
 import { SignUp } from "./pages/SignUp"
 import { TradePage } from "./pages/TradePage"
-import Discover from "./pages/Discover"
 import CoinPage from "./pages/CoinPage"
-
+import NFTs from "./pages/NFTs"
 import { AuthProvider, useAuth } from "./context/Auth"
 
 const PrivateRoute = ({path, children}: { path: string, children: ReactNode }) => {
@@ -59,19 +58,19 @@ function App() {
                             <Prices/>
                         </Page>
                     </PrivateRoute>
-                    <PrivateRoute path="/discover">
-                        <Page>
-                            <Discover/>
-                        </Page>
-                    </PrivateRoute>
                     <PrivateRoute path="/profile">
                         <Page>
                             <Profile/>
                         </Page>
                     </PrivateRoute>
+                    <PrivateRoute path="/nfts">
+                        <Page>
+                            <NFTs/>
+                        </Page>
+                    </PrivateRoute>
                     <PrivateRoute path="/coin/:name">
                         <Page>
-                            <CoinPage/>
+                            <CoinPage name = {"/coin/:name".split('/')[1]}/>
                         </Page>
                     </PrivateRoute>
                     <NoAuthRoute path="/">
