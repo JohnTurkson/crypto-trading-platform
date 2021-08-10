@@ -1,23 +1,14 @@
 import { postApi } from "./DefaultRequest"
-
-export interface UserToken {
-    userId: string;
-    token: string;
-}
-
-interface AuthRequest {
-    email: string;
-    password: string;
-}
+import { UserToken } from "../../../server/src/data/UserToken"
+import { LoginUserRequest } from "../../../server/src/requests/LoginUserRequest"
+import { CreateUserRequest } from "../../../server/src/requests/CreateUserRequest"
 
 export const loginRequest = async (email: string, password: string): Promise<UserToken> => {
-    const loginRequest: AuthRequest = { email, password }
-    const data = postApi<UserToken, AuthRequest>("https://crypto.johnturkson.com/login", loginRequest)
-    return data;
+    const loginRequest: LoginUserRequest = {email, password}
+    return postApi<UserToken, LoginUserRequest>("/LoginUser", loginRequest)
 }
 
 export const signupRequest = async (email: string, password: string): Promise<UserToken> => {
-    const loginRequest: AuthRequest = { email, password }
-    const data = postApi<UserToken, AuthRequest>("https://crypto.johnturkson.com/signup", loginRequest)
-    return data;
+    const createUserRequest: CreateUserRequest = {email, password}
+    return postApi<UserToken, CreateUserRequest>("/CreateUser", createUserRequest)
 }

@@ -1,11 +1,7 @@
-import CoinPage from "./CoinPage"
+import CoinList from "../containers/CoinList"
 
 export default () => {
     return (
-        <div>
-        <CoinPage name = {"Bitcoin"}/>
-        <CoinPage name = {"Ethereum"}/>
-        <CoinPage name = {"Doge Coin"}/>
-        </div>
+        <CoinList/>
     )
 }

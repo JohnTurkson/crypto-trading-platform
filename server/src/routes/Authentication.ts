@@ -6,14 +6,14 @@ import SignupHandler from "../handlers/SignupHandler"
 const database = new DefaultDatabaseProxy()
 
 export default (app: express.Application) => {
-    app.post("/signup", async (request, response) => {
+    app.post("/CreateUser", async (request, response) => {
         const handler = new SignupHandler(database)
         handler.handleRequest(request.body)
             .then(signupResponse => response.status(200).json(signupResponse))
             .catch(errorResponse => response.status(400).json(errorResponse))
     })
 
-    app.post("/login", async (request, response) => {
+    app.post("/LoginUser", async (request, response) => {
         const handler = new LoginHandler(database)
         handler.handleRequest(request.body)
             .then(loginResponse => response.status(200).json(loginResponse))

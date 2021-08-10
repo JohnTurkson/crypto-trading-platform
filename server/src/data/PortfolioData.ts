@@ -1,4 +1,4 @@
-export default interface PortfolioData {
+export interface PortfolioData {
     readonly user: string
     readonly name: string
 }

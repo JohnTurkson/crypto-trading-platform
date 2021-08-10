@@ -19,7 +19,9 @@ module.exports = {
         "ProcessOpenTrades": "./ProcessOpenTrades.js",
         "AddTradeStreamConnection": "./AddTradeStreamConnection.js",
         "RemoveTradeStreamConnection": "./RemoveTradeStreamConnection.js",
-        "BroadcastTradeUpdate": "./BroadcastTradeUpdate.js"
+        "BroadcastTradeUpdate": "./BroadcastTradeUpdate.js",
+        "CreateUser": "./CreateUser.js",
+        "LoginUser": "./LoginUser.js"
     },
     mode: "development",
     target: "node",

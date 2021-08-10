@@ -1,3 +1,4 @@
+
 import {makeStyles} from "@material-ui/core/styles";
 import {useEffect, useRef, useState} from "react";
 import TableContainer from "@material-ui/core/TableContainer";
@@ -32,12 +33,11 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
     console.log("id: " + selectedPortfolioId)
 
     const classes = useStyles()
+
     const ws = useRef(null)
-
-    const [trades, setTrades] = useState([])
-
     const {userId} = useAuth()
-
+    const [trades, setTrades] = useState([])
+    
     const updateTrades = async () => {
         if(portfolios.length > 0) {
             const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
@@ -46,35 +46,38 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
             }
         }
     }
-
+    
     useEffect(() => {
         updateTrades()
-        // Open web socket connection
         ws.current = new WebSocket("wss://crypto-trade-stream.johnturkson.com")
         ws.current.onopen = () => {
-            console.log("ws opened");
-
-            const subscribeToTradeUpdates : SubscribeToTradeUpdatesRequest = {authorization: "", user: userId, type: "SubscribeToTradeUpdatesRequest"}
+            console.log("ws opened")
+            
+            const subscribeToTradeUpdates: SubscribeToTradeUpdatesRequest = {
+                authorization: "",
+                user: userId,
+                type: "SubscribeToTradeUpdatesRequest"
+            }
             ws.current.send(JSON.stringify(subscribeToTradeUpdates))
         }
-        ws.current.onclose = () => console.log("ws closed");
-
+        ws.current.onclose = () => console.log("ws closed")
+        
         return () => {
             ws.current.close();
         };
     }, [selectedPortfolioId]);
 
     useEffect(() => {
-        if (!ws.current) return;
+        if (!ws.current) return
         ws.current.onmessage = message => {
             let json = JSON.parse(message.data)
             setTrades(trades.filter((trade) => trade.id !== json.id).concat([json]))
         }
     }, [trades])
-
+            
     return portfolios.length > 0 ? (
         <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+            <Table aria-label="Trades">
                 <TableHead>
                     <TableRow>
                         <TableCell>Coin</TableCell>
@@ -93,7 +96,8 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
                             </TableCell>
                             <TableCell align="right">{trade.type[0].toUpperCase() + trade.type.slice(1)}</TableCell>
                             <TableCell align="right">{trade.amount}</TableCell>
-                            <TableCell align="right">{"$" + (parseFloat(trade.amount) * parseFloat(trade.price)).toFixed(2) + " USD"}</TableCell>
+                            <TableCell
+                                align="right">{"$" + (parseFloat(trade.amount) * parseFloat(trade.price)).toFixed(2) + " USD"}</TableCell>
                             <TableCell align="right">{"" + new Date(trade.time).toLocaleString()}</TableCell>
                             <TableCell align="right">{trade.status[0].toUpperCase() + trade.status.slice(1)}</TableCell>
                         </TableRow>
