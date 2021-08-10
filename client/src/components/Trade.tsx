@@ -11,7 +11,7 @@ import {
     Toolbar,
     Typography
 } from "@material-ui/core"
-import { Autocomplete } from "@material-ui/lab"
+import {Alert, Autocomplete} from "@material-ui/lab"
 import {
     createTrade,
     getPortfolioAssets,
@@ -70,6 +70,8 @@ export function Trade() {
     const [userAssets, setUserAssets] = useState([])
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(true)
     const [selectedPortfolioUSD, setSelectedPortfolioUSD] = useState("")
+    const [showWarning, setShowWarning] = useState(false)
+
     const ws = useRef(null)
     
     const [priceData, setPriceData] = useState({})
@@ -148,6 +150,14 @@ export function Trade() {
                         "buy",
                         quantity,
                         priceData[selectedCurrency].toString())
+
+                    if(parseFloat(quantity) * priceData[selectedCurrency] > parseFloat(selectedPortfolioUSD)) {
+                        setShowWarning(true)
+                        setTimeout(() => {
+                            setShowWarning(false);
+                        }, 5000);
+                    }
+
                     break
                 case TradeCode.SELL:
                     await createTrade(userId,
@@ -189,6 +199,10 @@ export function Trade() {
 
     return (
         <>
+            <Container>
+            {showWarning
+            ? <Alert severity="warning">The trade you made might not fulfill due to insufficient funds!</Alert> : ""}
+            </Container>
         <Typography>{(userAssets !== []) ? "Total USD in Portfolio: $" + selectedPortfolioUSD : ""}</Typography>
             <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId} setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios} onChange={handleSelectionChange}/>
             <Container className={classes.tabContainer}>

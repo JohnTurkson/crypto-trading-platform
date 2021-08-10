@@ -12,7 +12,7 @@ import Coin from "../components/data/Coin";
 import {getUserPortfolioIds, listTrades} from "../requests/PortfolioRequests";
 import {SubscribeToTradeUpdatesRequest} from "../../../server/src/requests/SubscribeToTradeUpdatesRequest";
 import {useAuth} from "../context/Auth";
-import Portfolio from "../../../server/src/data/Portfolio";
+import {Portfolio} from "../../../server/src/data/Portfolio";
 import {Alert} from "@material-ui/lab";
 
 const useStyles = makeStyles({
