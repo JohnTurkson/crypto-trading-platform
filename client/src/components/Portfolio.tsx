@@ -71,8 +71,6 @@ const Portfolio = (props: any) => {
                 <Typography variant="h6" style={{color: changeColor}}>
                     {changeSign + "$" + Math.abs(valueChange).toFixed(2)}
                 </Typography>
-                <Button variant="contained"
-                        onClick={() => setValueChange(5000 + Math.random() * (-10000))}>Refresh</Button>
             </Box>
             
             <TableContainer component={Paper}>

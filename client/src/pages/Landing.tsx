@@ -71,7 +71,6 @@ export function Landing(props: LandingProps) {
                     Join Now for Free
                 </Button>
             </Container>
-
         </>
     )
 }
