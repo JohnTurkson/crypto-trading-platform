@@ -24,14 +24,15 @@ export const getPortfolioAssets = async (portfolio: string): Promise<ListPortfol
 
 export const createTrade = async (
     user: string,
+    authorization: string,
     portfolio: string,
     ticker: string,
     type: string,
     amount: string,
     price: string): Promise<CreateTradeResponse> => {
-    
+
     const createTrade: CreateTradeRequest = {
-        authorization: "",
+        authorization: authorization,
         user: user,
         portfolio: portfolio,
         ticker: ticker,
@@ -42,12 +43,8 @@ export const createTrade = async (
     return postApi<CreateTradeResponse, CreateTradeRequest>("/CreateTrade", createTrade)
 }
 
-export const listTrades = async (portfolio: string) => {
-    const listTradesRequest: ListTradesRequest = {authorization: "", portfolio: portfolio}
+export const listTrades = async (portfolio: string, authorization: string) => {
+    const listTradesRequest: ListTradesRequest = {authorization: authorization, portfolio: portfolio}
     console.log(listTradesRequest)
     return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest)
-}
-
-export const subscribeToTradeRequest = async (user: string) => {
-    
 }
