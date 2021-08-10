@@ -40,8 +40,8 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
     const updateTrades = async () => {
         if(portfolios.length > 0) {
             const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
-            if(selectedPortfolio !== undefined) {
-                setTrades(await listTrades(selectedPortfolio.id, authToken))
+            if (selectedPortfolio !== undefined) {
+                setTrades(await listTrades(userId, selectedPortfolio.id, authToken))
             }
         }
     }

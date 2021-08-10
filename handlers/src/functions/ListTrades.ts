@@ -3,9 +3,21 @@ import { getEventBody } from "../resources/Utils"
 import { ListTradesRequest } from "../../../server/src/requests/ListTradesRequest"
 import { dynamoDBDocumentClient } from "../resources/Clients"
 import { Trade } from "../../../server/src/data/Trade"
+import { UserToken } from "../../../server/src/data/UserToken"
 
 export async function handler(event: any): Promise<ListTradesResponse> {
     const request = getEventBody(event) as ListTradesRequest
+    
+    const authorization = await dynamoDBDocumentClient.get({
+        TableName: "CryptoUserTokens",
+        Key: {
+            "token": request.authorization
+        }
+    }).then(response => response.Item as UserToken ?? undefined)
+    
+    if (authorization === undefined || authorization.user !== request.user) {
+        return []
+    }
     
     const openTrades = dynamoDBDocumentClient.query({
         TableName: "CryptoOpenTrades",
