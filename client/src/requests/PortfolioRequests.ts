@@ -35,7 +35,7 @@ export const createTrade = async(
 }
 
 export const listTrades = async(portfolio: string) => {
-    const listTradesRequest: ListTradesRequest = {authorization: "", portfolio}
+    const listTradesRequest: ListTradesRequest = {authorization: "", portfolio: portfolio}
     return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest);
 }
 
