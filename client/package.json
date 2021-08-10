@@ -45,7 +45,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://crypto.johnturkson.com",
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/node": "^12.20.14",
