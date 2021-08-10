@@ -1,27 +1,11 @@
-import {FormEvent, useEffect, useRef, useState} from "react"
-import {
-    Button,
-    Container,
-    makeStyles,
-    MenuItem,
-    Select,
-    Tab,
-    Tabs,
-    TextField,
-    Toolbar,
-    Typography
-} from "@material-ui/core"
-import {Alert, Autocomplete} from "@material-ui/lab"
-import {
-    createTrade,
-    getPortfolioAssets,
-    getSupportedAssets,
-    getUserPortfolioIds
-} from "../requests/PortfolioRequests";
-import {useAuth} from "../context/Auth";
-import OrdersTable from "../containers/OrdersTable";
-import PortfolioSelect from "./PortfolioSelect";
-import {Link} from "react-router-dom";
+import { useEffect, useRef, useState } from "react"
+import { Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar, Typography } from "@material-ui/core"
+import { Alert, Autocomplete } from "@material-ui/lab"
+import { createTrade, getPortfolioAssets, getSupportedAssets, getUserPortfolioIds } from "../requests/PortfolioRequests"
+import { useAuth } from "../context/Auth"
+import OrdersTable from "../containers/OrdersTable"
+import PortfolioSelect from "./PortfolioSelect"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
     tabContainer: {
