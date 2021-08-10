@@ -185,7 +185,7 @@ export function Trade() {
     const max = selectedAsset === null ? 0 : selectedAsset.amount;
 
     return (
-        <>
+        <div>
             <Container>
             {showWarning
             ? <Alert severity="warning">The trade you made might not fulfill due to insufficient funds!</Alert> : ""}
@@ -271,7 +271,7 @@ export function Trade() {
                 <h4>Recent Trades</h4>
             <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
             </Container>
-            </>
+            </div>
     )
 }
 

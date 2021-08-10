@@ -1,3 +1,7 @@
+import { Portfolio } from "../../../server/src/data/Portfolio"
+import { Asset } from "../../../server/src/data/Asset"
+import { CreatePortfolioRequest } from "../../../server/src/requests/CreatePortfolioRequest"
+import { CreatePortfolioResponse } from "../../../server/src/responses/CreatePortfolioResponse"
 import { getApi, postApi } from "./DefaultRequest"
 import { ListPortfoliosResponse } from "../../../server/src/responses/ListPortfoliosResponse"
 import { ListPortfoliosRequest } from "../../../server/src/requests/ListPortfoliosRequest"
@@ -7,6 +11,26 @@ import { CreateTradeResponse } from "../../../server/src/responses/CreateTradeRe
 import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequest"
 import { ListTradesRequest } from "../../../server/src/requests/ListTradesRequest"
 import { ListTradesResponse } from "../../../server/src/responses/ListTradesResponse"
+
+
+export const createPortfolioRequest = async (user: string, name: string): Promise<Portfolio> => {
+    const request: CreatePortfolioRequest = { user, name }
+    const data = await postApi<CreatePortfolioResponse, CreatePortfolioRequest>("/CreatePortfolio", request)
+    const portfolio: Portfolio = (({ user, id, name }) => ({ user, id, name }))(data)
+    return portfolio
+}
+
+export const getPortfoliosRequest = async (user: string): Promise<Portfolio[]> => {
+    const request: ListPortfoliosRequest = { user }
+    const data = postApi<Portfolio[], ListPortfoliosRequest>("/ListPortfolios", request)
+    return data
+}
+
+export const getPortfolioDataRequest = async (portfolio: string): Promise<Asset[]> => {
+    const request: ListPortfolioAssetsRequest = { portfolio }
+    const data = postApi<Asset[], ListPortfolioAssetsRequest>("/ListPortfolioAssets", request)
+    return data
+}
 
 export const getSupportedAssets = async (): Promise<string[]> => {
     return getApi<string[]>("/GetSupportedAssets")
