@@ -7,7 +7,6 @@ import { CreateTradeResponse } from "../../../server/src/responses/CreateTradeRe
 import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequest"
 import { ListTradesRequest } from "../../../server/src/requests/ListTradesRequest"
 import { ListTradesResponse } from "../../../server/src/responses/ListTradesResponse"
-import {useAuth} from "../context/Auth";
 
 export const getSupportedAssets = async (): Promise<string[]> => {
     return getApi<string[]>("/GetSupportedAssets")
@@ -45,7 +44,6 @@ export const createTrade = async (
 }
 
 export const listTrades = async (portfolio: string, authorization: string) => {
-    const {authToken} = useAuth()
     const listTradesRequest: ListTradesRequest = {authorization: authorization, portfolio: portfolio}
     console.log(listTradesRequest)
     return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest)
