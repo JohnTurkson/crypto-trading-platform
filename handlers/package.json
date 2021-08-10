@@ -6,9 +6,11 @@
         "build": "tsc --build && webpack && cd build && jar -cfM index.zip -C webpack ."
     },
     "dependencies": {
-        "@aws-sdk/client-dynamodb": "^3.21.0",
-        "@aws-sdk/client-sns": "^3.21.0",
-        "@aws-sdk/client-apigatewaymanagementapi": "^3.21.0"
+        "@aws-sdk/client-apigatewaymanagementapi": "^3.25.0",
+        "@aws-sdk/client-dynamodb": "^3.25.0",
+        "@aws-sdk/client-sns": "^3.25.0",
+        "@aws-sdk/lib-dynamodb": "^3.25.0",
+        "decimal.js": "^10.3.1"
     },
     "devDependencies": {
         "@types/node": "^14.14.31",

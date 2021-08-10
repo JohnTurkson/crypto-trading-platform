@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/crypto-trading-platform
+permissions:
+  - object: /
+    owner: ec2-user
+    mode: 755
+hooks:
+  AfterInstall:
+    - location: scripts/start_server.sh
+      timeout: 30
+      runas: root
+    - location: scripts/start_client.sh
+      timeout: 30
+      runas: root

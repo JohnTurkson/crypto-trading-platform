@@ -85,7 +85,7 @@ export default class DefaultDatabaseProxy implements DatabaseProxy {
             const portfolio: Portfolio = {assets: newAssetList, userId: userPortfolio.userId, id: userPortfolio.id}
             await portfolios.replaceOne({id: userPortfolio.id}, portfolio)
 
-            return {amountOwned: amountPurchased, coinName: coinName}
+            return {amount: amountPurchased, name: coinName}
         }
 
         throw "Missing User Portfolio!"
