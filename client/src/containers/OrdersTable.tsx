@@ -36,13 +36,14 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
 
     const ws = useRef(null)
     const {userId} = useAuth()
+    const {authToken} = useAuth()
     const [trades, setTrades] = useState([])
     
     const updateTrades = async () => {
         if(portfolios.length > 0) {
             const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
             if(selectedPortfolio !== undefined) {
-                setTrades(await listTrades(selectedPortfolio.id))
+                setTrades(await listTrades(selectedPortfolio.id, authToken))
             }
         }
     }

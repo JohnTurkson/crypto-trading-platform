@@ -77,6 +77,8 @@ export function Trade() {
     const [priceData, setPriceData] = useState({})
     
     const {userId} = useAuth()
+    const {authToken} = useAuth()
+
     useEffect(() => {
         ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
         return () => {
@@ -144,7 +146,7 @@ export function Trade() {
             const portfolioId = ids.find((id) => selectedPortfolioId === id)
             switch (tab) {
                 case TradeCode.BUY:
-                    await createTrade(userId,
+                    await createTrade(userId, authToken,
                         portfolioId,
                         selectedCurrency + "-USD",
                         "buy",
@@ -160,7 +162,7 @@ export function Trade() {
 
                     break
                 case TradeCode.SELL:
-                    await createTrade(userId,
+                    await createTrade(userId, authToken,
                         portfolioId,
                         selectedCurrency + "-USD",
                         "sell",
