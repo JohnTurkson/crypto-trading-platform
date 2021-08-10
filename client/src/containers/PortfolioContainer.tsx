@@ -3,12 +3,13 @@ import PortfolioData from "../components/PortfolioData"
 import PortfolioSelect from "../components/PortfolioSelect"
 import { useEffect, useState } from "react"
 import { getPortfoliosRequest } from "../requests/PortfolioRequests"
-import Portfolio from "../../../server/src/data/Portfolio"
+import { Portfolio } from "../../../server/src/data/Portfolio"
 import Alert from '@material-ui/lab/Alert';
 import Grow from '@material-ui/core/Grow';
 import { styled } from '@material-ui/styles';
 
 import "../styles/portfolio.css"
+import { useAuth } from "../context/Auth"
 
 const StyledSuccessAlert = styled(Alert)({
     marginTop: "-80px",
@@ -20,11 +21,12 @@ const PortfolioContainer = () => {
     const [portfolioId, setPortfolioId] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(true)
     const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+    const { userId } = useAuth()
 
 
     useEffect(() => {
         const getPortfolios = async () => {
-            const data = await getPortfoliosRequest("2")
+            const data = await getPortfoliosRequest(userId)
             setPortfolios(data)
             if (data.length > 0) {
                 setPortfolioId(data[0].id)
@@ -53,7 +55,7 @@ const PortfolioContainer = () => {
                         setShowSuccessAlert={b => setShowSuccessAlert(b)}
                     />
                 </div>
-                <PortfolioData portfolioId={portfolioId} />
+                <PortfolioData portfolioId={portfolioId} loadingPortfolio={loading} />
             </div>
         </div>
     )

@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const PortfolioSelect = ({ portfolios, portfolioId, setPortfolioId, isLoading, onChange }:
-                             { portfolios: Portfolio[], portfolioId: string, setPortfolioId: Dispatch<SetStateAction<string>>, isLoading: boolean, onChange }) => {
+                             { portfolios: Portfolio[], portfolioId: string, setPortfolioId: Dispatch<SetStateAction<string>>, isLoading: boolean, onChange? }) => {
     const classes = useStyles()
 
     return (
@@ -56,7 +56,9 @@ const PortfolioSelect = ({ portfolios, portfolioId, setPortfolioId, isLoading, o
                                 id="select_portfolio"
                                 onChange={(e: ChangeEvent<{ value: unknown }>) => {
                                     setPortfolioId(e.target.value as string)
-                                    onChange(e)
+                                    if (onChange) {
+                                        onChange(e)
+                                    }
                                 }}
                                 value={portfolioId}
                                 MenuProps={{

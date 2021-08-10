@@ -5,8 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { createPortfolioRequest } from '../requests/PortfolioRequests';
-import Alert from '@material-ui/lab/Alert';
-import Grow from '@material-ui/core/Grow';
+import { useAuth } from '../context/Auth';
 
 const StyledCard = styled(Card)({
     padding: "1em",
@@ -40,6 +39,7 @@ const StyledButton = styled(Button)({
 
 const CreatePortfolio = ({ addHandler, setShowSuccessAlert }) => {
     const [name, setName] = useState("")
+    const { userId } = useAuth()
 
     const toggleSuccessAlert = () => {
         setShowSuccessAlert(true)
@@ -50,7 +50,7 @@ const CreatePortfolio = ({ addHandler, setShowSuccessAlert }) => {
 
     const submitHandler = async () => {
         try {
-            const newPortfolio = await createPortfolioRequest("2", name)
+            const newPortfolio = await createPortfolioRequest(userId, name)
             addHandler(newPortfolio)
             toggleSuccessAlert()
             setName("")

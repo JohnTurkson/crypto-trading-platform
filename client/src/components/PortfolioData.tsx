@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import Asset from "../../../server/src/data/Asset"
+import { Asset } from "../../../server/src/data/Asset"
 import { getPortfolioDataRequest } from "../requests/PortfolioRequests"
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const PortfolioData = ({ portfolioId }) => {
+const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
     const classes = useStyles()
     const [assets, setAssets] = useState<Asset[]>([])
     const [loading, setLoading] = useState<boolean>(true)
@@ -36,15 +36,17 @@ const PortfolioData = ({ portfolioId }) => {
     useEffect(() => {
         const getPortfolioData = async () => {
             setLoading(true)
-            if (portfolioId != "") {
-                const data = await getPortfolioDataRequest(portfolioId)
-                setAssets(data)
+            if (!loadingPortfolio) {
+                if (portfolioId != "") {
+                    const data = await getPortfolioDataRequest(portfolioId)
+                    setAssets(data)
+                }
                 setLoading(false)
             }
         }
 
         getPortfolioData()
-    }, [portfolioId])
+    }, [portfolioId, loadingPortfolio])
 
     return (
         <div id="portfolio_data_container">
