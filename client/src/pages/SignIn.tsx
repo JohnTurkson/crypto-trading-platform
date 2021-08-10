@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react"
+import { FormEvent, useState } from "react"
 import { AppBar, Button, Container, makeStyles, TextField, Toolbar, Typography } from "@material-ui/core"
 import { handleStateChange } from "../handlers/Handlers"
 import { useAuth } from "../context/Auth"
@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme => ({
 
 export function SignIn() {
     const [signInData, setSignInData] = useState({email: "", password: ""})
-    const { login } = useAuth()
+    const {login} = useAuth()
     const classes = useStyles()
-
+    
     const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         await login(signInData.email, signInData.password)
     }
-
+    
     return (
         <>
             <AppBar position="static" color="transparent" elevation={0}>
@@ -60,7 +60,7 @@ export function SignIn() {
                     </Button>
                 </Toolbar>
             </AppBar>
-
+            
             <Container className={classes.container}>
                 <Typography className={classes.title} component="h1" variant="h5">
                     Sign In

@@ -12,6 +12,10 @@ export async function postApi<T, B>(url: string, body: B): Promise<T> {
     if (!res.ok) {
         throw new Error(jsonData.message)
     }
+    
+    if (jsonData.success === false) {
+        throw new Error(jsonData.error)
+    }
 
     return jsonData
 }

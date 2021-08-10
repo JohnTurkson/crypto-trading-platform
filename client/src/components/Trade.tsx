@@ -70,29 +70,23 @@ export function Trade() {
     const [userAssets, setUserAssets] = useState([])
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(true)
     const [selectedPortfolioUSD, setSelectedPortfolioUSD] = useState("")
-
     const ws = useRef(null)
-
+    
     const [priceData, setPriceData] = useState({})
-
+    
     const {userId} = useAuth()
     useEffect(() => {
-        // Open web socket connection
         ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
-        ws.current.onopen = () => console.log("ws opened");
-        ws.current.onclose = () => console.log("ws closed");
-
         return () => {
-            ws.current.close();
-        };
-    }, []);
-
+            ws.current.close()
+        }
+    }, [])
+    
     useEffect(() => {
-        if (!ws.current) return;
+        if (!ws.current) return
         ws.current.onmessage = message => {
             let currData = {...priceData}
             let json = JSON.parse(message.data)
-
             const assetName = json["asset"].split("-")[0]
             currData[assetName] = json["price"]
             setPriceData(currData)
@@ -141,13 +135,14 @@ export function Trade() {
                 break
         }
     }
+    
     const tradeHandler = async(tab) => {
         if(portfolios.length > 0) {
             const ids = (portfolios).map((portfolio) => portfolio.id)
             const portfolioId = ids.find((id) => selectedPortfolioId === id)
             switch (tab) {
                 case TradeCode.BUY:
-                    const buyTrade = await createTrade(userId,
+                    await createTrade(userId,
                         portfolioId,
                         selectedCurrency + "-USD",
                         "buy",
@@ -155,7 +150,7 @@ export function Trade() {
                         priceData[selectedCurrency].toString())
                     break
                 case TradeCode.SELL:
-                    const sellTrade = await createTrade(userId,
+                    await createTrade(userId,
                         portfolioId,
                         selectedCurrency + "-USD",
                         "sell",
@@ -167,7 +162,7 @@ export function Trade() {
             }
         }
     }
-
+    
     useEffect(() => {
         updateCurrencyOptions(selectedTab)
     }, [])
@@ -213,18 +208,20 @@ export function Trade() {
                         </Tab>
                     </Tabs>
                 </Toolbar>
-
+                
                 <Container className={classes.tradeContainer}>
                     <Autocomplete
                         value={selectedCurrency}
                         className={`${classes.tradeInput} ${classes.selection}`}
                         options={currencyOptions}
                         onChange={(event, value) => {
-                            if(value === null) {
+                            if (value === null) {
                                 setQuantity("")
                             }
-                            if(selectedTab === TradeCode.SELL) {
-                                const userAsset = (userAssets.find(asset => { return asset.name === value }))
+                            if (selectedTab === TradeCode.SELL) {
+                                const userAsset = (userAssets.find(asset => {
+                                    return asset.name === value
+                                }))
                                 setQuantity(userAsset.amount)
                                 setSelectedAsset(userAsset)
                             }
@@ -235,14 +232,14 @@ export function Trade() {
                         className={classes.tradeInput}
                         variant="outlined"
                         value={quantity}
-                        inputProps= {{min, max}}
+                        inputProps={{min, max}}
                         onChange={(event) => {
-                            let value = event.target.value;
-
-                            if(selectedTab === TradeCode.SELL) {
+                            let value = event.target.value
+                            
+                            if (selectedTab === TradeCode.SELL) {
                                 if (value !== "") {
-                                    if (parseInt(value) > max) value = max.toString();
-                                    if (parseInt(value) < min) value = min.toString();
+                                    if (parseInt(value) > max) value = max.toString()
+                                    if (parseInt(value) < min) value = min.toString()
                                 }
                             }
                             setQuantity(value)
@@ -250,29 +247,29 @@ export function Trade() {
                         disabled={!currencyOptions.includes(selectedCurrency)}
                         label="Quantity"/>
                 </Container>
-
+                
                 <Typography>{
                     (selectedCurrency === null) ? "" :
                         (priceData[selectedCurrency] === undefined) ? "LOADING.." : (selectedCurrency + " Market Price: $" + parseFloat(priceData[selectedCurrency]).toFixed(4) + " USD")
                 }</Typography>
-
+                
                 <Button
                     className={classes.tradeButton}
                     variant="contained"
                     color="primary"
-                    onClick={() => { tradeHandler(selectedTab) }}>
+                    onClick={() => {
+                        tradeHandler(selectedTab)
+                    }}>
                     Trade
                 </Button>
             </Container>
-
+            
             <Container className={classes.tradesContainer}>
                 <h4>Recent Trades</h4>
             <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
             </Container>
             </>
-
     )
-
 }
 
-export default Trade;
+export default Trade

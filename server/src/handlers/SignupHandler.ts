@@ -1,32 +1,32 @@
 import DefaultHandler from "./DefaultHandler"
-import SignupRequest from "../requests/SignupRequest"
-import SignupResponse from "../responses/SignupResponse"
+import CreateUserRequest from "../requests/CreateUserRequest"
+import CreateUserResponse from "../responses/CreateUserResponse"
 import generateUserToken from "../functions/user/credentials/GenerateUserToken"
 import ErrorResponse from "../responses/ErrorResponse"
 import generatePasswordHash from "../functions/user/credentials/GeneratePasswordHash"
 
-export default class SignupHandler extends DefaultHandler<SignupRequest, SignupResponse> {
-    async validateRequest(request: any): Promise<SignupRequest> {
+export default class SignupHandler extends DefaultHandler<CreateUserRequest, CreateUserResponse> {
+    async validateRequest(request: any): Promise<CreateUserRequest> {
         return request
     }
 
-    async authenticateRequest(request: SignupRequest): Promise<SignupRequest> {
+    async authenticateRequest(request: CreateUserRequest): Promise<CreateUserRequest> {
         return request
     }
 
-    async authorizeRequest(request: SignupRequest): Promise<SignupRequest> {
+    async authorizeRequest(request: CreateUserRequest): Promise<CreateUserRequest> {
         return request
     }
 
-    async processRequest(request: SignupRequest): Promise<SignupResponse> {
+    async processRequest(request: CreateUserRequest): Promise<CreateUserResponse> {
         return generatePasswordHash(request.password)
             .then(hash => this.database.createUser(request.name, request.email, hash))
             .then(user => this.database.createUserToken(user.id, generateUserToken()))
             .then(token => {
-                const response: SignupResponse = {
-                    type: "SignupResponse",
-                    userId: token.userId,
-                    token: token.token,
+                const response: CreateUserResponse = {
+                    success: true,
+                    user: token.user,
+                    token: token.id,
                 }
                 return response
             })
