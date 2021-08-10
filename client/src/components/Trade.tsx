@@ -1,4 +1,4 @@
-import {FormEvent, useEffect, useState} from "react"
+import {FormEvent, useEffect, useRef, useState} from "react"
 import {Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar, Typography} from "@material-ui/core"
 import { Autocomplete } from "@material-ui/lab"
 import {
@@ -38,19 +38,44 @@ enum TradeCode {
     SELL = 1
 }
 
-const connection = new WebSocket("wss://crypto-data-stream.johnturkson.com")
-
 export function Trade() {
     const classes = useStyles()
     const [selectedTab, setSelectedTab] = useState(TradeCode.BUY)
     const [selectedPortfolio, setSelectedPortfolio] = useState(0)
     const [currencyOptions, setCurrencyOptions] = useState([])
-    const [selectedCurrency, setSelectedCurrency] = useState("")
+    const [selectedCurrency, setSelectedCurrency] = useState(null)
+    const [selectedAsset, setSelectedAsset] = useState(null)
     const [quantity, setQuantity] = useState("")
+    const [userAssets, setUserAssets] = useState(null)
 
-    const [priceData, setPriceData] = useState(new Map<string, number>())
+    const ws = useRef(null)
+
+    const [priceData, setPriceData] = useState({})
 
     const userId = "1"
+    useEffect(() => {
+        // Open web socket connection
+        ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
+        ws.current.onopen = () => console.log("ws opened");
+        ws.current.onclose = () => console.log("ws closed");
+
+        return () => {
+            ws.current.close();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!ws.current) return;
+        ws.current.onmessage = message => {
+            let currData = {...priceData}
+            let json = JSON.parse(message.data)
+
+            const assetName = json["asset"].split("-")[0]
+            currData[assetName] = json["price"]
+            setPriceData(currData)
+        }
+    }, [priceData])
+
     const updateCurrencyOptions = async (tab) => {
         setCurrencyOptions(["Loading..."])
         switch (tab) {
@@ -60,13 +85,18 @@ export function Trade() {
                 break
             case TradeCode.SELL:
                 const ids = (await getUserPortfolioIds(userId)).map((portfolio) => portfolio.id)
-                let userAssets = []
+                let assets = null
                 if(ids.length !== 0) {
-                    userAssets = await getPortfolioAssets(ids[selectedPortfolio])
+                    assets = await getPortfolioAssets(ids[selectedPortfolio])
+                    setUserAssets(assets)
                 }
-                setCurrencyOptions(userAssets.map(asset => {
-                    return asset.name
-                }))
+                if(assets !== null) {
+                    setCurrencyOptions(assets.map(asset => {
+                        return asset.name
+                    }).filter(assetName => {
+                        return assetName !== "USD"
+                    }))
+                }
                 break
             default:
                 break
@@ -75,10 +105,8 @@ export function Trade() {
 
     const tradeHandler = async(tab) => {
         const portfolios = (await getUserPortfolioIds(userId))
-
         if(portfolios.length !== 0) {
-            console.log(portfolios.portfolios[0])
-            const portfolioId = ""
+            const portfolioId = portfolios[selectedPortfolio].id
             switch (tab) {
                 case TradeCode.BUY:
                     const buyTrade = await createTrade(userId,
@@ -86,7 +114,7 @@ export function Trade() {
                         selectedCurrency + "-USD",
                         "buy",
                         quantity,
-                        priceData.get(selectedCurrency).toString())
+                        priceData[selectedCurrency].toString())
                     break
                 case TradeCode.SELL:
                     const sellTrade = await createTrade(userId,
@@ -94,7 +122,7 @@ export function Trade() {
                         selectedCurrency + "-USD",
                         "sell",
                         quantity,
-                        priceData.get(selectedCurrency).toString())
+                        priceData[selectedCurrency].toString())
                     break
                 default:
                     break
@@ -103,19 +131,11 @@ export function Trade() {
     }
 
     useEffect(() => {
-        connection.onmessage = message => {
-            let currData = priceData
-            let json = JSON.parse(message.data)
-
-            const assetName = json["asset"].split("-")[0]
-            currData.set(assetName, json["price"])
-            setPriceData(currData)
-        }
-    })
-
-    useEffect(() => {
         updateCurrencyOptions(selectedTab)
     }, [])
+
+    const min = 0;
+    const max = selectedAsset === null ? 0 : selectedAsset.amount;
 
     return (
         <>
@@ -125,6 +145,8 @@ export function Trade() {
                           onChange={(event, index) => {
                               setSelectedTab(index)
                               updateCurrencyOptions(index)
+                              setQuantity("")
+                              setSelectedCurrency(null)
                           }}
                           textColor="primary"
                           indicatorColor="primary">
@@ -136,23 +158,43 @@ export function Trade() {
                 </Toolbar>
 
                 <Container className={classes.tradeContainer}>
-                    <TextField
-                        className={classes.tradeInput}
-                        variant="outlined"
-                        onChange={(event) => setQuantity(event.target.value)}
-                        label="Quantity"/>
                     <Autocomplete
+                        value={selectedCurrency}
                         className={`${classes.tradeInput} ${classes.selection}`}
                         options={currencyOptions}
                         onChange={(event, value) => {
+                            if(value === null) {
+                                setQuantity("")
+                            }
+                            if(selectedTab === TradeCode.SELL) {
+                                const userAsset = (userAssets.find(asset => { return asset.name === value }))
+                                setQuantity(userAsset.amount)
+                                setSelectedAsset(userAsset)
+                            }
                             setSelectedCurrency(value)
                         }}
                         renderInput={params => (<TextField {...params} label="Currency"/>)}/>
+                    <TextField
+                        className={classes.tradeInput}
+                        variant="outlined"
+                        value={quantity}
+                        inputProps= {{min, max}}
+                        onChange={(event) => {
+                            let value = event.target.value;
+                            if(value !== "") {
+                                if (parseInt(value) > max) value = max.toString();
+                                if (parseInt(value) < min) value = min.toString();
+                            }
+                            setQuantity(value)
+                        }}
+                        disabled={!currencyOptions.includes(selectedCurrency)}
+                        label="Quantity"/>
                 </Container>
 
-                <Typography variant={"h4"}>{
-                    (selectedCurrency !== "") ? selectedCurrency + " Market Price: $" + (parseInt(quantity) * priceData.get(selectedCurrency)) + " USD" : ""
-                }</Typography>
+                <h4>{
+                    (selectedCurrency === null) ? "" :
+                        (priceData[selectedCurrency] === undefined) ? "LOADING.." : (selectedCurrency + " Market Price: $" + priceData[selectedCurrency] + " USD")
+                }</h4>
 
                 <Button
                     className={classes.tradeButton}
