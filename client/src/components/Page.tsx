@@ -5,6 +5,9 @@ import { ReactNode } from "react"
 const MainContentContainer = styled.div`
   margin-top: 5em;
   padding: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const Page = ({children, tabIndex}: { children: ReactNode, tabIndex?: number }) => {
