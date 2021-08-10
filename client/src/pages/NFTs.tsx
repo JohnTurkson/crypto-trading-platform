@@ -1,4 +1,4 @@
-import { Container, makeStyles, Typography } from "@material-ui/core"
+import { Button, Container, makeStyles, Typography } from "@material-ui/core"
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -10,6 +10,10 @@ const useStyles = makeStyles(theme => ({
     headline: {
         margin: "32px",
     },
+    joinButton: {
+        margin: "8px",
+        textTransform: "none",
+    },
 }))
 export default () => {
     const classes = useStyles()
@@ -19,6 +23,13 @@ export default () => {
             <Typography className={classes.headline} component="h1" variant="h2" align="center">
                 Coming Soon
             </Typography>
+            <Button
+                className={classes.joinButton}
+                href="/"
+                variant="outlined"
+                color="primary">
+                Stay Tuned
+            </Button>
         </Container>
     )
 }
