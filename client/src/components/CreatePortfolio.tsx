@@ -35,11 +35,12 @@ const StyledButton = styled(Button)({
     }
 })
 
-const CreatePortfolio = () => {
+const CreatePortfolio = ({ addHandler }) => {
     const [name, setName] = useState("")
 
-    const submitHandler = () => {
-        createPortfolioRequest("1", name)
+    const submitHandler = async () => {
+        const newPortfolio = await createPortfolioRequest("1", name)
+        addHandler(newPortfolio)
         setName("")
     }
 
