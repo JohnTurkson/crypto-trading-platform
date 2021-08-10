@@ -1,5 +1,16 @@
 import {FormEvent, useEffect, useRef, useState} from "react"
-import {Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar, Typography} from "@material-ui/core"
+import {
+    Button,
+    Container,
+    makeStyles,
+    MenuItem,
+    Select,
+    Tab,
+    Tabs,
+    TextField,
+    Toolbar,
+    Typography
+} from "@material-ui/core"
 import { Autocomplete } from "@material-ui/lab"
 import {
     createTrade,
@@ -9,6 +20,7 @@ import {
 } from "../requests/PortfolioRequests";
 import {useAuth} from "../context/Auth";
 import OrdersTable from "../containers/OrdersTable";
+import PortfolioSelect from "./PortfolioSelect";
 
 const useStyles = makeStyles(theme => ({
     tabContainer: {
@@ -35,6 +47,10 @@ const useStyles = makeStyles(theme => ({
     tradeButton: {
         margin: "16px",
     },
+    selectContainer: {
+        display: "flex",
+        flexDirection: "column"
+    }
 }))
 
 enum TradeCode {
@@ -45,12 +61,15 @@ enum TradeCode {
 export function Trade() {
     const classes = useStyles()
     const [selectedTab, setSelectedTab] = useState(TradeCode.BUY)
-    const [selectedPortfolio, setSelectedPortfolio] = useState(0)
+    const [portfolios, setPortfolios] = useState([])
+    const [selectedPortfolioId, setSelectedPortfolioId] = useState("")
     const [currencyOptions, setCurrencyOptions] = useState([])
     const [selectedCurrency, setSelectedCurrency] = useState(null)
     const [selectedAsset, setSelectedAsset] = useState(null)
     const [quantity, setQuantity] = useState("")
-    const [userAssets, setUserAssets] = useState(null)
+    const [userAssets, setUserAssets] = useState([])
+    const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(true)
+    const [selectedPortfolioUSD, setSelectedPortfolioUSD] = useState("")
 
     const ws = useRef(null)
 
@@ -80,6 +99,26 @@ export function Trade() {
         }
     }, [priceData])
 
+    useEffect(() => {
+        const getPortfoliosAndAssets = async () => {
+            const data = await getUserPortfolioIds(userId)
+            setPortfolios(data)
+            if (data.length > 0) {
+                setSelectedPortfolioId(data[0].id)
+            }
+            setLoadingPortfolios(false)
+
+            if(data[0].id !== "") {
+                const assets = await getPortfolioAssets(data[0].id)
+                console.log(assets)
+                setUserAssets(assets)
+                setSelectedPortfolioUSD(assets.find((asset) => asset.name === "USD").amount)
+            }
+        }
+
+        getPortfoliosAndAssets()
+    }, [])
+
     const updateCurrencyOptions = async (tab) => {
         setCurrencyOptions(["Loading..."])
         switch (tab) {
@@ -88,14 +127,8 @@ export function Trade() {
                 setCurrencyOptions(supportedAssets)
                 break
             case TradeCode.SELL:
-                const ids = (await getUserPortfolioIds(userId)).map((portfolio) => portfolio.id)
-                let assets = null
-                if(ids.length !== 0) {
-                    assets = await getPortfolioAssets(ids[selectedPortfolio])
-                    setUserAssets(assets)
-                }
-                if(assets !== null) {
-                    setCurrencyOptions(assets.map(asset => {
+                if(userAssets !== null) {
+                    setCurrencyOptions(userAssets.map(asset => {
                         return asset.name
                     }).filter(assetName => {
                         return assetName !== "USD"
@@ -106,11 +139,10 @@ export function Trade() {
                 break
         }
     }
-
     const tradeHandler = async(tab) => {
-        const portfolios = (await getUserPortfolioIds(userId))
         if(portfolios.length !== 0) {
-            const portfolioId = portfolios[selectedPortfolio].id
+            const ids = (portfolios).map((portfolio) => portfolio.id)
+            const portfolioId = ids.find((id) => selectedPortfolioId === id)
             switch (tab) {
                 case TradeCode.BUY:
                     const buyTrade = await createTrade(userId,
@@ -138,11 +170,30 @@ export function Trade() {
         updateCurrencyOptions(selectedTab)
     }, [])
 
+    const handleSelectionChange = (event) => {
+        const value = event.target.value
+        const handleAssets = async (value) => {
+            const assets = await getPortfolioAssets(value)
+            console.log(assets)
+            setUserAssets(assets)
+            const usdAsset = assets.find((asset) => asset.name === "USD")
+            if(usdAsset !== undefined) {
+                setSelectedPortfolioUSD(usdAsset.amount)
+            }
+            else {
+                setSelectedPortfolioUSD("0")
+            }
+        }
+        handleAssets(value)
+    }
+
     const min = 0;
     const max = selectedAsset === null ? 0 : selectedAsset.amount;
 
     return (
         <>
+        <Typography>{(userAssets !== []) ? "Total USD in Portfolio: $" + selectedPortfolioUSD : ""}</Typography>
+            <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId} setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios} onChange={handleSelectionChange}/>
             <Container className={classes.tabContainer}>
                 <Toolbar>
                     <Tabs value={selectedTab}
@@ -214,9 +265,9 @@ export function Trade() {
 
             <Container className={classes.tradesContainer}>
                 <h4>Recent Trades</h4>
-            <OrdersTable />
+            <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
             </Container>
-        </>
+            </>
 
     )
 

@@ -11,6 +11,8 @@ import Coin from "../components/data/Coin";
 import {getUserPortfolioIds, listTrades} from "../requests/PortfolioRequests";
 import {SubscribeToTradeUpdatesRequest} from "../../../server/src/requests/SubscribeToTradeUpdatesRequest";
 import {useAuth} from "../context/Auth";
+import Portfolio from "../../../server/src/data/Portfolio";
+import {Alert} from "@material-ui/lab";
 
 const useStyles = makeStyles({
     root: {
@@ -26,7 +28,8 @@ const useStyles = makeStyles({
 
 const maxTrades = 10
 
-export default function OrdersTable() {
+export default function OrdersTable({portfolios, selectedPortfolioId}: {portfolios: Portfolio[], selectedPortfolioId : string}) {
+    console.log("id: " + selectedPortfolioId)
 
     const classes = useStyles()
     const ws = useRef(null)
@@ -36,8 +39,12 @@ export default function OrdersTable() {
     const {userId} = useAuth()
 
     const updateTrades = async () => {
-        const ids = (await getUserPortfolioIds(userId)).map((portfolio) => portfolio.id)
-        setTrades(trades.concat(await listTrades(ids[0])))
+        if(portfolios.length > 0) {
+            const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
+            if(selectedPortfolio !== undefined) {
+                setTrades(await listTrades(selectedPortfolio.id))
+            }
+        }
     }
 
     useEffect(() => {
@@ -55,7 +62,7 @@ export default function OrdersTable() {
         return () => {
             ws.current.close();
         };
-    }, []);
+    }, [selectedPortfolioId]);
 
     useEffect(() => {
         if (!ws.current) return;
@@ -65,7 +72,7 @@ export default function OrdersTable() {
         }
     }, [trades])
 
-    return (
+    return portfolios.length > 0 ? (
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
                 <TableHead>
@@ -95,5 +102,5 @@ export default function OrdersTable() {
             </Table>
         </TableContainer>
 
-    )
+    ) : (<Alert severity="error">Select a Portfolio to View Recent Trades</Alert>)
 }
