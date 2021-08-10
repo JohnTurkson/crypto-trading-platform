@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 
 export interface CoinProps {
     // url: string
-    // name: string
+    name: string
     // price: number
 }
 
