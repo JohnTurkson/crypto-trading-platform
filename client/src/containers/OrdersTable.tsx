@@ -74,7 +74,7 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
         }
     }, [trades])
             
-    return portfolios.length > 0 ? (
+    return portfolios.length > 0 && trades.length > 0 ? (
         <TableContainer component={Paper}>
             <Table aria-label="Trades">
                 <TableHead>
