@@ -207,10 +207,10 @@ export function Trade() {
             ? <Alert severity="warning">The trade you made might not fulfill due to insufficient funds!</Alert> : ""}
             </Container>
             <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId} setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios} onChange={handleSelectionChange}/>
-            <Typography>{(userAssets !== []) ? "Total USD in Portfolio: $" + selectedPortfolioUSD : ""}</Typography>
             {portfolios.length === 0 ? (<Button component={Link} to="/overview" variant="contained" color="primary">
                 Create Portfolio
             </Button>) : ""}
+            <Typography>{(userAssets !== []) ? "Total USD in Portfolio: $" + selectedPortfolioUSD : ""}</Typography>
             <Container className={classes.tabContainer}>
                 <Toolbar>
                     <Tabs value={selectedTab}
