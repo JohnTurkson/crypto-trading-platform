@@ -2,7 +2,7 @@
     display: flex;
 }
 
-#portfolio_sidebar_container {
+#portfolio_column_container {
     display: flex;
     flex-direction: column;
 }
