@@ -63,12 +63,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUserId(null)
     }
 
-    const userTokenHandler = ({ token, userId }: UserToken) => {
+    const userTokenHandler = ({ token, user }: UserToken) => {
         setToken(token)
-        setUserId(userId)
+        setUserId(user)
 
         localStorage.setItem("authToken", token)
-        localStorage.setItem("userId", userId)
+        localStorage.setItem("userId", user)
     }
 
     return (

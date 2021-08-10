@@ -1,7 +1,7 @@
 import { postApi } from "./DefaultRequest"
 
 export interface UserToken {
-    userId: string;
+    user: string;
     token: string;
 }
 
