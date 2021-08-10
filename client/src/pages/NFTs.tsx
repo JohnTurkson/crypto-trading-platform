@@ -25,7 +25,7 @@ export default () => {
             </Typography>
             <Button
                 className={classes.joinButton}
-                href="/sign-up"
+                href="/"
                 variant="outlined"
                 color="primary">
                 Stay Tuned
