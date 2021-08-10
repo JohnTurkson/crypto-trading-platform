@@ -11,7 +11,6 @@ export async function handler(event: any): Promise<CreateUserResponse> {
     
     const user: User = {
         id: generateId(),
-        name: request.name,
         email: request.email
     }
     

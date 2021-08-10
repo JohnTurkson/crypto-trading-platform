@@ -1,4 +1,4 @@
-import PortfolioData from "./PortfolioData"
+import { PortfolioData } from "./PortfolioData"
 
 export interface Portfolio extends PortfolioData {
     readonly id: string
