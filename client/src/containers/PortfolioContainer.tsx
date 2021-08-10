@@ -10,6 +10,7 @@ import "../styles/portfolio.css"
 const PortfolioContainer = () => {
     const [portfolios, setPortfolios] = useState<Portfolio[]>([])
     const [portfolioId, setPortfolioId] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const getPortfolios = async () => {
@@ -18,6 +19,7 @@ const PortfolioContainer = () => {
             if (data.length > 0) {
                 setPortfolioId(data[0].id)
             }
+            setLoading(false)
         }
 
         getPortfolios()
@@ -31,7 +33,7 @@ const PortfolioContainer = () => {
     return (
         <div id="portfolio_container">
             <div id="portfolio_sidebar_container">
-                <PortfolioSelect portfolios={portfolios} portfolioId={portfolioId} setPortfolioId={id => setPortfolioId(id)} />
+                <PortfolioSelect portfolios={portfolios} portfolioId={portfolioId} setPortfolioId={id => setPortfolioId(id)} isLoading={loading} />
                 <CreatePortfolio addHandler={portfolio => onAddPortfolio(portfolio)} />
             </div>
             <PortfolioData portfolioId={portfolioId} />

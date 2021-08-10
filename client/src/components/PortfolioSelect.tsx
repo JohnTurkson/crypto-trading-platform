@@ -21,8 +21,13 @@ const StyledTypography = styled(Typography)({
     textUnderlineOffset: "0.2em"
 })
 
+const StyledMessage = styled(Typography)({
+    marginTop: "0.5em",
+    fontSize: "14px"
+})
+
 const StyledForm = styled(FormControl)({
-    marginTop: "30px"
+    marginTop: "20px"
 })
 
 const StyledMenuItem = styled(MenuItem)({
@@ -35,34 +40,40 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const PortfolioSelect = ({ portfolios, portfolioId, setPortfolioId }: 
-    { portfolios: Portfolio[], portfolioId: string, setPortfolioId: Dispatch<SetStateAction<string>> }) => {
+const PortfolioSelect = ({ portfolios, portfolioId, setPortfolioId, isLoading }: 
+    { portfolios: Portfolio[], portfolioId: string, setPortfolioId: Dispatch<SetStateAction<string>>, isLoading: boolean }) => {
     const classes = useStyles()
 
     return (
         <StyledCard>
-            <StyledTypography align="left" variant="h6" >Select Portfolio</StyledTypography>
-            <StyledForm variant="outlined">
-                <Select
-                    id="select_portfolio"
-                    onChange={(e: ChangeEvent<{ value: unknown }>) => setPortfolioId(e.target.value as string)}
-                    value={portfolioId}
-                    MenuProps={{
-                        anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "left"
-                        },
-                        transformOrigin: {
-                            vertical: "top",
-                            horizontal: "left"
-                        },
-                        getContentAnchorEl: null,
-                        classes: { paper: classes.menuPaper }
-                    }}
-                >
-                    {portfolios.map(portfolio => <StyledMenuItem key={portfolio.id} value={portfolio.id}>{portfolio.name}</StyledMenuItem>)}
-                </Select>
-            </StyledForm>
+            <StyledTypography align="left" variant="h6">Select Portfolio</StyledTypography>
+            {
+                isLoading ?
+                <StyledMessage align="left" variant="h6">Loading...</StyledMessage> :
+                portfolios.length > 0 ?
+                <StyledForm variant="outlined">
+                    <Select
+                        id="select_portfolio"
+                        onChange={(e: ChangeEvent<{ value: unknown }>) => setPortfolioId(e.target.value as string)}
+                        value={portfolioId}
+                        MenuProps={{
+                            anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: "left"
+                            },
+                            transformOrigin: {
+                                vertical: "top",
+                                horizontal: "left"
+                            },
+                            getContentAnchorEl: null,
+                            classes: { paper: classes.menuPaper }
+                        }}
+                    >
+                        {portfolios.map(portfolio => <StyledMenuItem key={portfolio.id} value={portfolio.id}>{portfolio.name}</StyledMenuItem>)}
+                    </Select>
+                </StyledForm> :
+                <StyledMessage align="left" variant="h6">No portfolios found</StyledMessage>
+            }
         </StyledCard>
     )
 }
