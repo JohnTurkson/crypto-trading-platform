@@ -10,6 +10,7 @@ import TableBody from "@material-ui/core/TableBody";
 import Coin from "../components/data/Coin";
 import {getUserPortfolioIds, listTrades} from "../requests/PortfolioRequests";
 import {SubscribeToTradeUpdatesRequest} from "../../../server/src/requests/SubscribeToTradeUpdatesRequest";
+import {useAuth} from "../context/Auth";
 
 const useStyles = makeStyles({
     root: {
@@ -32,8 +33,7 @@ export default function OrdersTable() {
 
     const [trades, setTrades] = useState([])
 
-    // TODO: change to useAuth()
-    const userId = "1"
+    const {userId} = useAuth()
 
     const updateTrades = async () => {
         const ids = (await getUserPortfolioIds(userId)).map((portfolio) => portfolio.id)

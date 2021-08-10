@@ -56,8 +56,7 @@ export function Trade() {
 
     const [priceData, setPriceData] = useState({})
 
-    // TODO: change this back to useAuth
-    const userId = "1"
+    const {userId} = useAuth()
     useEffect(() => {
         // Open web socket connection
         ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
