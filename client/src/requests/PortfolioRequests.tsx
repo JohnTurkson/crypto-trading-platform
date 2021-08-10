@@ -12,7 +12,6 @@ import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequ
 import { ListTradesRequest } from "../../../server/src/requests/ListTradesRequest"
 import { ListTradesResponse } from "../../../server/src/responses/ListTradesResponse"
 
-
 export const createPortfolioRequest = async (user: string, name: string): Promise<Portfolio> => {
     const request: CreatePortfolioRequest = { user, name }
     const data = await postApi<CreatePortfolioResponse, CreatePortfolioRequest>("/CreatePortfolio", request)

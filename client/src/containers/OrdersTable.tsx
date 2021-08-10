@@ -79,7 +79,7 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
             <Table aria-label="Trades">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Coin</TableCell>
+                        <TableCell>Asset</TableCell>
                         <TableCell align="right">Type</TableCell>
                         <TableCell align="right">Amount</TableCell>
                         <TableCell align="right">Total Price</TableCell>
