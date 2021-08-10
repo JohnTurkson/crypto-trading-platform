@@ -1,19 +1,17 @@
-
-import {makeStyles} from "@material-ui/core/styles";
-import {useEffect, useRef, useState} from "react";
-import TableContainer from "@material-ui/core/TableContainer";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableCell from "@material-ui/core/TableCell";
-import TableBody from "@material-ui/core/TableBody";
-import Coin from "../components/data/Coin";
-import {getUserPortfolioIds, listTrades} from "../requests/PortfolioRequests";
-import {SubscribeToTradeUpdatesRequest} from "../../../server/src/requests/SubscribeToTradeUpdatesRequest";
-import {useAuth} from "../context/Auth";
-import {Portfolio} from "../../../server/src/data/Portfolio";
-import {Alert} from "@material-ui/lab";
+import { makeStyles } from "@material-ui/core/styles"
+import { useEffect, useRef, useState } from "react"
+import TableContainer from "@material-ui/core/TableContainer"
+import Paper from "@material-ui/core/Paper"
+import Table from "@material-ui/core/Table"
+import TableHead from "@material-ui/core/TableHead"
+import TableRow from "@material-ui/core/TableRow"
+import TableCell from "@material-ui/core/TableCell"
+import TableBody from "@material-ui/core/TableBody"
+import { listTrades } from "../requests/PortfolioRequests"
+import { SubscribeToTradeUpdatesRequest } from "../../../server/src/requests/SubscribeToTradeUpdatesRequest"
+import { useAuth } from "../context/Auth"
+import { Portfolio } from "../../../server/src/data/Portfolio"
+import { Alert } from "@material-ui/lab"
 
 const useStyles = makeStyles({
     root: {
