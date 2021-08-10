@@ -13,12 +13,12 @@ export const getSupportedAssets = async (): Promise<string[]> => {
 }
 
 export const getUserPortfolioIds = async (user: string): Promise<ListPortfoliosResponse> => {
-    const portfolioRequest: ListPortfoliosRequest = {user}
+    const portfolioRequest: ListPortfoliosRequest = {user: user}
     return postApi<ListPortfoliosResponse, ListPortfoliosRequest>("/ListPortfolios", portfolioRequest);
 }
 
 export const getPortfolioAssets = async (portfolio: string): Promise<ListPortfolioAssetsResponse> => {
-    const portfolioRequest: ListPortfolioAssetsRequest = {portfolio}
+    const portfolioRequest: ListPortfolioAssetsRequest = {portfolio: portfolio}
     return postApi<ListPortfolioAssetsResponse, ListPortfolioAssetsRequest>("/ListPortfolioAssets", portfolioRequest);
 }
 
@@ -30,7 +30,7 @@ export const createTrade = async(
     amount: string,
     price: string) : Promise<CreateTradeResponse> => {
 
-    const createTrade: CreateTradeRequest = {authorization: "", user, portfolio, ticker, type, amount, price}
+    const createTrade: CreateTradeRequest = {authorization: "", user: user, portfolio: portfolio, ticker: ticker, type: type, amount: amount, price: price}
     return postApi<CreateTradeResponse, CreateTradeRequest>("/CreateTrade", createTrade)
 }
 
