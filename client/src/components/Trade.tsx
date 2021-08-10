@@ -21,6 +21,7 @@ import {
 import {useAuth} from "../context/Auth";
 import OrdersTable from "../containers/OrdersTable";
 import PortfolioSelect from "./PortfolioSelect";
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     tabContainer: {
@@ -207,6 +208,9 @@ export function Trade() {
             </Container>
             <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId} setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios} onChange={handleSelectionChange}/>
             <Typography>{(userAssets !== []) ? "Total USD in Portfolio: $" + selectedPortfolioUSD : ""}</Typography>
+            {portfolios.length === 0 ? (<Button component={Link} to="/overview" variant="contained" color="primary">
+                Create Portfolio
+            </Button>) : ""}
             <Container className={classes.tabContainer}>
                 <Toolbar>
                     <Tabs value={selectedTab}

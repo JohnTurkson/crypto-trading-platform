@@ -53,9 +53,9 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
         ws.current = new WebSocket("wss://crypto-trade-stream.johnturkson.com")
         ws.current.onopen = () => {
             console.log("ws opened")
-            
+
             const subscribeToTradeUpdates: SubscribeToTradeUpdatesRequest = {
-                authorization: "",
+                authorization: authToken,
                 user: userId,
                 type: "SubscribeToTradeUpdatesRequest"
             }
