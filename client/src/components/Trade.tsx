@@ -210,7 +210,6 @@ export function Trade() {
             {portfolios.length === 0 ? (<Button component={Link} to="/overview" variant="contained" color="primary">
                 Create Portfolio
             </Button>) : ""}
-            <Typography>{(userAssets !== []) ? "Total USD in Portfolio: $" + selectedPortfolioUSD : ""}</Typography>
             <Container className={classes.tabContainer}>
                 <Toolbar>
                     <Tabs value={selectedTab}
