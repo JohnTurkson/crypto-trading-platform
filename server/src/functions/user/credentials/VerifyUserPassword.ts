@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs"
-import UserCredentials from "../../../data/UserCredentials"
+import { UserCredentials } from "../../../data/UserCredentials"
 
 export default async function verifyUserPassword(
     userCredentials: UserCredentials,

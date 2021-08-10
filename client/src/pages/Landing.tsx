@@ -1,5 +1,4 @@
 import { AppBar, Box, Button, Container, makeStyles, Toolbar, Typography } from "@material-ui/core"
-import React from "react"
 
 const useStyles = makeStyles(theme => ({
     navigation: {
@@ -72,7 +71,6 @@ export function Landing(props: LandingProps) {
                     Join Now for Free
                 </Button>
             </Container>
-
         </>
     )
 }

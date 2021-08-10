@@ -1,8 +1,9 @@
 import { CreateTradeResponse } from "../../../server/src/responses/CreateTradeResponse"
 import { generateId, getEventBody } from "../resources/Utils"
 import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequest"
-import { dynamoDBDocumentClient } from "../resources/Clients"
+import { dynamoDBDocumentClient, snsClient } from "../resources/Clients"
 import Decimal from "decimal.js"
+import { PublishCommand } from "@aws-sdk/client-sns"
 
 export async function handler(event: any): Promise<CreateTradeResponse> {
     // TODO authenticate user
@@ -70,6 +71,11 @@ export async function handler(event: any): Promise<CreateTradeResponse> {
         TableName: "CryptoOpenTrades",
         Item: trade
     })
+    
+    await snsClient.send(new PublishCommand({
+        TopicArn: process.env.TRADE_STREAM_TOPIC!,
+        Message: JSON.stringify(trade)
+    }))
     
     return {
         success: true,

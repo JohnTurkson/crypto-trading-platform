@@ -1,4 +1,4 @@
-export default interface AssetData {
+export interface AssetData {
     readonly name: string
     readonly amount: string
 }

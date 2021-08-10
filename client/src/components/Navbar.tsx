@@ -1,5 +1,4 @@
 import { AppBar, Button, makeStyles, Tab, Tabs, Toolbar } from "@material-ui/core"
-import { FormEvent } from "react"
 import { useAuth } from "../context/Auth"
 
 const useStyles = makeStyles(theme => ({
@@ -19,8 +18,8 @@ const useStyles = makeStyles(theme => ({
 
 export function Navbar({selected}: { selected?: number }) {
     const classes = useStyles()
-    const { logout } = useAuth()
-
+    const {logout} = useAuth()
+    
     return (
         <>
             <AppBar position="static" color="primary" elevation={0}>
@@ -44,15 +43,9 @@ export function Navbar({selected}: { selected?: number }) {
                         <Tab
                             className={classes.tabItem}
                             component="a"
-                            label="Discover"
-                            href="/discover"/>
-                        <Tab
-                            className={classes.tabItem}
-                            component="a"
                             label="NFTs"
                             href="/nfts"/>
                     </Tabs>
-
                     <Button
                         className={classes.logoutButton}
                         onClick={() => logout()}
