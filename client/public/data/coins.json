@@ -1,20 +1,20 @@
 {
   "coins": [
     {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png",
+      "url": "/BTC.png",
       "name": "Bitcoin",
       "price": 30000,
       "amountOwned": 2
 
     },
     {
-      "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png",
+      "url": "/ETH.png",
       "name": "Ethereum",
       "price": 3000,
       "amountOwned": 3
     },
     {
-      "url": "https://static01.nyt.com/images/2021/05/16/fashion/13DOGECOIN-1/13DOGECOIN-1-mediumSquareAt3X.jpg",
+      "url": "/DOGE.png",
       "name": "Dogecoin",
       "price": 0.50,
       "amountOwned": 10000
