@@ -12,7 +12,6 @@ const StyledCard = styled(Card)({
     padding: "1em",
     display: "flex",
     flexDirection: "column",
-    marginTop: "50px"
 })
 
 const StyledTypography = styled(Typography)({
@@ -38,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 const PortfolioSelect = ({ portfolios, portfolioId, setPortfolioId }: 
     { portfolios: Portfolio[], portfolioId: string, setPortfolioId: Dispatch<SetStateAction<string>> }) => {
-    const classes = useStyles();
+    const classes = useStyles()
 
     return (
         <StyledCard>

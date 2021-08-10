@@ -9,7 +9,8 @@ import { createPortfolioRequest } from '../requests/PortfolioRequests';
 const StyledCard = styled(Card)({
     padding: "1em",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    marginTop: "50px"
 })
 
 const StyledTypography = styled(Typography)({
@@ -39,7 +40,7 @@ const CreatePortfolio = ({ addHandler }) => {
     const [name, setName] = useState("")
 
     const submitHandler = async () => {
-        const newPortfolio = await createPortfolioRequest("1", name)
+        const newPortfolio = await createPortfolioRequest("2", name)
         addHandler(newPortfolio)
         setName("")
     }

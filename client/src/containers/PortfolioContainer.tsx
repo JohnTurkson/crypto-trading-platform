@@ -13,8 +13,7 @@ const PortfolioContainer = () => {
 
     useEffect(() => {
         const getPortfolios = async () => {
-            const data = await getPortfoliosRequest("1")
-            console.log(data)
+            const data = await getPortfoliosRequest("2")
             setPortfolios(data)
             if (data.length > 0) {
                 setPortfolioId(data[0].id)
@@ -32,10 +31,10 @@ const PortfolioContainer = () => {
     return (
         <div id="portfolio_container">
             <div id="portfolio_sidebar_container">
-                <CreatePortfolio addHandler={portfolio => onAddPortfolio(portfolio)} />
                 <PortfolioSelect portfolios={portfolios} portfolioId={portfolioId} setPortfolioId={id => setPortfolioId(id)} />
+                <CreatePortfolio addHandler={portfolio => onAddPortfolio(portfolio)} />
             </div>
-            <PortfolioData />
+            <PortfolioData portfolioId={portfolioId} />
         </div>
     )
 }
