@@ -10,11 +10,11 @@ import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from "@material-ui/styles";
 import { Link } from "react-router-dom"
 import { coinsWithImageLink } from "../constants";
+import { Typography } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     tableContainer: {
         maxWidth: "800px",
-        marginLeft: "300px"
     },
     icon: {
         height: "32px",
@@ -22,18 +22,24 @@ const useStyles = makeStyles(theme => ({
     },
     tableCell: {
         width: "150px"
+    },
+    message: {
+        marginTop: "50px"
     }
 }))
 
 const PortfolioData = ({ portfolioId }) => {
     const classes = useStyles()
     const [assets, setAssets] = useState<Asset[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const getPortfolioData = async () => {
+            setLoading(true)
             if (portfolioId != "") {
                 const data = await getPortfolioDataRequest(portfolioId)
                 setAssets(data)
+                setLoading(false)
             }
         }
 
@@ -41,33 +47,41 @@ const PortfolioData = ({ portfolioId }) => {
     }, [portfolioId])
 
     return (
-        <TableContainer className={classes.tableContainer}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="center" className={classes.tableCell}>Asset</TableCell>
-                        <TableCell align="center" className={classes.tableCell}>Name</TableCell>
-                        <TableCell align="center" className={classes.tableCell}>Amount</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {assets.map(asset => (
-                        <TableRow key={asset.name}>
-                            <TableCell align="center" className={classes.tableCell}>
-                                {
-                                    coinsWithImageLink.hasOwnProperty(asset.name) &&
-                                    <Link to={`/coin/${coinsWithImageLink[asset.name].name}`}>
-                                        <img src={coinsWithImageLink[asset.name].imageUrl} className={classes.icon}></img>
-                                    </Link>
-                                }
-                            </TableCell>
-                            <TableCell align="center" className={classes.tableCell}>{asset.name}</TableCell>
-                            <TableCell align="center" className={classes.tableCell}>{asset.amount}</TableCell>
+        <div id="portfolio_data_container">
+            <TableContainer className={classes.tableContainer}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center" className={classes.tableCell}>Asset</TableCell>
+                            <TableCell align="center" className={classes.tableCell}>Name</TableCell>
+                            <TableCell align="center" className={classes.tableCell}>Amount</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        { !loading && assets.map(asset => (
+                            <TableRow key={asset.name}>
+                                <TableCell align="center" className={classes.tableCell}>
+                                    {
+                                        coinsWithImageLink.hasOwnProperty(asset.name) &&
+                                        <Link to={`/coin/${coinsWithImageLink[asset.name].name}`}>
+                                            <img src={coinsWithImageLink[asset.name].imageUrl} className={classes.icon}></img>
+                                        </Link>
+                                    }
+                                </TableCell>
+                                <TableCell align="center" className={classes.tableCell}>{asset.name}</TableCell>
+                                <TableCell align="center" className={classes.tableCell}>{asset.amount}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            {
+                loading ?
+                <Typography align="center" variant="h6" className={classes.message}>Loading...</Typography> :
+                assets.length == 0 ?
+                <Typography align="center" variant="h6" className={classes.message}>No assets</Typography> : null
+            }
+        </div>
     )
 }
 
