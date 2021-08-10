@@ -1,6 +1,6 @@
 import { getEventBody } from "../resources/Utils"
 import { dynamoDBDocumentClient } from "../resources/Clients"
-import Asset from "../../../server/src/data/Asset"
+import { Asset } from "../../../server/src/data/Asset"
 import { ListPortfolioAssetsRequest } from "../../../server/src/requests/ListPortfolioAssetsRequest"
 
 export async function handler(event: any) {
