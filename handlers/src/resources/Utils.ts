@@ -1,5 +1,7 @@
 import { Buffer } from "buffer"
 import * as crypto from "crypto"
+import bcrypt from "bcryptjs"
+import { UserCredentials } from "../../../server/src/data/UserCredentials"
 
 export function getEventBody(event: any): any {
     if (event.isBase64Encoded) {
@@ -11,6 +13,17 @@ export function getEventBody(event: any): any {
 
 export function generateId(): string {
     return crypto.randomBytes(16).toString("hex")
+}
+
+export async function generatePasswordHash(password: string, rounds: number = 10): Promise<string> {
+    return bcrypt.genSalt(rounds).then(salt => bcrypt.hash(password, salt))
+}
+
+export async function verifyUserPassword(
+    credentials: UserCredentials,
+    password: string
+): Promise<boolean> {
+    return bcrypt.compare(password, credentials.password)
 }
 
 export function generateConditionExpression(
