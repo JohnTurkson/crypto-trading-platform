@@ -1,12 +1,9 @@
-import CoinList from "../containers/CoinList"
-import {Trade} from "../components/Trade"
+import { Trade } from "../components/Trade"
 
 export function TradePage() {
-
     return (
         <>
-            <Trade></Trade>
+            <Trade/>
         </>
-
     )
 }

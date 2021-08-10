@@ -7,7 +7,6 @@ import TableContainer from "@material-ui/core/TableContainer"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
-import {Card} from "@material-ui/core"
 import Coin from "../components/data/Coin"
 
 const useStyles = makeStyles({
@@ -24,8 +23,6 @@ const useStyles = makeStyles({
 
 
 export default function BasicTable() {
-
-    const classes = useStyles()
     const [list, setList] = useState([{
         url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png",
         name: "Bitcoin",
@@ -59,7 +56,7 @@ export default function BasicTable() {
                 </TableHead>
                 <TableBody>
                     {list.map((row) => (
-                        <Coin name = {row.name} url={row.url} price = {row.price} amountOwned = {0} portfolio = {false}></Coin>
+                        <Coin name = {row.name} url={row.url} price = {row.price} amountOwned = {0} portfolio = {false}/>
                     ))}
                 </TableBody>
             </Table>

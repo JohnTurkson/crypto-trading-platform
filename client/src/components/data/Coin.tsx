@@ -56,7 +56,6 @@ export function Coin(props: CoinProps) {
     const [amountOwned, setAmountOwned] = useState(0)
     const [totalValueOwned, setTotalValueOwned] = useState(0)
     
-    //const [price, setPrice] = useState(props.price)
     const [price, setPrice] = useState(props.price)
     
     useEffect(() => {
@@ -78,7 +77,6 @@ export function Coin(props: CoinProps) {
     const [volatility, setVolatility] = useState(0)
     const [allTimeHigh, setAllTimeHigh] = useState(0)
     
-    // const { row } = props;
     const [open, setOpen] = useState(false)
     
     function update() {
@@ -95,8 +93,7 @@ export function Coin(props: CoinProps) {
         pathname: "/coin/" + props.name,
         state: {url: props.url, name: props.name}
     }
-    //            <TableRow className={classes.root}>
-    //<TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+    
     return (
         <>
             <TableRow>
@@ -107,7 +104,7 @@ export function Coin(props: CoinProps) {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Link to={newTo}>
-                        <img src={props.url} className={classes.icon}></img>
+                        <img src={props.url} className={classes.icon}/>
                     </Link>
                 </TableCell>
                 <TableCell align="right">{props.name}</TableCell>
@@ -151,7 +148,6 @@ export function Coin(props: CoinProps) {
                 </TableCell>
             </TableRow>
         </>
-    
     )
 }
 
