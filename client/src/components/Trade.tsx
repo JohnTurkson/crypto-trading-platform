@@ -108,11 +108,13 @@ export function Trade() {
             }
             setLoadingPortfolios(false)
 
-            if(data[0].id !== "") {
-                const assets = await getPortfolioAssets(data[0].id)
-                console.log(assets)
-                setUserAssets(assets)
-                setSelectedPortfolioUSD(assets.find((asset) => asset.name === "USD").amount)
+            if(data.length > 0) {
+                if (data[0].id !== "") {
+                    const assets = await getPortfolioAssets(data[0].id)
+                    console.log(assets)
+                    setUserAssets(assets)
+                    setSelectedPortfolioUSD(assets.find((asset) => asset.name === "USD").amount)
+                }
             }
         }
 
@@ -140,7 +142,7 @@ export function Trade() {
         }
     }
     const tradeHandler = async(tab) => {
-        if(portfolios.length !== 0) {
+        if(portfolios.length > 0) {
             const ids = (portfolios).map((portfolio) => portfolio.id)
             const portfolioId = ids.find((id) => selectedPortfolioId === id)
             switch (tab) {
