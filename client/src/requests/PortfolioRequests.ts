@@ -5,6 +5,8 @@ import {ListPortfolioAssetsResponse} from "../../../server/src/responses/ListPor
 import {ListPortfolioAssetsRequest} from "../../../server/src/requests/ListPortfolioAssetsRequest";
 import {CreateTradeResponse} from "../../../server/src/responses/CreateTradeResponse";
 import {CreateTradeRequest} from "../../../server/src/requests/CreateTradeRequest";
+import {ListTradesRequest} from "../../../server/src/requests/ListTradesRequest";
+import {ListTradesResponse} from "../../../server/src/responses/ListTradesResponse";
 
 export const getSupportedAssets = async (): Promise<string[]> => {
     return getApi<string[]>("/GetSupportedAssets")
@@ -32,3 +34,11 @@ export const createTrade = async(
     return postApi<CreateTradeResponse, CreateTradeRequest>("/CreateTrade", createTrade)
 }
 
+export const listTrades = async(portfolio: string) => {
+    const listTradesRequest: ListTradesRequest = {authorization: "", portfolio}
+    return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest);
+}
+
+export const subscribeToTradeRequest = async(user: string) => {
+
+}

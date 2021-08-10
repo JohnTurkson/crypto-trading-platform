@@ -8,6 +8,7 @@ import {
     getUserPortfolioIds
 } from "../requests/PortfolioRequests";
 import {useAuth} from "../context/Auth";
+import OrdersTable from "../containers/OrdersTable";
 
 const useStyles = makeStyles(theme => ({
     tabContainer: {
@@ -15,6 +16,9 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    tradesContainer: {
+        marginTop: "100px"
     },
     selection: {
         minWidth: "200px",
@@ -52,6 +56,7 @@ export function Trade() {
 
     const [priceData, setPriceData] = useState({})
 
+    // TODO: change this back to useAuth
     const userId = "1"
     useEffect(() => {
         // Open web socket connection
@@ -181,9 +186,12 @@ export function Trade() {
                         inputProps= {{min, max}}
                         onChange={(event) => {
                             let value = event.target.value;
-                            if(value !== "") {
-                                if (parseInt(value) > max) value = max.toString();
-                                if (parseInt(value) < min) value = min.toString();
+
+                            if(selectedTab === TradeCode.SELL) {
+                                if (value !== "") {
+                                    if (parseInt(value) > max) value = max.toString();
+                                    if (parseInt(value) < min) value = min.toString();
+                                }
                             }
                             setQuantity(value)
                         }}
@@ -191,10 +199,10 @@ export function Trade() {
                         label="Quantity"/>
                 </Container>
 
-                <h4>{
+                <Typography>{
                     (selectedCurrency === null) ? "" :
-                        (priceData[selectedCurrency] === undefined) ? "LOADING.." : (selectedCurrency + " Market Price: $" + priceData[selectedCurrency] + " USD")
-                }</h4>
+                        (priceData[selectedCurrency] === undefined) ? "LOADING.." : (selectedCurrency + " Market Price: $" + parseFloat(priceData[selectedCurrency]).toFixed(4) + " USD")
+                }</Typography>
 
                 <Button
                     className={classes.tradeButton}
@@ -205,7 +213,10 @@ export function Trade() {
                 </Button>
             </Container>
 
-
+            <Container className={classes.tradesContainer}>
+                <h4>Recent Trades</h4>
+            <OrdersTable />
+            </Container>
         </>
 
     )
