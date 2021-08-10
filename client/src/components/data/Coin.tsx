@@ -39,7 +39,7 @@ const useStyles = makeStyles({
 })
 
 export interface CoinProps {
-    json: JSON
+    json: any
     url: string
     name: string
     price: number
@@ -59,8 +59,6 @@ export function Coin(props: CoinProps) {
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
-        console.log(props.price)
-        //setPrice(props.price)
         let json = props.json
         if (json == undefined) return
         setPrice(json["price"])
