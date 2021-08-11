@@ -11,6 +11,7 @@ const connection = new WebSocket("wss://crypto-data-stream.johnturkson.com")
 export function Chart(props: ChartProps) {
 
     const [data, setData] = useState([])
+    const [mostRecentTime, setMostRecentTime] = useState(0)
     const [config, setConfig] = useState({
 
         yAxis: [{
@@ -53,10 +54,12 @@ export function Chart(props: ChartProps) {
             enabled: true
         },
 
-        xAxis: {
+        xAxis: [{
             type: "date",
 
         },
+        ],
+
         rangeSelector: {
             buttons: [{
                 type: "day",
@@ -97,10 +100,16 @@ export function Chart(props: ChartProps) {
         ]
     })
 
+
     useEffect(() => {
+
+
         connection.onmessage = message => {
+
             let currData = data
             let json = JSON.parse(message.data)
+
+            if (json["time"] - mostRecentTime <= 10000) return
 
             if (props.name == "Bitcoin") {
                 if (json["asset"] != "BTC-USD") return
@@ -110,6 +119,8 @@ export function Chart(props: ChartProps) {
                 if (json["asset"] != "DOGE-USD") return
             }
 
+            setMostRecentTime(json["time"])
+
             currData.push([json["time"] - 2.52e+7, parseFloat(json["price"])])
             setData([data, currData])
             setData(currData)
@@ -118,7 +129,10 @@ export function Chart(props: ChartProps) {
             newConfig.series[0].data = data
             setConfig(newConfig)
             console.log(data)
+
+
         }
+
     })
 
     return (
