@@ -88,7 +88,7 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
     }, [])
 
     const submitHandler = async () => {
-        if (chosenCurrency == "" || amount == "" || isNaN(parseInt(amount)) || parseInt(amount) <= 0) {
+        if (chosenCurrency == "" || amount == "" || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
             setShowError(true)
         } else {
             setShowError(false)

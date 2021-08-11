@@ -77,7 +77,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
     const getSum = () => {
         let sum = 0;
         assets.forEach(asset => {
-            sum += priceData[asset.name] ? priceData[asset.name] * parseFloat(asset.amount) : 0
+            sum += priceData[asset.name] ? parseFloat(priceData[asset.name]) * parseFloat(asset.amount) : 0
         })
         return sum.toFixed(2)
     }

@@ -77,7 +77,7 @@ const WithdrawAsset = ({ portfolioId, assets, setAssets, loadingData, setLoading
     const { userId, authToken } = useAuth()
 
     const submitHandler = async () => {
-        if (selectedAsset == "" || amount == "" || isNaN(parseInt(amount)) || parseInt(amount) <= 0 || !haveSufficientAmount()) {
+        if (selectedAsset == "" || amount == "" || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0 || !haveSufficientAmount()) {
             setShowError(true)
         } else {
             setShowError(false)
@@ -92,7 +92,7 @@ const WithdrawAsset = ({ portfolioId, assets, setAssets, loadingData, setLoading
     
     const haveSufficientAmount = () => {
         const targetAsset = assets.find(asset => asset.name == selectedAsset)
-        return parseInt(targetAsset.amount) >= parseInt(amount)
+        return parseFloat(targetAsset.amount) >= parseFloat(amount)
     }
 
     return (
