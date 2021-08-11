@@ -10,7 +10,6 @@ const connection = new WebSocket("wss://crypto-data-stream.johnturkson.com")
 export function Chart(props: ChartProps) {
     const [data, setData] = useState([])
     const [config, setConfig] = useState({
-        
         yAxis: [
             {
                 offset: 6,

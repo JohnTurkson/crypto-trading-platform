@@ -40,8 +40,8 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
     const updateTrades = async () => {
         if(portfolios.length > 0) {
             const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
-            if(selectedPortfolio !== undefined) {
-                setTrades(await listTrades(selectedPortfolio.id, authToken))
+            if (selectedPortfolio !== undefined) {
+                setTrades(await listTrades(userId, selectedPortfolio.id, authToken))
             }
         }
     }
@@ -79,7 +79,7 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
             <Table aria-label="Trades">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Coin</TableCell>
+                        <TableCell>Asset</TableCell>
                         <TableCell align="right">Type</TableCell>
                         <TableCell align="right">Amount</TableCell>
                         <TableCell align="right">Total Price</TableCell>

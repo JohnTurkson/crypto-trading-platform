@@ -2,7 +2,7 @@ import { dynamoDBDocumentClient, snsClient } from "../resources/Clients"
 import { Trade } from "../../../server/src/data/Trade"
 import { PriceData } from "../../../data-stream/src/data/PriceData"
 import Decimal from "decimal.js"
-import Asset from "../../../server/src/data/Asset"
+import { Asset } from "../../../server/src/data/Asset"
 import { generateConditionExpression } from "../resources/Utils"
 import { PublishCommand } from "@aws-sdk/client-sns"
 

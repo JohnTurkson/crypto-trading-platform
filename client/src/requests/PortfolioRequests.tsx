@@ -12,7 +12,6 @@ import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequ
 import { ListTradesRequest } from "../../../server/src/requests/ListTradesRequest"
 import { ListTradesResponse } from "../../../server/src/responses/ListTradesResponse"
 
-
 export const createPortfolioRequest = async (user: string, name: string): Promise<Portfolio> => {
     const request: CreatePortfolioRequest = { user, name }
     const data = await postApi<CreatePortfolioResponse, CreatePortfolioRequest>("/CreatePortfolio", request)
@@ -67,8 +66,8 @@ export const createTrade = async (
     return postApi<CreateTradeResponse, CreateTradeRequest>("/CreateTrade", createTrade)
 }
 
-export const listTrades = async (portfolio: string, authorization: string) => {
-    const listTradesRequest: ListTradesRequest = {authorization: authorization, portfolio: portfolio}
+export const listTrades = async (user: string, portfolio: string, authorization: string) => {
+    const listTradesRequest: ListTradesRequest = {user: user, authorization: authorization, portfolio: portfolio}
     console.log(listTradesRequest)
     return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest)
 }
