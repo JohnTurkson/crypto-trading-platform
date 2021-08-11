@@ -8,6 +8,10 @@ import { UserToken } from "../../../server/src/data/UserToken"
 export async function handler(event: any): Promise<ListTradesResponse> {
     const request = getEventBody(event) as ListTradesRequest
     
+    if (request.authorization === undefined || request.authorization === "") {
+        return []
+    }
+    
     const authorization = await dynamoDBDocumentClient.get({
         TableName: "CryptoUserTokens",
         Key: {

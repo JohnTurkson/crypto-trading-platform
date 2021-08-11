@@ -8,6 +8,13 @@ import { UserToken } from "../../../server/src/data/UserToken"
 export async function handler(event: any): Promise<WithdrawAssetResponse> {
     const request = getEventBody(event) as WithdrawAssetRequest
     
+    if (request.authorization === undefined || request.authorization === "") {
+        return {
+            success: false,
+            error: "Invalid Credentials"
+        }
+    }
+    
     const authorization = await dynamoDBDocumentClient.get({
         TableName: "CryptoUserTokens",
         Key: {

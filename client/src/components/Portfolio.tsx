@@ -7,7 +7,7 @@ import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import TableBody from "@material-ui/core/TableBody"
-import Coin from "./data/Coin"
+import Asset from "./data/Asset"
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -89,7 +89,7 @@ const Portfolio = (props: any) => {
                     </TableHead>
                     <TableBody>
                         {props.data.map((row: any) => (
-                            <Coin
+                            <Asset
                                 name={row.name}
                                 url={row.url}
                                 price={row.price}
