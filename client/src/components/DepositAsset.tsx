@@ -9,6 +9,7 @@ import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
 import { useAuth } from '../context/Auth';
+import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
 
 const StyledCard = styled(Card)({
@@ -36,6 +37,12 @@ const StyledForm = styled(FormControl)({
 
 const StyledMenuItem = styled(MenuItem)({
     backgroundColor: "white !important"
+})
+
+const StyledAlert = styled(Alert)({
+    width: "175px",
+    alignSelf: "center",
+    marginTop: "10px"
 })
 
 const StyledTextField = styled(TextField)({
@@ -66,6 +73,7 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
     const [loading, setLoading] = useState(true)
     const [chosenCurrency, setChosenCurrency] = useState("")
     const [amount, setAmount] = useState("")
+    const [showError, setShowError] = useState(false)
     const { userId, authToken } = useAuth()
 
     useEffect(() => {
@@ -80,12 +88,17 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
     }, [])
 
     const submitHandler = async () => {
-        setAmount("")
-        await depositAssetRequest(authToken, userId, portfolioId, chosenCurrency, amount)
-        setLoadingData(true)
-        const newAssets = await getPortfolioDataRequest(portfolioId)
-        setAssets(newAssets)
-        setLoadingData(false)
+        if (chosenCurrency == "" || amount == "" || isNaN(parseInt(amount)) || parseInt(amount) <= 0) {
+            setShowError(true)
+        } else {
+            setShowError(false)
+            setAmount("")
+            await depositAssetRequest(authToken, userId, portfolioId, chosenCurrency, amount)
+            setLoadingData(true)
+            const newAssets = await getPortfolioDataRequest(portfolioId)
+            setAssets(newAssets)
+            setLoadingData(false)
+        }
     }
 
     return (
@@ -124,6 +137,7 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
                             value={amount}
                             onChange={e => setAmount(e.target.value)}
                         />
+                        { showError && <StyledAlert severity="error">Invalid input!</StyledAlert> }
                         <StyledButton variant="outlined" size="small" onClick={() => submitHandler()} >Submit</StyledButton>
                     </>
             }

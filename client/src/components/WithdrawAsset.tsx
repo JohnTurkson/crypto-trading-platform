@@ -2,7 +2,7 @@ import { styled } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent } from 'react';
 import { getPortfolioDataRequest, withdrawAssetRequest } from '../requests/PortfolioRequests';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
@@ -11,6 +11,7 @@ import TextField from '@material-ui/core/TextField';
 import { useAuth } from '../context/Auth';
 import Button from '@material-ui/core/Button';
 import { Asset } from "../../../server/src/data/Asset"
+import Alert from '@material-ui/lab/Alert';
 
 const StyledCard = styled(Card)({
     padding: "1em",
@@ -55,6 +56,12 @@ const StyledButton = styled(Button)({
     }
 })
 
+const StyledAlert = styled(Alert)({
+    width: "175px",
+    alignSelf: "center",
+    marginTop: "10px"
+})
+
 const useStyles = makeStyles(theme => ({
     menuPaper: {
         maxHeight: "300px"
@@ -66,15 +73,26 @@ const WithdrawAsset = ({ portfolioId, assets, setAssets, loadingData, setLoading
     const classes = useStyles()
     const [selectedAsset, setSelectedAsset] = useState("")
     const [amount, setAmount] = useState("")
+    const [showError, setShowError] = useState(false)
     const { userId, authToken } = useAuth()
 
     const submitHandler = async () => {
-        setAmount("")
-        await withdrawAssetRequest(authToken, userId, portfolioId, selectedAsset, amount)
-        setLoadingData(true)
-        const newAssets = await getPortfolioDataRequest(portfolioId)
-        setAssets(newAssets)
-        setLoadingData(false)
+        if (selectedAsset == "" || amount == "" || isNaN(parseInt(amount)) || parseInt(amount) <= 0 || !haveSufficientAmount()) {
+            setShowError(true)
+        } else {
+            setShowError(false)
+            setAmount("")
+            await withdrawAssetRequest(authToken, userId, portfolioId, selectedAsset, amount)
+            setLoadingData(true)
+            const newAssets = await getPortfolioDataRequest(portfolioId)
+            setAssets(newAssets)
+            setLoadingData(false)
+        }
+    }
+    
+    const haveSufficientAmount = () => {
+        const targetAsset = assets.find(asset => asset.name == selectedAsset)
+        return targetAsset.amount >= amount
     }
 
     return (
@@ -115,6 +133,7 @@ const WithdrawAsset = ({ portfolioId, assets, setAssets, loadingData, setLoading
                             value={amount}
                             onChange={e => setAmount(e.target.value)}
                         />
+                        { showError && <StyledAlert severity="error">Invalid input!</StyledAlert> }
                         <StyledButton variant="outlined" size="small" onClick={() => submitHandler()} >Submit</StyledButton>
                     </>
             }
