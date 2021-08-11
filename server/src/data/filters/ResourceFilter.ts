@@ -1,5 +1,3 @@
-import Resource from "../Resource"
-
-export type ResourceFilter<T extends Resource> = {
+export type ResourceFilter<T> = {
     [P in keyof T]?: T[P];
 } 

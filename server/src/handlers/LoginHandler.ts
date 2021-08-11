@@ -1,29 +1,28 @@
-import LoginRequest from "../requests/LoginRequest"
-import LoginResponse from "../responses/LoginResponse"
+import { LoginUserRequest } from "../requests/LoginUserRequest"
+import { LoginUserResponse } from "../responses/LoginUserResponse"
 import verifyUserPassword from "../functions/user/credentials/VerifyUserPassword"
-import ErrorResponse from "../responses/ErrorResponse"
 import generateUserToken from "../functions/user/credentials/GenerateUserToken"
 import DefaultHandler from "./DefaultHandler"
 
-export default class LoginHandler extends DefaultHandler<LoginRequest, LoginResponse> {
-    async validateRequest(request: any): Promise<LoginRequest> {
+export default class LoginHandler extends DefaultHandler<LoginUserRequest, LoginUserResponse> {
+    async validateRequest(request: any): Promise<LoginUserRequest> {
         return request
     }
-
-    async authenticateRequest(request: LoginRequest): Promise<LoginRequest> {
+    
+    async authenticateRequest(request: LoginUserRequest): Promise<LoginUserRequest> {
         return request
     }
-
-    async authorizeRequest(request: LoginRequest): Promise<LoginRequest> {
+    
+    async authorizeRequest(request: LoginUserRequest): Promise<LoginUserRequest> {
         return request
     }
-
-    async processRequest(request: LoginRequest): Promise<LoginResponse> {
-        const error: ErrorResponse = {
+    
+    async processRequest(request: LoginUserRequest): Promise<LoginUserResponse> {
+        const error = {
             type: "ErrorResponse",
             message: "Invalid Credentials"
         }
-
+        
         return this.database.getUser({email: request.email})
             .then(user => {
                 if (user === undefined) {
@@ -47,8 +46,8 @@ export default class LoginHandler extends DefaultHandler<LoginRequest, LoginResp
             })
             .then(credentials => this.database.createUserToken(credentials.user, generateUserToken()))
             .then(token => ({
-                type: "LoginResponse",
-                userId: token.userId,
+                success: true,
+                user: token.user,
                 token: token.token,
             }))
     }

@@ -1,8 +1,7 @@
-import CryptoPriceList from "../containers/CryptoPriceList"
+import PortfolioContainer from "../containers/PortfolioContainer"
 
-// TODO: add more components to home page
 export default () => {
     return (
-        <CryptoPriceList/>
+        <PortfolioContainer />
     )
 }

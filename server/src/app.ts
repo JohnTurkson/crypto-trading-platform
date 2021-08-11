@@ -1,10 +1,8 @@
 import express from "express"
 import routesHandler from "./routes/index"
-import SignupHandler from "./handlers/SignupHandler";
-import CreatePortfolioHandler from "./handlers/CreatePortfolioHandler";
-import DefaultDatabaseProxy from "./database/DefaultDatabaseClient";
-import PurchaseAssetHandler from "./handlers/PurchaseAssetHandler";
-import GetPortfolioHandler from "./handlers/GetPortfolioHandler";
+import CreatePortfolioHandler from "./handlers/CreatePortfolioHandler"
+import DefaultDatabaseProxy from "./database/DefaultDatabaseClient"
+import GetPortfolioHandler from "./handlers/GetPortfolioHandler"
 
 const app = express()
 app.use(express.json())
@@ -19,21 +17,14 @@ app.get("/", async (request, response) => {
     response.send("Hello World").end()
 })
 
-app.post("/CreatePortfolio", async (request , response) => {
+app.post("/CreatePortfolio", async (request, response) => {
     const handler = new CreatePortfolioHandler(database)
     handler.handleRequest(request.body)
         .then(createPortfolioResponse => response.status(200).json(createPortfolioResponse))
         .catch(errorResponse => response.status(400).json(errorResponse))
 })
 
-app.post("/PurchaseAsset", async (request , response) => {
-    const handler = new PurchaseAssetHandler(database)
-    handler.handleRequest(request.body)
-        .then(createPortfolioResponse => response.status(200).json(createPortfolioResponse))
-        .catch(errorResponse => response.status(400).json(errorResponse))
-})
-
-app.get("/GetPortfolio", async (request, response) => {
+app.get("/ListPortfolios", async (request, response) => {
     const handler = new GetPortfolioHandler(database)
     handler.handleRequest(request.body)
         .then(createPortfolioResponse => response.status(200).json(createPortfolioResponse))

@@ -1,28 +1,21 @@
 import DefaultHandler from "./DefaultHandler"
-import GetPortfolioRequest from "../requests/GetPortfolioRequest"
-import GetPortfolioResponse from "../responses/GetPortfolioResponse"
-import generateUserToken from "../functions/user/credentials/GenerateUserToken"
-import ErrorResponse from "../responses/ErrorResponse"
-import generatePasswordHash from "../functions/user/credentials/GeneratePasswordHash"
+import { ListPortfoliosRequest } from "../requests/ListPortfoliosRequest"
+import { ListPortfoliosResponse } from "../responses/ListPortfoliosResponse"
 
-export default class GetPortfolioHandler extends DefaultHandler<GetPortfolioRequest, GetPortfolioResponse> {
-    async validateRequest(request: any): Promise<GetPortfolioRequest> {
+export default class GetPortfolioHandler extends DefaultHandler<ListPortfoliosRequest, ListPortfoliosResponse> {
+    async validateRequest(request: any): Promise<ListPortfoliosRequest> {
         return request
     }
-
-    async authenticateRequest(request: GetPortfolioRequest): Promise<GetPortfolioRequest> {
+    
+    async authenticateRequest(request: ListPortfoliosRequest): Promise<ListPortfoliosRequest> {
         return request
     }
-
-    async authorizeRequest(request: GetPortfolioRequest): Promise<GetPortfolioRequest> {
+    
+    async authorizeRequest(request: ListPortfoliosRequest): Promise<ListPortfoliosRequest> {
         return request
     }
-
-    async processRequest(request: GetPortfolioRequest): Promise<GetPortfolioResponse> {
-        const portfolio = await this.database.getPortfolio(request.userId)
-        return {
-            portfolio: portfolio,
-            type: "GetPortfolioResponse",
-        }
+    
+    async processRequest(request: ListPortfoliosRequest): Promise<ListPortfoliosResponse> {
+        return await this.database.listPortfolios(request.user)
     }
 }

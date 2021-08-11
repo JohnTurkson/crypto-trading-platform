@@ -3,17 +3,14 @@ import Trade from "../components/Trade"
 import { useParams } from "react-router-dom"
 
 export interface CoinProps {
-    // url: string
-    // name: string
-    // price: number
+    name: string
 }
 
 export default (props: CoinProps) => {
-    const {name} = useParams<{name}>()
+    const {name} = useParams<{ name }>()
     return (
         <div>
             <Chart name={name}/>
-            <Trade/>
         </div>
     )
 }

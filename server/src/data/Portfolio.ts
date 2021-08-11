@@ -1,10 +1,7 @@
-import Resource from "./Resource"
-import Asset from "./Asset";
-import PortfolioData from "./PortfolioData";
-import AssetData from "./AssetData";
+import { PortfolioData } from "./PortfolioData"
 
-export default interface Portfolio extends PortfolioData, Resource {
-    readonly assets: AssetData[],
-    readonly userId: string,
-    readonly id: string,
+export interface Portfolio extends PortfolioData {
+    readonly id: string
+    readonly user: string
+    readonly name: string
 }

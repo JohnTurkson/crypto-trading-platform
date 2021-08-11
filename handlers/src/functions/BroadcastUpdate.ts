@@ -1,24 +1,21 @@
 import { PostToConnectionCommand } from "@aws-sdk/client-apigatewaymanagementapi"
-import { ScanCommand } from "@aws-sdk/client-dynamodb"
-import { apiGatewayManagementApiClient, dynamoDBClient } from "../resources/Clients"
+import { dataStreamClient, dynamoDBDocumentClient } from "../resources/Clients"
 import { textEncoder } from "../resources/Tools"
 
 export async function handler(event: any) {
-    // TODO types
     const updates: string[] = event.Records
         .map((record: any) => record.Sns.Message as string)
     
-    const getConnectionsCommand = new ScanCommand({
+    const connections = await dynamoDBDocumentClient.scan({
         TableName: "CryptoDataStreamConnections"
     })
-    const connections = await dynamoDBClient.send(getConnectionsCommand)
     
     const broadcasts = connections.Items?.flatMap(connection => {
         return updates.map(update => new PostToConnectionCommand({
-                ConnectionId: connection.connectionId.S,
+                ConnectionId: connection.connectionId,
                 Data: textEncoder.encode(update)
             })
-        ).map(broadcastUpdateCommand => apiGatewayManagementApiClient.send(broadcastUpdateCommand))
+        ).map(broadcastUpdateCommand => dataStreamClient.send(broadcastUpdateCommand))
     }) ?? []
     
     return Promise.all(broadcasts)

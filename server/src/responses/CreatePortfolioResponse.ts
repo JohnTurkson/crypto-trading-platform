@@ -1,6 +1,3 @@
-import Portfolio from "../data/Portfolio";
+import { Portfolio } from "../data/Portfolio"
 
-export default interface CreatePortfolioResponse {
-    readonly portfolio: Portfolio,
-    readonly type: "CreatePortfolioResponse"
-}
+export type CreatePortfolioResponse = Portfolio

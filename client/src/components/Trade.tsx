@@ -1,6 +1,11 @@
-import { useState } from "react"
-import { Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar } from "@material-ui/core"
-import { Autocomplete } from "@material-ui/lab"
+import { useEffect, useRef, useState } from "react"
+import { Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar, Typography } from "@material-ui/core"
+import { Alert, Autocomplete } from "@material-ui/lab"
+import { createTrade, getPortfolioAssets, getSupportedAssets, getUserPortfolioIds } from "../requests/PortfolioRequests"
+import { useAuth } from "../context/Auth"
+import OrdersTable from "../containers/OrdersTable"
+import PortfolioSelect from "./PortfolioSelect"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
     tabContainer: {
@@ -8,6 +13,9 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    tradesContainer: {
+        marginTop: "100px"
     },
     selection: {
         minWidth: "200px",
@@ -24,26 +32,164 @@ const useStyles = makeStyles(theme => ({
     tradeButton: {
         margin: "16px",
     },
+    selectContainer: {
+        display: "flex",
+        flexDirection: "column"
+    },
+    parentContainer: {
+        width: "70%"
+    }
 }))
+
+enum TradeCode {
+    BUY = 0,
+    SELL = 1
+}
 
 export function Trade() {
     const classes = useStyles()
-    const [selectedTab, setSelectedTab] = useState(0)
-    const currencies = [
-        "BTC",
-        "ETH",
-        //"ADA",
-        "DOGE",
-    ]
+    const [selectedTab, setSelectedTab] = useState(TradeCode.BUY)
+    const [portfolios, setPortfolios] = useState([])
+    const [selectedPortfolioId, setSelectedPortfolioId] = useState("")
+    const [currencyOptions, setCurrencyOptions] = useState([])
+    const [selectedCurrency, setSelectedCurrency] = useState(null)
+    const [selectedAsset, setSelectedAsset] = useState(null)
+    const [quantity, setQuantity] = useState("")
+    const [userAssets, setUserAssets] = useState([])
+    const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(true)
+    const [showWarning, setShowWarning] = useState(false)
 
+    const ws = useRef(null)
+    
+    const [priceData, setPriceData] = useState({})
+    
+    const {userId} = useAuth()
+    const {authToken} = useAuth()
 
+    useEffect(() => {
+        ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
+        return () => {
+            ws.current.close()
+        }
+    }, [])
+    
+    useEffect(() => {
+        if (!ws.current) return
+        ws.current.onmessage = message => {
+            let currData = {...priceData}
+            let json = JSON.parse(message.data)
+            const assetName = json["asset"].split("-")[0]
+            currData[assetName] = json["price"]
+            setPriceData(currData)
+        }
+    }, [priceData])
+
+    useEffect(() => {
+        const getPortfoliosAndAssets = async () => {
+            const data = await getUserPortfolioIds(userId)
+            setPortfolios(data)
+            if (data.length > 0) {
+                setSelectedPortfolioId(data[0].id)
+            }
+            setLoadingPortfolios(false)
+
+            if(data.length > 0) {
+                if (data[0].id !== "") {
+                    const assets = await getPortfolioAssets(data[0].id)
+                    setUserAssets(assets)
+                }
+            }
+        }
+
+        getPortfoliosAndAssets()
+    }, [])
+
+    const updateCurrencyOptions = async (tab) => {
+        setCurrencyOptions(["Loading..."])
+        switch (tab) {
+            case TradeCode.BUY:
+                const supportedAssets = await getSupportedAssets()
+                setCurrencyOptions(supportedAssets)
+                break
+            case TradeCode.SELL:
+                const assets = await getPortfolioAssets(selectedPortfolioId)
+                if(assets !== null) {
+                    const currencyOptions = assets.map(asset => {
+                        return asset.name
+                    }).filter(assetName => {
+                        return assetName !== "USD"
+                    })
+                    setCurrencyOptions(currencyOptions)
+                }
+                break
+            default:
+                break
+        }
+    }
+
+    useEffect(() => {
+        updateCurrencyOptions(selectedTab)
+    }, [selectedPortfolioId])
+    
+    const tradeHandler = async(tab) => {
+        if(portfolios.length > 0) {
+            const ids = (portfolios).map((portfolio) => portfolio.id)
+            const portfolioId = ids.find((id) => selectedPortfolioId === id)
+            switch (tab) {
+                case TradeCode.BUY:
+                    await createTrade(userId, authToken,
+                        portfolioId,
+                        selectedCurrency + "-USD",
+                        "buy",
+                        quantity,
+                        priceData[selectedCurrency].toString())
+
+                    break
+                case TradeCode.SELL:
+                    await createTrade(userId, authToken,
+                        portfolioId,
+                        selectedCurrency + "-USD",
+                        "sell",
+                        quantity,
+                        priceData[selectedCurrency].toString())
+                    break
+                default:
+                    break
+            }
+        }
+    }
+
+    const handleSelectionChange = (event) => {
+        const value = event.target.value
+        const handleAssets = async (value) => {
+            const assets = await getPortfolioAssets(value)
+            setUserAssets(assets)
+        }
+        handleAssets(value)
+    }
+
+    const min = 0;
+    const max = selectedAsset === null ? 0 : selectedAsset.amount;
 
     return (
-        <>
+        <div className={classes.parentContainer}>
+            <Container>
+            {showWarning
+            ? <Alert severity="warning">The trade you made might not fulfill due to insufficient funds!</Alert> : ""}
+            </Container>
+            <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId} setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios} onChange={handleSelectionChange}/>
+            {portfolios.length === 0 ? (<Button component={Link} to="/overview" variant="contained" color="primary">
+                Create Portfolio
+            </Button>) : ""}
             <Container className={classes.tabContainer}>
                 <Toolbar>
                     <Tabs value={selectedTab}
-                          onChange={(event, index) => setSelectedTab(index)}
+                          onChange={(event, index) => {
+                              setSelectedTab(index)
+                              updateCurrencyOptions(index)
+                              setQuantity("")
+                              setSelectedCurrency(null)
+                          }}
                           textColor="primary"
                           indicatorColor="primary">
                         <Tab label="Buy">
@@ -52,30 +198,68 @@ export function Trade() {
                         </Tab>
                     </Tabs>
                 </Toolbar>
-
+                
                 <Container className={classes.tradeContainer}>
+                    <Autocomplete
+                        value={selectedCurrency}
+                        className={`${classes.tradeInput} ${classes.selection}`}
+                        options={currencyOptions}
+                        onChange={(event, value) => {
+                            if (value === null) {
+                                setQuantity("")
+                            }
+                            if (selectedTab === TradeCode.SELL) {
+                                const userAsset = (userAssets.find(asset => {
+                                    return asset.name === value
+                                }))
+                                setQuantity(userAsset.amount)
+                                setSelectedAsset(userAsset)
+                            }
+                            setSelectedCurrency(value)
+                        }}
+                        renderInput={params => (<TextField {...params} label="Currency"/>)}/>
                     <TextField
                         className={classes.tradeInput}
                         variant="outlined"
+                        value={quantity}
+                        inputProps={{min, max}}
+                        onChange={(event) => {
+                            let value = event.target.value
+                            
+                            if (selectedTab === TradeCode.SELL) {
+                                if (value !== "") {
+                                    if (parseInt(value) > max) value = max.toString()
+                                    if (parseInt(value) < min) value = min.toString()
+                                }
+                            }
+                            setQuantity(value)
+                        }}
+                        disabled={!currencyOptions.includes(selectedCurrency)}
                         label="Quantity"/>
-                    <Autocomplete
-                        className={`${classes.tradeInput} ${classes.selection}`}
-                        options={currencies}
-                        renderInput={params => (<TextField {...params} label="Currency"/>)}/>
                 </Container>
-
+                
+                <Typography>{
+                    (selectedCurrency === null) ? "" :
+                        (priceData[selectedCurrency] === undefined) ? "LOADING.." : (selectedCurrency + " Market Price: $" + parseFloat(priceData[selectedCurrency]).toFixed(4) + " USD")
+                }</Typography>
+                
                 <Button
                     className={classes.tradeButton}
                     variant="contained"
-                    color="primary">
+                    color="primary"
+                    onClick={() => {
+                        tradeHandler(selectedTab)
+                    }}>
                     Trade
                 </Button>
             </Container>
-
-        </>
+            <Container className={classes.tradesContainer}>
+                <h4>Recent Trades</h4>
+                <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
+            </Container>
+            </div>
 
     )
-
 }
 
-export default Trade;
+export default Trade
