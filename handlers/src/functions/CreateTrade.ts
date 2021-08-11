@@ -4,10 +4,31 @@ import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequ
 import { dynamoDBDocumentClient, snsClient } from "../resources/Clients"
 import Decimal from "decimal.js"
 import { PublishCommand } from "@aws-sdk/client-sns"
+import { UserToken } from "../../../server/src/data/UserToken"
 
 export async function handler(event: any): Promise<CreateTradeResponse> {
-    // TODO authenticate user
     const request = getEventBody(event) as CreateTradeRequest
+    
+    if (request.authorization === undefined || request.authorization === "") {
+        return {
+            success: false,
+            error: "Invalid Credentials"
+        }
+    }
+    
+    const authorization = await dynamoDBDocumentClient.get({
+        TableName: "CryptoUserTokens",
+        Key: {
+            "token": request.authorization
+        }
+    }).then(response => response.Item as UserToken ?? undefined)
+    
+    if (authorization === undefined || authorization.user !== request.user) {
+        return {
+            success: false,
+            error: "Invalid Credentials"
+        }
+    }
     
     if (Number.isNaN(request.amount)) {
         return {

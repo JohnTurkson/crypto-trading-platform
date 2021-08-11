@@ -1,27 +1,11 @@
-import {FormEvent, useEffect, useRef, useState} from "react"
-import {
-    Button,
-    Container,
-    makeStyles,
-    MenuItem,
-    Select,
-    Tab,
-    Tabs,
-    TextField,
-    Toolbar,
-    Typography
-} from "@material-ui/core"
-import {Alert, Autocomplete} from "@material-ui/lab"
-import {
-    createTrade,
-    getPortfolioAssets,
-    getSupportedAssets,
-    getUserPortfolioIds
-} from "../requests/PortfolioRequests";
-import {useAuth} from "../context/Auth";
-import OrdersTable from "../containers/OrdersTable";
-import PortfolioSelect from "./PortfolioSelect";
-import {Link} from "react-router-dom";
+import { useEffect, useRef, useState } from "react"
+import { Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar, Typography } from "@material-ui/core"
+import { Alert, Autocomplete } from "@material-ui/lab"
+import { createTrade, getPortfolioAssets, getSupportedAssets, getUserPortfolioIds } from "../requests/PortfolioRequests"
+import { useAuth } from "../context/Auth"
+import OrdersTable from "../containers/OrdersTable"
+import PortfolioSelect from "./PortfolioSelect"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
     tabContainer: {
@@ -126,18 +110,25 @@ export function Trade() {
                 setCurrencyOptions(supportedAssets)
                 break
             case TradeCode.SELL:
-                if(userAssets !== null) {
-                    setCurrencyOptions(userAssets.map(asset => {
+                const assets = await getPortfolioAssets(selectedPortfolioId)
+                if(assets !== null) {
+                    const currencyOptions = assets.map(asset => {
                         return asset.name
                     }).filter(assetName => {
                         return assetName !== "USD"
-                    }))
+                    })
+                    console.log(currencyOptions)
+                    setCurrencyOptions(currencyOptions)
                 }
                 break
             default:
                 break
         }
     }
+
+    useEffect(() => {
+        updateCurrencyOptions(selectedTab)
+    }, [selectedPortfolioId])
     
     const tradeHandler = async(tab) => {
         if(portfolios.length > 0) {
@@ -166,10 +157,6 @@ export function Trade() {
             }
         }
     }
-    
-    useEffect(() => {
-        updateCurrencyOptions(selectedTab)
-    }, [])
 
     const handleSelectionChange = (event) => {
         const value = event.target.value

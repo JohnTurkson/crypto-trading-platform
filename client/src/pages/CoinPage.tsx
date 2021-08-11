@@ -11,7 +11,6 @@ export default (props: CoinProps) => {
     return (
         <div>
             <Chart name={name}/>
-            <Trade/>
         </div>
     )
 }

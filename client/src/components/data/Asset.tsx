@@ -47,20 +47,23 @@ export interface CoinProps {
     portfolio: boolean
 }
 
-export function Coin(props: CoinProps) {
+export function Asset(props: CoinProps) {
     const classes = useStyles()
-    const [price, setPrice] = useState(0)
-    const [dailyPercentChange, setDailyPercentChange] = useState(0)
-    const [dailyNetChange, setDailyNetChange] = useState(0)
-    const [dailyVolume, setDailyVolume] = useState(0)
-    const [dailyLow, setDailyLow] = useState(0)
-    const [dailyHigh, setDailyHigh] = useState(0)
-    const [dailyOpen, setDailyOpen] = useState(0)
+    const [price, setPrice] = useState("Loading")
+    const [dailyPercentChange, setDailyPercentChange] = useState("Loading")
+    const [dailyNetChange, setDailyNetChange] = useState("Loading")
+    const [dailyVolume, setDailyVolume] = useState("Loading")
+    const [dailyLow, setDailyLow] = useState("Loading")
+    const [dailyHigh, setDailyHigh] = useState("Loading")
+    const [dailyOpen, setDailyOpen] = useState("Loading")
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
         let json = props.json
         if (json == undefined) return
+
+        if (json["price"] == undefined) return
+
         setPrice(json["price"])
         setDailyOpen(json["open"])
         setDailyPercentChange(Math.round(((price - dailyOpen) / dailyOpen * 100) * 100) / 100)
@@ -129,4 +132,4 @@ export function Coin(props: CoinProps) {
     )
 }
 
-export default Coin
+export default Asset

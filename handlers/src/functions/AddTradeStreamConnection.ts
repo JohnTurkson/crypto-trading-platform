@@ -1,21 +1,35 @@
 import { dynamoDBDocumentClient } from "../resources/Clients"
 import { getEventBody } from "../resources/Utils"
 import { SubscribeToTradeUpdatesRequest } from "../../../server/src/requests/SubscribeToTradeUpdatesRequest"
+import { UserToken } from "../../../server/src/data/UserToken"
 
 export async function handler(event: any) {
-    // TODO authenticate user
     const request = getEventBody(event) as SubscribeToTradeUpdatesRequest
     
-    await dynamoDBDocumentClient.put({
-        TableName: "CryptoTradeStreamConnections",
-        Item: {
-            "id": event.requestContext.connectionId,
-            "user": request.user
+    const authorization = await dynamoDBDocumentClient.get({
+        TableName: "CryptoUserTokens",
+        Key: {
+            "token": request.authorization
         }
-    })
+    }).then(response => response.Item as UserToken ?? undefined)
     
-    return {
-        statusCode: 200,
-        body: JSON.stringify(event)
+    if (authorization === undefined || authorization.user !== request.user) {
+        return {
+            statusCode: "403",
+            body: "Invalid Credentials"
+        }
+    } else {
+        await dynamoDBDocumentClient.put({
+            TableName: "CryptoTradeStreamConnections",
+            Item: {
+                "id": event.requestContext.connectionId,
+                "user": request.user
+            }
+        })
+        
+        return {
+            statusCode: "200",
+            body: "Connected"
+        }
     }
 }
