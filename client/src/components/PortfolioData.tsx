@@ -110,11 +110,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                                 <TableCell align="center" className={classes.tableCell}>
                                     {
                                         priceData.hasOwnProperty(asset.name) ?
-                                        `${
-                                            priceData[asset.name]["amount"] == "0" ?
-                                            "Loading..." :
-                                            (parseFloat(priceData[asset.name]) * parseFloat(asset.amount)).toFixed(2)
-                                        }` :
+                                        `${(parseFloat(priceData[asset.name]) * parseFloat(asset.amount)).toFixed(2)}` :
                                         asset.name != "USD" ?
                                         "Loading..." :
                                         asset.amount
