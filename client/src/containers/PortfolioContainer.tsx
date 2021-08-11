@@ -8,10 +8,11 @@ import Alert from '@material-ui/lab/Alert';
 import Grow from '@material-ui/core/Grow';
 import { styled } from '@material-ui/styles';
 import { Asset } from "../../../server/src/data/Asset"
-
-import "../styles/portfolio.css"
 import { useAuth } from "../context/Auth"
 import DepositAsset from "../components/DepositAsset"
+import WithdrawAsset from "../components/WithdrawAsset"
+
+import "../styles/portfolio.css"
 
 const StyledSuccessAlert = styled(Alert)({
     marginTop: "-90px",
@@ -55,6 +56,13 @@ const PortfolioContainer = () => {
                 <div id="portfolio_column_container">
                     <PortfolioSelect portfolios={portfolios} portfolioId={portfolioId} setPortfolioId={id => setPortfolioId(id)} isLoading={loading} />
                     <DepositAsset portfolioId={portfolioId} setAssets={a => setAssets(a)} setLoadingData={b => setLoadingData(b)} loadingPortfolio={loading} />
+                    <WithdrawAsset
+                        portfolioId={portfolioId}
+                        assets={assets}
+                        setAssets={a => setAssets(a)}
+                        setLoadingData={b => setLoadingData(b)}
+                        loadingData={loadingData}
+                    />
                     <CreatePortfolio
                         addHandler={portfolio => onAddPortfolio(portfolio)}
                         setShowSuccessAlert={b => setShowSuccessAlert(b)}

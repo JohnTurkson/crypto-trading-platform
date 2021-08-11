@@ -3,13 +3,14 @@ import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import Select from '@material-ui/core/Select';
 import { useEffect, useState, ChangeEvent } from 'react';
-import { depositAssetRequest, getPortfolioDataRequest, getSupportedAssets, getSupportedCurrencies } from '../requests/PortfolioRequests';
+import { getPortfolioDataRequest, withdrawAssetRequest } from '../requests/PortfolioRequests';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from '@material-ui/core/TextField';
 import { useAuth } from '../context/Auth';
 import Button from '@material-ui/core/Button';
+import { Asset } from "../../../server/src/data/Asset"
 
 const StyledCard = styled(Card)({
     padding: "1em",
@@ -60,28 +61,16 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio }) => {
+const WithdrawAsset = ({ portfolioId, assets, setAssets, loadingData, setLoadingData }
+    : { portfolioId: string, assets: Asset[], setAssets, loadingData: boolean, setLoadingData }) => {
     const classes = useStyles()
-    const [currencies, setCurrencies] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [chosenCurrency, setChosenCurrency] = useState("")
+    const [selectedAsset, setSelectedAsset] = useState("")
     const [amount, setAmount] = useState("")
     const { userId, authToken } = useAuth()
 
-    useEffect(() => {
-        const getCurrencies = async () => {
-            const supportedAssets = await getSupportedAssets()
-            const supportedCurrencies = await getSupportedCurrencies()
-            setCurrencies(supportedAssets.concat(supportedCurrencies))
-            setLoading(false)
-        }
-
-        getCurrencies()
-    }, [])
-
     const submitHandler = async () => {
         setAmount("")
-        await depositAssetRequest(authToken, userId, portfolioId, chosenCurrency, amount)
+        await withdrawAssetRequest(authToken, userId, portfolioId, selectedAsset, amount)
         setLoadingData(true)
         const newAssets = await getPortfolioDataRequest(portfolioId)
         setAssets(newAssets)
@@ -90,16 +79,18 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
 
     return (
         <StyledCard>
-            <StyledTypography align="left" variant="h6">Deposit Asset</StyledTypography>
+            <StyledTypography align="left" variant="h6">Withdraw Asset</StyledTypography>
             {
-                loading || loadingPortfolio ?
+                loadingData ?
                     <StyledMessage align="left" variant="h6">Loading...</StyledMessage> :
+                    assets.length == 0 ?
+                    <StyledMessage align="left" variant="h6">No assets</StyledMessage> :
                     <>
                         <StyledForm variant="outlined">
                             <Select
                                 id="select_portfolio"
-                                onChange={(e: ChangeEvent<{ value: unknown }>) => setChosenCurrency(e.target.value as string)}
-                                value={chosenCurrency}
+                                onChange={(e: ChangeEvent<{ value: unknown }>) => setSelectedAsset(e.target.value as string)}
+                                value={selectedAsset}
                                 MenuProps={{
                                     anchorOrigin: {
                                         vertical: "bottom",
@@ -113,12 +104,12 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
                                     classes: { paper: classes.menuPaper }
                                 }}
                             >
-                                {currencies.map(currency => <StyledMenuItem key={currency} value={currency}>{currency}</StyledMenuItem>)}
+                                {assets.map(asset => <StyledMenuItem key={asset.name} value={asset.name}>{asset.name}</StyledMenuItem>)}
                             </Select>
                         </StyledForm>
                         <StyledTextField
                             id="standard-basic"
-                            label="Deposit amount" 
+                            label="Withdraw amount" 
                             variant="filled"
                             size="small"
                             value={amount}
@@ -131,4 +122,4 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
     )
 }
 
-export default DepositAsset
+export default WithdrawAsset

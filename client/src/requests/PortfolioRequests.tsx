@@ -13,7 +13,8 @@ import { ListTradesRequest } from "../../../server/src/requests/ListTradesReques
 import { ListTradesResponse } from "../../../server/src/responses/ListTradesResponse"
 import { DepositAssetRequest } from "../../../server/src/requests/DepositAssetRequest"
 import { DepositAssetResponse } from "../../../server/src/responses/DepositAssetResponse"
-
+import { WithdrawAssetRequest } from "../../../server/src/requests/WithdrawAssetRequest"
+import { WithdrawAssetResponse } from "../../../server/src/responses/WithdrawAssetResponse"
 
 export const createPortfolioRequest = async (user: string, name: string): Promise<Portfolio> => {
     const request: CreatePortfolioRequest = { user, name }
@@ -82,5 +83,11 @@ export const listTrades = async (portfolio: string, authorization: string) => {
 export const depositAssetRequest = async (authorization: string, user: string, portfolio: string, asset: string, amount: string): Promise<DepositAssetResponse> => {
     const request: DepositAssetRequest = { authorization, user, portfolio, asset, amount }
     const data = postApi<DepositAssetResponse, DepositAssetRequest>("/DepositAsset", request)
+    return data
+}
+
+export const withdrawAssetRequest = async (authorization: string, user: string, portfolio: string, asset: string, amount: string): Promise<WithdrawAssetResponse> => {
+    const request: WithdrawAssetRequest = { authorization, user, portfolio, asset, amount }
+    const data = postApi<WithdrawAssetResponse, WithdrawAssetRequest>("/WithdrawAsset", request)
     return data
 }
