@@ -33,6 +33,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
     const classes = useStyles()
     const [priceData, setPriceData] = useState({})
     const [sum, setSum] = useState("0")
+    const [usd, setUsd] = useState("0")
     const [loadingSum, setLoadingSum] = useState(true)
     const ws = useRef(null)
 
@@ -44,6 +45,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                     const data = await getPortfolioDataRequest(portfolioId)
                     const targetUSD = data.find(asset => asset.name == "USD")
                     if (targetUSD) {
+                        setUsd(targetUSD.amount)
                         setSum(targetUSD.amount)
                     }
                     setAssets(data)
@@ -54,6 +56,14 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
 
         getPortfolioData()
     }, [portfolioId, loadingPortfolio])
+
+    useEffect(() => {
+        const targetUSD = assets.find(asset => asset.name == "USD")
+        if (targetUSD) {
+            setSum((parseFloat(sum) + parseFloat(targetUSD.amount) - parseFloat(usd)).toFixed(2))
+            setUsd(parseFloat(targetUSD.amount).toFixed(2))
+        }
+    }, [assets])
 
     useEffect(() => {
         ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
@@ -72,7 +82,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
             const assetName = json["asset"].split("-")[0]
             const price = json["price"]
             const amount = findAmount(assetName)
-            const currValue = (parseFloat(price) * parseFloat(amount)).toFixed(1)
+            const currValue = (parseFloat(price) * parseFloat(amount)).toFixed(2)
             currData[assetName] = {
                 "price": price,
                 "amount": amount,
@@ -84,7 +94,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                 prevValue = priceData[assetName]["value"]
             }
             setPriceData(currData)
-            setSum((parseFloat(sum) - parseFloat(prevValue) + parseFloat(currValue)).toFixed(1))
+            setSum((parseFloat(sum) - parseFloat(prevValue) + parseFloat(currValue)).toFixed(2))
             setLoadingSum(false)
         }
     })
@@ -122,7 +132,11 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                                 <TableCell align="center" className={classes.tableCell}>
                                     {
                                         priceData.hasOwnProperty(asset.name) ?
-                                        `${priceData[asset.name]["value"]}` :
+                                        `${
+                                            priceData[asset.name]["amount"] == "0" ?
+                                            "Loading..." :
+                                            (parseFloat(priceData[asset.name]["price"]) * parseFloat(priceData[asset.name]["amount"])).toFixed(2)
+                                        }` :
                                         asset.name != "USD" ?
                                         "Loading..." :
                                         asset.amount
