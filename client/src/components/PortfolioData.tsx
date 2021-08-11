@@ -31,9 +31,7 @@ const useStyles = makeStyles(theme => ({
 const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadingData, setLoadingData }
     : { portfolioId: string, loadingPortfolio: boolean, assets: Asset[], setAssets, loadingData: boolean, setLoadingData }) => {
     const classes = useStyles()
-    const [priceData, setPriceData] = useState({})
-    const [sum, setSum] = useState("0")
-    const [usd, setUsd] = useState("0")
+    const [priceData, setPriceData] = useState({ "USD": 1 })
     const [loadingSum, setLoadingSum] = useState(true)
     const ws = useRef(null)
 
@@ -43,11 +41,6 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
             if (!loadingPortfolio) {
                 if (portfolioId != "") {
                     const data = await getPortfolioDataRequest(portfolioId)
-                    const targetUSD = data.find(asset => asset.name == "USD")
-                    if (targetUSD) {
-                        setUsd(targetUSD.amount)
-                        setSum(targetUSD.amount)
-                    }
                     setAssets(data)
                 }
                 setLoadingData(false)
@@ -56,14 +49,6 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
 
         getPortfolioData()
     }, [portfolioId, loadingPortfolio])
-
-    useEffect(() => {
-        const targetUSD = assets.find(asset => asset.name == "USD")
-        if (targetUSD) {
-            setSum((parseFloat(sum) + parseFloat(targetUSD.amount) - parseFloat(usd)).toFixed(2))
-            setUsd(parseFloat(targetUSD.amount).toFixed(2))
-        }
-    }, [assets])
 
     useEffect(() => {
         ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
@@ -81,27 +66,20 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
 
             const assetName = json["asset"].split("-")[0]
             const price = json["price"]
-            const amount = findAmount(assetName)
-            const currValue = (parseFloat(price) * parseFloat(amount)).toFixed(2)
-            currData[assetName] = {
-                "price": price,
-                "amount": amount,
-                "value": currValue
-            }
+            
+            currData[assetName] = price
 
-            let prevValue = "0";
-            if (priceData.hasOwnProperty(assetName)) {
-                prevValue = priceData[assetName]["value"]
-            }
             setPriceData(currData)
-            setSum((parseFloat(sum) - parseFloat(prevValue) + parseFloat(currValue)).toFixed(2))
             setLoadingSum(false)
         }
     })
 
-    const findAmount = (assetName: string) => {
-        const targetAsset = assets.find(asset => asset.name == assetName)
-        return targetAsset ? targetAsset.amount : "0"
+    const getSum = () => {
+        let sum = 0;
+        assets.forEach(asset => {
+            sum += priceData[asset.name] ? priceData[asset.name] * parseFloat(asset.amount) : 0
+        })
+        return sum.toFixed(2)
     }
 
     return (
@@ -135,7 +113,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                                         `${
                                             priceData[asset.name]["amount"] == "0" ?
                                             "Loading..." :
-                                            (parseFloat(priceData[asset.name]["price"]) * parseFloat(priceData[asset.name]["amount"])).toFixed(2)
+                                            (parseFloat(priceData[asset.name]) * parseFloat(asset.amount)).toFixed(2)
                                         }` :
                                         asset.name != "USD" ?
                                         "Loading..." :
@@ -148,7 +126,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                             !loadingData && assets.length != 0 &&
                             <TableRow>
                                 <TableCell colSpan={3} align="center" >Total</TableCell>
-                                <TableCell align="center">{loadingSum ? "Loading..." : sum}</TableCell>
+                                <TableCell align="center">{loadingSum ? "Loading..." : getSum()}</TableCell>
                             </TableRow>
                         }
                     </TableBody>
