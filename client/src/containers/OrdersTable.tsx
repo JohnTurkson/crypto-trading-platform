@@ -29,8 +29,6 @@ const useStyles = makeStyles({
 const maxTrades = 10
 
 export default function OrdersTable({portfolios, selectedPortfolioId}: {portfolios: Portfolio[], selectedPortfolioId : string}) {
-    console.log("id: " + selectedPortfolioId)
-
     const classes = useStyles()
 
     const ws = useRef(null)
@@ -52,8 +50,6 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
     useEffect(() => {
         ws.current = new WebSocket("wss://crypto-trade-stream.johnturkson.com")
         ws.current.onopen = () => {
-            console.log("ws opened")
-
             const subscribeToTradeUpdates: SubscribeToTradeUpdatesRequest = {
                 authorization: authToken,
                 user: userId,
@@ -61,7 +57,7 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
             }
             ws.current.send(JSON.stringify(subscribeToTradeUpdates))
         }
-        ws.current.onclose = () => console.log("ws closed")
+        ws.current.onclose = () => {}
         
         return () => {
             ws.current.close();

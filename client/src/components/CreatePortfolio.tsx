@@ -55,7 +55,7 @@ const CreatePortfolio = ({ addHandler, setShowSuccessAlert }) => {
             toggleSuccessAlert()
             setName("")
         } catch (e) {
-            console.log(e)
+            
         }
     }
 
