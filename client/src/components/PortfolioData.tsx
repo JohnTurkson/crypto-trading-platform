@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react"
-import { Asset } from "../../../server/src/data/Asset"
+import { useEffect, useRef, useState } from "react"
 import { getPortfolioDataRequest } from "../requests/PortfolioRequests"
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +10,7 @@ import { makeStyles } from "@material-ui/styles";
 import { Link } from "react-router-dom"
 import { coinsWithImageLink } from "../constants";
 import { Typography } from "@material-ui/core";
+import { Asset } from "../../../server/src/data/Asset"
 
 const useStyles = makeStyles(theme => ({
     tableContainer: {
@@ -28,25 +28,59 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
+const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadingData, setLoadingData }
+    : { portfolioId: string, loadingPortfolio: boolean, assets: Asset[], setAssets, loadingData: boolean, setLoadingData }) => {
     const classes = useStyles()
-    const [assets, setAssets] = useState<Asset[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
+    const [priceData, setPriceData] = useState({ "USD": 1 })
+    const [loadingSum, setLoadingSum] = useState(true)
+    const ws = useRef(null)
 
     useEffect(() => {
         const getPortfolioData = async () => {
-            setLoading(true)
+            setLoadingData(true)
             if (!loadingPortfolio) {
                 if (portfolioId != "") {
                     const data = await getPortfolioDataRequest(portfolioId)
                     setAssets(data)
                 }
-                setLoading(false)
+                setLoadingData(false)
             }
         }
 
         getPortfolioData()
     }, [portfolioId, loadingPortfolio])
+
+    useEffect(() => {
+        ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
+
+        return () => ws.current.close()
+    }, [])
+    
+    useEffect(() => {
+        if (!ws.current || assets.length == 0) return
+
+        ws.current.onmessage = message => {
+            setLoadingSum(true)
+            const currData = {...priceData}
+            const json = JSON.parse(message.data)
+
+            const assetName = json["asset"].split("-")[0]
+            const price = json["price"]
+            
+            currData[assetName] = price
+
+            setPriceData(currData)
+            setLoadingSum(false)
+        }
+    })
+
+    const getSum = () => {
+        let sum = 0;
+        assets.forEach(asset => {
+            sum += priceData[asset.name] ? priceData[asset.name] * parseFloat(asset.amount) : 0
+        })
+        return sum.toFixed(2)
+    }
 
     return (
         <div id="portfolio_data_container">
@@ -57,10 +91,11 @@ const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
                             <TableCell align="center" className={classes.tableCell}>Asset</TableCell>
                             <TableCell align="center" className={classes.tableCell}>Name</TableCell>
                             <TableCell align="center" className={classes.tableCell}>Amount</TableCell>
+                            <TableCell align="center" className={classes.tableCell}>Value</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        { !loading && assets.map(asset => (
+                        { !loadingData && assets.map(asset => (
                             <TableRow key={asset.name}>
                                 <TableCell align="center" className={classes.tableCell}>
                                     {
@@ -72,13 +107,33 @@ const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
                                 </TableCell>
                                 <TableCell align="center" className={classes.tableCell}>{asset.name}</TableCell>
                                 <TableCell align="center" className={classes.tableCell}>{asset.amount}</TableCell>
+                                <TableCell align="center" className={classes.tableCell}>
+                                    {
+                                        priceData.hasOwnProperty(asset.name) ?
+                                        `${
+                                            priceData[asset.name]["amount"] == "0" ?
+                                            "Loading..." :
+                                            (parseFloat(priceData[asset.name]) * parseFloat(asset.amount)).toFixed(2)
+                                        }` :
+                                        asset.name != "USD" ?
+                                        "Loading..." :
+                                        asset.amount
+                                    }
+                                </TableCell>
                             </TableRow>
                         ))}
+                        {
+                            !loadingData && assets.length != 0 &&
+                            <TableRow>
+                                <TableCell colSpan={3} align="center" >Total</TableCell>
+                                <TableCell align="center">{loadingSum ? "Loading..." : getSum()}</TableCell>
+                            </TableRow>
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>
             {
-                loading ?
+                loadingData ?
                 <Typography align="center" variant="h6" className={classes.message}>Loading...</Typography> :
                 assets.length == 0 ?
                 <Typography align="center" variant="h6" className={classes.message}>No assets</Typography> : null

@@ -11,7 +11,7 @@ const StyledCard = styled(Card)({
     padding: "1em",
     display: "flex",
     flexDirection: "column",
-    marginTop: "50px"
+    marginTop: "20px"
 })
 
 const StyledTypography = styled(Typography)({
@@ -71,7 +71,6 @@ const CreatePortfolio = ({ addHandler, setShowSuccessAlert }) => {
                 onChange={e => setName(e.target.value)}
             />
             <StyledButton variant="outlined" size="small" onClick={() => submitHandler()} >Submit</StyledButton>
-            
         </StyledCard>
     )
 }

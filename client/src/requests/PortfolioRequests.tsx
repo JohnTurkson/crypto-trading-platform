@@ -11,6 +11,10 @@ import { CreateTradeResponse } from "../../../server/src/responses/CreateTradeRe
 import { CreateTradeRequest } from "../../../server/src/requests/CreateTradeRequest"
 import { ListTradesRequest } from "../../../server/src/requests/ListTradesRequest"
 import { ListTradesResponse } from "../../../server/src/responses/ListTradesResponse"
+import { DepositAssetRequest } from "../../../server/src/requests/DepositAssetRequest"
+import { DepositAssetResponse } from "../../../server/src/responses/DepositAssetResponse"
+import { WithdrawAssetRequest } from "../../../server/src/requests/WithdrawAssetRequest"
+import { WithdrawAssetResponse } from "../../../server/src/responses/WithdrawAssetResponse"
 
 export const createPortfolioRequest = async (user: string, name: string): Promise<Portfolio> => {
     const request: CreatePortfolioRequest = { user, name }
@@ -33,6 +37,10 @@ export const getPortfolioDataRequest = async (portfolio: string): Promise<Asset[
 
 export const getSupportedAssets = async (): Promise<string[]> => {
     return getApi<string[]>("/GetSupportedAssets")
+}
+
+export const getSupportedCurrencies = async (): Promise<string[]> => {
+    return getApi<string[]>("/GetSupportedCurrencies")
 }
 
 export const getUserPortfolioIds = async (user: string): Promise<ListPortfoliosResponse> => {
@@ -70,4 +78,16 @@ export const listTrades = async (user: string, portfolio: string, authorization:
     const listTradesRequest: ListTradesRequest = {user: user, authorization: authorization, portfolio: portfolio}
     console.log(listTradesRequest)
     return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest)
+}
+
+export const depositAssetRequest = async (authorization: string, user: string, portfolio: string, asset: string, amount: string): Promise<DepositAssetResponse> => {
+    const request: DepositAssetRequest = { authorization, user, portfolio, asset, amount }
+    const data = postApi<DepositAssetResponse, DepositAssetRequest>("/DepositAsset", request)
+    return data
+}
+
+export const withdrawAssetRequest = async (authorization: string, user: string, portfolio: string, asset: string, amount: string): Promise<WithdrawAssetResponse> => {
+    const request: WithdrawAssetRequest = { authorization, user, portfolio, asset, amount }
+    const data = postApi<WithdrawAssetResponse, WithdrawAssetRequest>("/WithdrawAsset", request)
+    return data
 }
