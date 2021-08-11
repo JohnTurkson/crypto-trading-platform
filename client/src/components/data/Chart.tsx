@@ -24,6 +24,7 @@ export function Chart(props: ChartProps) {
                 align: "left"
             },
         },
+
         ],
         tooltip: {
             shared: true,
