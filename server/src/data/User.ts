@@ -1,8 +1,6 @@
-import Resource from "./Resource"
-import UserData from "./UserData"
+import { UserData } from "./UserData"
 
-export default interface User extends Resource, UserData {
-    readonly id: string,
-    readonly name: string,
-    readonly email: string,
+export interface User extends UserData {
+    readonly id: string
+    readonly email: string
 }

@@ -7,8 +7,9 @@
         "build": "tsc --build"
     },
     "dependencies": {
-        "ws": "^7.5.3",
-        "@aws-sdk/client-sns": "^3.21.0"
+        "@aws-sdk/client-sns": "^3.21.0",
+        "axios": "^0.21.1",
+        "ws": "^7.5.3"
     },
     "devDependencies": {
         "@types/node": "^14.14.31",

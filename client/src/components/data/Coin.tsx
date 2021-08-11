@@ -1,6 +1,5 @@
-import {useEffect, useState} from "react"
-import {makeStyles} from "@material-ui/core/styles"
-import Button from "@material-ui/core/Button"
+import { useEffect, useState } from "react"
+import { makeStyles } from "@material-ui/core/styles"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import Box from "@material-ui/core/Box"
@@ -11,7 +10,7 @@ import TableBody from "@material-ui/core/TableBody"
 import TableHead from "@material-ui/core/TableHead"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp"
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 
 const useStyles = makeStyles({
     root: {
@@ -40,7 +39,7 @@ const useStyles = makeStyles({
 })
 
 export interface CoinProps {
-    json: JSON
+    json: any
     url: string
     name: string
     price: number
@@ -60,8 +59,6 @@ export function Coin(props: CoinProps) {
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
-        console.log(props.price)
-        //setPrice(props.price)
         let json = props.json
         if (json == undefined) return
 
@@ -80,7 +77,7 @@ export function Coin(props: CoinProps) {
         pathname: "/coin/" + props.name,
         state: {url: props.url, name: props.name}
     }
-
+    
     return (
         <>
             <TableRow>
@@ -91,16 +88,16 @@ export function Coin(props: CoinProps) {
                 </TableCell>
                 <TableCell component="th" scope="row">
                     <Link to={newTo}>
-                        <img src={props.url} className={classes.icon}></img>
+                        <img src={props.url} className={classes.icon}/>
                     </Link>
                 </TableCell>
                 <TableCell align="right">{props.name}</TableCell>
-
+                
                 {props.portfolio ? <>
                     <TableCell align="right">{props.amountOwned}</TableCell>
                     <TableCell align="right">{props.amountOwned * price}</TableCell>
                 </> : <></>}
-
+                
                 <TableCell align="right">{price}</TableCell>
                 <TableCell align="right">{dailyPercentChange}</TableCell>
                 <TableCell align="right">{dailyNetChange}</TableCell>
@@ -132,7 +129,6 @@ export function Coin(props: CoinProps) {
                 </TableCell>
             </TableRow>
         </>
-
     )
 }
 

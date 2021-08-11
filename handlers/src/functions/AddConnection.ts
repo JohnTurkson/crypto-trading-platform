@@ -1,15 +1,12 @@
-import { PutItemCommand } from "@aws-sdk/client-dynamodb"
-import { dynamoDBClient } from "../resources/Clients"
+import { dynamoDBDocumentClient } from "../resources/Clients"
 
 export async function handler(event: any) {
-    const addConnectionCommand = new PutItemCommand({
+    await dynamoDBDocumentClient.put({
         TableName: "CryptoDataStreamConnections",
         Item: {
-            "connectionId": {S: event.requestContext.connectionId}
+            "connectionId": event.requestContext.connectionId
         }
     })
-    
-    await dynamoDBClient.send(addConnectionCommand)
     
     return {
         statusCode: 200,

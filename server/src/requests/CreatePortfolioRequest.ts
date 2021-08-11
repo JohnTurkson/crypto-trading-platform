@@ -1,6 +1,3 @@
-import Request from "./Request"
+import { PortfolioData } from "../data/PortfolioData"
 
-export default interface GetPortfolioRequest extends Request {
-    readonly type: "GetPortfolioRequest",
-    readonly userId: string,
-}
+export type CreatePortfolioRequest = PortfolioData
