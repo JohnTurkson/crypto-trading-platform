@@ -24,6 +24,11 @@ export async function handler(event: any) {
         await tradeStreamClient.send(new PostToConnectionCommand({
             ConnectionId: connection.id,
             Data: textEncoder.encode(JSON.stringify(update))
+        })).catch(() => dynamoDBDocumentClient.delete({
+            TableName: "CryptoTradeStreamConnections",
+            Key: {
+                "id": connection.id
+            }
         }))
     }
 }
