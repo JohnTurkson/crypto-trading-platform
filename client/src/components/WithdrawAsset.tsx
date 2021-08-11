@@ -92,7 +92,7 @@ const WithdrawAsset = ({ portfolioId, assets, setAssets, loadingData, setLoading
     
     const haveSufficientAmount = () => {
         const targetAsset = assets.find(asset => asset.name == selectedAsset)
-        return targetAsset.amount >= amount
+        return parseInt(targetAsset.amount) >= parseInt(amount)
     }
 
     return (

@@ -107,6 +107,8 @@ const DepositAsset = ({ portfolioId, setAssets, setLoadingData, loadingPortfolio
             {
                 loading || loadingPortfolio ?
                     <StyledMessage align="left" variant="h6">Loading...</StyledMessage> :
+                    portfolioId == "" ?
+                    <StyledMessage align="left" variant="h6">No portfolios found</StyledMessage> :
                     <>
                         <StyledForm variant="outlined">
                             <Select
