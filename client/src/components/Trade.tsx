@@ -35,6 +35,9 @@ const useStyles = makeStyles(theme => ({
     selectContainer: {
         display: "flex",
         flexDirection: "column"
+    },
+    parentContainer: {
+        width: "70%"
     }
 }))
 
@@ -172,7 +175,7 @@ export function Trade() {
     const max = selectedAsset === null ? 0 : selectedAsset.amount;
 
     return (
-        <div>
+        <div className={classes.parentContainer}>
             <Container>
             {showWarning
             ? <Alert severity="warning">The trade you made might not fulfill due to insufficient funds!</Alert> : ""}
@@ -253,12 +256,12 @@ export function Trade() {
                     Trade
                 </Button>
             </Container>
-            
             <Container className={classes.tradesContainer}>
                 <h4>Recent Trades</h4>
-            <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
+                <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
             </Container>
             </div>
+
     )
 }
 

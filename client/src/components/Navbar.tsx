@@ -1,11 +1,15 @@
-import { AppBar, Button, makeStyles, Tab, Tabs, Toolbar } from "@material-ui/core"
+import {AppBar, Button, createMuiTheme, makeStyles, MuiThemeProvider, Tab, Tabs, Toolbar} from "@material-ui/core"
 import { useAuth } from "../context/Auth"
+import {useEffect, useState} from "react"
 
 const useStyles = makeStyles(theme => ({
     navigation: {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+    },
+    selectedTab: {
+        textDecoration: "underline"
     },
     tabItem: {
         textTransform: "none",
@@ -14,22 +18,44 @@ const useStyles = makeStyles(theme => ({
         margin: "8px",
         textTransform: "none",
     },
+
 }))
 
-export function Navbar({selected}: { selected?: number }) {
+const theme = createMuiTheme({
+    palette: {
+        secondary: {
+            light: '#fff',
+            main: '#fff',
+            dark: '#fff',
+            contrastText: '#fff',
+        },
+    },
+});
+
+export function Navbar() {
     const classes = useStyles()
     const {logout} = useAuth()
-    
+    const [value, setValue] = useState(Number(localStorage.getItem("selectedTab")) ?? 0)
+
+    const handleChange = (event, newValue) => {
+        localStorage.setItem("selectedTab", newValue)
+        setValue(newValue)
+    };
+
     return (
         <>
+            <MuiThemeProvider theme={theme}>
             <AppBar position="static" color="primary" elevation={0}>
                 <Toolbar className={classes.navigation}>
-                    <Tabs value={selected ?? false}>
+                    <Tabs
+                    value={value}
+                    onChange={handleChange}>
                         <Tab
                             className={classes.tabItem}
                             component="a"
                             label="Portfolio"
-                            href="/overview"/>
+                            href="/overview"
+                            />
                         <Tab
                             className={classes.tabItem}
                             component="a"
@@ -55,6 +81,7 @@ export function Navbar({selected}: { selected?: number }) {
                     </Button>
                 </Toolbar>
             </AppBar>
+            </MuiThemeProvider>
         </>
     )
 }

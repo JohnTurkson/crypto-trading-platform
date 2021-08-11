@@ -10,10 +10,10 @@ const MainContentContainer = styled.div`
   align-items: center;
 `
 
-const Page = ({children, tabIndex}: { children: ReactNode, tabIndex?: number }) => {
+const Page = ({children}: { children: ReactNode}) => {
     return (
         <>
-            <Navbar selected={tabIndex}/>
+            <Navbar />
             <MainContentContainer>
                 {children}
             </MainContentContainer>
