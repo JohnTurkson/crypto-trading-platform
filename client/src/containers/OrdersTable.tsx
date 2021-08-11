@@ -1,3 +1,4 @@
+import { makeStyles } from "@material-ui/core/styles"
 import { useEffect, useRef, useState } from "react"
 import TableContainer from "@material-ui/core/TableContainer"
 import Paper from "@material-ui/core/Paper"
@@ -6,21 +7,42 @@ import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import TableBody from "@material-ui/core/TableBody"
-import { getUserPortfolioIds, listTrades } from "../requests/PortfolioRequests"
+import { listTrades } from "../requests/PortfolioRequests"
 import { SubscribeToTradeUpdatesRequest } from "../../../server/src/requests/SubscribeToTradeUpdatesRequest"
 import { useAuth } from "../context/Auth"
+import { Portfolio } from "../../../server/src/data/Portfolio"
+import { Alert } from "@material-ui/lab"
+
+const useStyles = makeStyles({
+    root: {
+        '& > *': {
+            borderBottom: 'unset',
+        },
+    },
+    icon: {
+        minWidth: 50,
+        width: 10
+    }
+})
 
 const maxTrades = 10
 
-export default function OrdersTable() {
+export default function OrdersTable({portfolios, selectedPortfolioId}: {portfolios: Portfolio[], selectedPortfolioId : string}) {
+    console.log("id: " + selectedPortfolioId)
+
+    const classes = useStyles()
+
     const ws = useRef(null)
     const {userId} = useAuth()
+    const {authToken} = useAuth()
     const [trades, setTrades] = useState([])
     
     const updateTrades = async () => {
-        const ids = (await getUserPortfolioIds(userId)).map((portfolio) => portfolio.id)
-        if (ids.length > 0) {
-            setTrades(trades.concat(await listTrades(ids[0])))
+        if(portfolios.length > 0) {
+            const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
+            if (selectedPortfolio !== undefined) {
+                setTrades(await listTrades(userId, selectedPortfolio.id, authToken))
+            }
         }
     }
     
@@ -29,9 +51,9 @@ export default function OrdersTable() {
         ws.current = new WebSocket("wss://crypto-trade-stream.johnturkson.com")
         ws.current.onopen = () => {
             console.log("ws opened")
-            
+
             const subscribeToTradeUpdates: SubscribeToTradeUpdatesRequest = {
-                authorization: "",
+                authorization: authToken,
                 user: userId,
                 type: "SubscribeToTradeUpdatesRequest"
             }
@@ -40,10 +62,10 @@ export default function OrdersTable() {
         ws.current.onclose = () => console.log("ws closed")
         
         return () => {
-            ws.current.close()
-        }
-    }, [])
-    
+            ws.current.close();
+        };
+    }, [selectedPortfolioId]);
+
     useEffect(() => {
         if (!ws.current) return
         ws.current.onmessage = message => {
@@ -51,13 +73,13 @@ export default function OrdersTable() {
             setTrades(trades.filter((trade) => trade.id !== json.id).concat([json]))
         }
     }, [trades])
-    
-    return (
+            
+    return portfolios.length > 0 && trades.length > 0 ? (
         <TableContainer component={Paper}>
             <Table aria-label="Trades">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Coin</TableCell>
+                        <TableCell>Asset</TableCell>
                         <TableCell align="right">Type</TableCell>
                         <TableCell align="right">Amount</TableCell>
                         <TableCell align="right">Total Price</TableCell>
@@ -82,5 +104,6 @@ export default function OrdersTable() {
                 </TableBody>
             </Table>
         </TableContainer>
-    )
+
+    ) : (<Alert severity="error">Select a Portfolio to View Recent Trades</Alert>)
 }

@@ -47,7 +47,7 @@ So while raw HTML, CSS, JS can be used in creating basic full-stack web applicat
 
 Unit 2: React
 
-Our application front-end code is essentially written entirely in React. We have utilized React Functional Components with Hooks to manage state, to create separate, reuseable components such as a Coin component, a Coin Table component, a Charts component to visualize crypto price data in real time, a Navigation Bar component, Trade component, and more. This is one of the best features of using React, the ability to conceptualize and reason about features compartmentialized in the form of Functional Components, and the ability to re-use these components effortlessly throughout the entire application, is remarkable. 
+Our application front-end code is essentially written entirely in React. We have utilized React Functional Components with Hooks to manage state, to create separate, reuseable components such as a Asset component, a Asset Table component, a Charts component to visualize crypto price data in real time, a Navigation Bar component, Trade component, and more. This is one of the best features of using React, the ability to conceptualize and reason about features compartmentialized in the form of Functional Components, and the ability to re-use these components effortlessly throughout the entire application, is remarkable. 
 
 We also took initiative to learn React Router in order to set up the navigation between pages of our Application seamlessly, and Material UI to make our components look nicer.
 
@@ -140,7 +140,7 @@ Andy Kwan worked in both front end and back end, and took a leadership position 
 
 Ryan Liu:
 
-Ryan primarily worked on the front-end, taking a leadership role in front end components such as Coin, the Coin Tables in the portfolio and the discover page, and the Charts component to visualize and graph the crypto price data in real-time. Ryan contributed by taking initiative to learn and utilize Material UI for the Coin Tables, React Router to set up Links between the Coins and their respective Charts pages, and Websockets API to be able to get real-time data for each crypto. Ryan also worked on the documentation.
+Ryan primarily worked on the front-end, taking a leadership role in front end components such as Asset, the Asset Tables in the portfolio and the discover page, and the Charts component to visualize and graph the crypto price data in real-time. Ryan contributed by taking initiative to learn and utilize Material UI for the Asset Tables, React Router to set up Links between the Coins and their respective Charts pages, and Websockets API to be able to get real-time data for each crypto. Ryan also worked on the documentation.
 
 Andy Ma:
 

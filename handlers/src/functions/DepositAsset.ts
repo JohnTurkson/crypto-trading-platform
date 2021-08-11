@@ -3,9 +3,31 @@ import { dynamoDBDocumentClient } from "../resources/Clients"
 import { DepositAssetRequest } from "../../../server/src/requests/DepositAssetRequest"
 import { DepositAssetResponse } from "../../../server/src/responses/DepositAssetResponse"
 import Decimal from "decimal.js"
+import { UserToken } from "../../../server/src/data/UserToken"
 
 export async function handler(event: any): Promise<DepositAssetResponse> {
     const request = getEventBody(event) as DepositAssetRequest
+    
+    if (request.authorization === undefined || request.authorization === "") {
+        return {
+            success: false,
+            error: "Invalid Credentials"
+        }
+    }
+    
+    const authorization = await dynamoDBDocumentClient.get({
+        TableName: "CryptoUserTokens",
+        Key: {
+            "token": request.authorization
+        }
+    }).then(response => response.Item as UserToken ?? undefined)
+    
+    if (authorization === undefined || authorization.user !== request.user) {
+        return {
+            success: false,
+            error: "Invalid Credentials"
+        }
+    }
     
     if (Number.isNaN(request.amount)) {
         return {

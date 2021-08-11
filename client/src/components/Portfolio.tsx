@@ -7,7 +7,7 @@ import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import TableBody from "@material-ui/core/TableBody"
-import Coin from "./data/Coin"
+import Asset from "./data/Asset"
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -71,8 +71,6 @@ const Portfolio = (props: any) => {
                 <Typography variant="h6" style={{color: changeColor}}>
                     {changeSign + "$" + Math.abs(valueChange).toFixed(2)}
                 </Typography>
-                <Button variant="contained"
-                        onClick={() => setValueChange(5000 + Math.random() * (-10000))}>Refresh</Button>
             </Box>
             
             <TableContainer component={Paper}>
@@ -91,7 +89,7 @@ const Portfolio = (props: any) => {
                     </TableHead>
                     <TableBody>
                         {props.data.map((row: any) => (
-                            <Coin
+                            <Asset
                                 name={row.name}
                                 url={row.url}
                                 price={row.price}

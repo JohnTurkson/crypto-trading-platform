@@ -5,6 +5,7 @@ import { UserToken } from "../../../server/src/data/UserToken"
 interface AuthContextType {
     isAuthed: boolean
     userId: string | null
+    authToken: string | null
     login: (e: string, p: string) => Promise<UserToken | undefined>
     signUp: (e: string, p: string) => Promise<UserToken | undefined>
     logout: () => void
@@ -74,7 +75,7 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
     return (
         loading ?
             <div>Loading</div> :
-            <AuthContext.Provider value={{isAuthed: !!token && !!userId, userId, login, signUp, logout}}>
+            <AuthContext.Provider value={{isAuthed: !!token && !!userId, userId: userId, authToken: token, login, signUp, logout}}>
                 {children}
             </AuthContext.Provider>
     )

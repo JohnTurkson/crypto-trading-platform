@@ -1,7 +1,7 @@
-import CryptoPriceList from "../containers/CryptoPriceList"
+import PortfolioContainer from "../containers/PortfolioContainer"
 
 export default () => {
     return (
-        <CryptoPriceList/>
+        <PortfolioContainer />
     )
 }

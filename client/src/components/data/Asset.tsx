@@ -47,7 +47,7 @@ export interface CoinProps {
     portfolio: boolean
 }
 
-export function Coin(props: CoinProps) {
+export function Asset(props: CoinProps) {
     const classes = useStyles()
     const [price, setPrice] = useState("Loading")
     const [dailyPercentChange, setDailyPercentChange] = useState("Loading")
@@ -132,4 +132,4 @@ export function Coin(props: CoinProps) {
     )
 }
 
-export default Coin
+export default Asset
