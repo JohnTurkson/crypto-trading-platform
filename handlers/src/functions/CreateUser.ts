@@ -27,7 +27,6 @@ export async function handler(event: any): Promise<CreateUserResponse> {
     }).then(response => response.Items as User[] ?? [])
     
     if (response.length > 0) {
-        console.log(response)
         return {
             success: false,
             error: "User Already Exists"
