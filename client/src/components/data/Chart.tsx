@@ -24,7 +24,6 @@ export function Chart(props: ChartProps) {
                 align: "left"
             },
         },
-
         ],
         tooltip: {
             shared: true,
@@ -44,8 +43,6 @@ export function Chart(props: ChartProps) {
         chart: {
             height: 600,
         },
-
-
         credits: {
             enabled: false
         },
@@ -60,30 +57,6 @@ export function Chart(props: ChartProps) {
         },
         ],
 
-        rangeSelector: {
-            buttons: [{
-                type: "day",
-                count: 1,
-                text: "1d",
-            }, {
-                type: "day",
-                count: 7,
-                text: "7d"
-            }, {
-                type: "month",
-                count: 1,
-                text: "1m"
-            }, {
-                type: "month",
-                count: 3,
-                text: "3m"
-            },
-                {
-                    type: "all",
-                    text: "All"
-                }],
-            selected: 4
-        },
         series: [{
             name: "Price",
             type: "spline",
@@ -95,7 +68,6 @@ export function Chart(props: ChartProps) {
             tooltip: {
                 valueDecimals: props.name == "Dogecoin" ? 4 : 2
             },
-
         }
         ]
     })
