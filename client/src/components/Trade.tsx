@@ -96,7 +96,6 @@ export function Trade() {
             if(data.length > 0) {
                 if (data[0].id !== "") {
                     const assets = await getPortfolioAssets(data[0].id)
-                    console.log(assets)
                     setUserAssets(assets)
                 }
             }
@@ -120,7 +119,6 @@ export function Trade() {
                     }).filter(assetName => {
                         return assetName !== "USD"
                     })
-                    console.log(currencyOptions)
                     setCurrencyOptions(currencyOptions)
                 }
                 break
@@ -165,7 +163,6 @@ export function Trade() {
         const value = event.target.value
         const handleAssets = async (value) => {
             const assets = await getPortfolioAssets(value)
-            console.log(assets)
             setUserAssets(assets)
         }
         handleAssets(value)

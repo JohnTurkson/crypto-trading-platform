@@ -35,7 +35,6 @@ export default function AssetList() {
     useEffect(() => {
         connection.onmessage = message => {
             let json = JSON.parse(message.data)
-            console.log(json)
             if (json["asset"] == "BTC-USD") {
                 setBitcoinJSON(json)
             } else if (json["asset"] == "ETH-USD") {

@@ -73,7 +73,6 @@ export function Chart(props: ChartProps) {
             let newConfig = config
             newConfig.series[0].data = data
             setConfig(newConfig)
-            console.log(data)
         }
     })
     
