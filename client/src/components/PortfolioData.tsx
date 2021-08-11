@@ -101,7 +101,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadi
                                     {
                                         coinsWithImageLink.hasOwnProperty(asset.name) &&
                                         <Link to={`/coin/${coinsWithImageLink[asset.name].name}`}>
-                                            <img src={coinsWithImageLink[asset.name].imageUrl} className={classes.icon}></img>
+                                            <img src={coinsWithImageLink[asset.name].imageUrl} className={classes.icon}/>
                                         </Link>
                                     }
                                 </TableCell>
