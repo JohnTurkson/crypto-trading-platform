@@ -24,9 +24,9 @@ const useStyles = makeStyles({
 const connection = new WebSocket("wss://crypto-data-stream.johnturkson.com")
 
 export default function AssetList() {
-    let bitcoinURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/BTC_Logo.svg/183px-BTC_Logo.svg.png"
-    let ethereumURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/1200px-Ethereum-icon-purple.svg.png"
-    let dogeCoinURL = "https://static01.nyt.com/images/2021/05/16/fashion/13DOGECOIN-1/13DOGECOIN-1-mediumSquareAt3X.jpg"
+    let bitcoinURL = "https://crypto.johnturkson.com/BTC.png"
+    let ethereumURL = "https://crypto.johnturkson.com/ETH.png"
+    let dogeCoinURL = "https://crypto.johnturkson.com/DOGE.png"
 
     const [bitcoinJSON, setBitcoinJSON] = useState({})
     const [ethereumJSON, setEthereumJSON] = useState({})
