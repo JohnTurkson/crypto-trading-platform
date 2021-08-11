@@ -12,6 +12,7 @@ import { SubscribeToTradeUpdatesRequest } from "../../../server/src/requests/Sub
 import { useAuth } from "../context/Auth"
 import { Portfolio } from "../../../server/src/data/Portfolio"
 import { Alert } from "@material-ui/lab"
+import {Container, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles({
     root: {
@@ -36,18 +37,19 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
     const {userId} = useAuth()
     const {authToken} = useAuth()
     const [trades, setTrades] = useState([])
+    const [loadingTrades, setLoadingTrades] = useState(true)
     
     const updateTrades = async () => {
         if(portfolios.length > 0) {
             const selectedPortfolio = portfolios.find((portfolio) => portfolio.id == selectedPortfolioId)
             if (selectedPortfolio !== undefined) {
                 setTrades(await listTrades(userId, selectedPortfolio.id, authToken))
+                setLoadingTrades(false)
             }
         }
     }
     
     useEffect(() => {
-        updateTrades()
         ws.current = new WebSocket("wss://crypto-trade-stream.johnturkson.com")
         ws.current.onopen = () => {
             console.log("ws opened")
@@ -64,7 +66,11 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
         return () => {
             ws.current.close();
         };
-    }, [selectedPortfolioId]);
+    }, []);
+
+    useEffect(() => {
+        updateTrades()
+    }, [selectedPortfolioId])
 
     useEffect(() => {
         if (!ws.current) return
@@ -74,7 +80,7 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
         }
     }, [trades])
             
-    return portfolios.length > 0 && trades.length > 0 ? (
+    return (portfolios.length > 0) ? (loadingTrades) ? <Container>"Loading...."</Container> : ((trades.length === 0) ? <Typography>No Recent Trades</Typography> : (
         <TableContainer component={Paper}>
             <Table aria-label="Trades">
                 <TableHead>
@@ -105,5 +111,5 @@ export default function OrdersTable({portfolios, selectedPortfolioId}: {portfoli
             </Table>
         </TableContainer>
 
-    ) : (<Alert severity="error">Select a Portfolio to View Recent Trades</Alert>)
+    )) : (<Alert severity="error">Select or Create a Portfolio to View Recent Trades</Alert>)
 }

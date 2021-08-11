@@ -110,18 +110,25 @@ export function Trade() {
                 setCurrencyOptions(supportedAssets)
                 break
             case TradeCode.SELL:
-                if(userAssets !== null) {
-                    setCurrencyOptions(userAssets.map(asset => {
+                const assets = await getPortfolioAssets(selectedPortfolioId)
+                if(assets !== null) {
+                    const currencyOptions = assets.map(asset => {
                         return asset.name
                     }).filter(assetName => {
                         return assetName !== "USD"
-                    }))
+                    })
+                    console.log(currencyOptions)
+                    setCurrencyOptions(currencyOptions)
                 }
                 break
             default:
                 break
         }
     }
+
+    useEffect(() => {
+        updateCurrencyOptions(selectedTab)
+    }, [selectedPortfolioId])
     
     const tradeHandler = async(tab) => {
         if(portfolios.length > 0) {
@@ -150,10 +157,6 @@ export function Trade() {
             }
         }
     }
-    
-    useEffect(() => {
-        updateCurrencyOptions(selectedTab)
-    }, [])
 
     const handleSelectionChange = (event) => {
         const value = event.target.value
