@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { Asset } from "../../../server/src/data/Asset"
 import { getPortfolioDataRequest } from "../requests/PortfolioRequests"
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,6 +10,7 @@ import { makeStyles } from "@material-ui/styles";
 import { Link } from "react-router-dom"
 import { coinsWithImageLink } from "../constants";
 import { Typography } from "@material-ui/core";
+import { Asset } from "../../../server/src/data/Asset"
 
 const useStyles = makeStyles(theme => ({
     tableContainer: {
@@ -28,20 +28,19 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
+const PortfolioData = ({ portfolioId, loadingPortfolio, assets, setAssets, loadingData, setLoadingData }
+    : { portfolioId: string, loadingPortfolio: boolean, assets: Asset[], setAssets, loadingData: boolean, setLoadingData }) => {
     const classes = useStyles()
-    const [assets, setAssets] = useState<Asset[]>([])
-    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         const getPortfolioData = async () => {
-            setLoading(true)
+            setLoadingData(true)
             if (!loadingPortfolio) {
                 if (portfolioId != "") {
                     const data = await getPortfolioDataRequest(portfolioId)
                     setAssets(data)
                 }
-                setLoading(false)
+                setLoadingData(false)
             }
         }
 
@@ -60,7 +59,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        { !loading && assets.map(asset => (
+                        { !loadingData && assets.map(asset => (
                             <TableRow key={asset.name}>
                                 <TableCell align="center" className={classes.tableCell}>
                                     {
@@ -78,7 +77,7 @@ const PortfolioData = ({ portfolioId, loadingPortfolio }) => {
                 </Table>
             </TableContainer>
             {
-                loading ?
+                loadingData ?
                 <Typography align="center" variant="h6" className={classes.message}>Loading...</Typography> :
                 assets.length == 0 ?
                 <Typography align="center" variant="h6" className={classes.message}>No assets</Typography> : null
