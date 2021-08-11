@@ -276,15 +276,19 @@ export function Trade() {
                             
                             const currency = userAssets.filter(asset => asset.name === "USD")[0]?.amount
                             
-                            if (currency !== undefined) {
-                                if (selectedTab === TradeCode.BUY) {
-                                    if (parseFloat(quantity) * parseFloat(value) > parseFloat(currency)) {
-                                        setShowBanner(true)
-                                        setBannerType("warning")
-                                        setShowBanner(true)
-                                        setBannerType("warning")
-                                        setBanner("This trade may not fulfill due to insufficient balance.")
-                                    }
+                            if (currency !== undefined && selectedTab === TradeCode.BUY) {
+                                if (parseFloat(quantity) * parseFloat(value) > parseFloat(currency)) {
+                                    setShowBanner(true)
+                                    setBannerType("warning")
+                                    setBanner("This trade may not fulfill due to insufficient balance.")
+                                }
+                            }
+                            
+                            if (selectedTab === TradeCode.SELL) {
+                                if (parseFloat(quantity) > parseFloat(selectedAsset.amount)) {
+                                    setShowBanner(true)
+                                    setBannerType("warning")
+                                    setBanner("This trade may not fulfill due to insufficient balance.")
                                 }
                             }
                             
