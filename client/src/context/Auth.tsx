@@ -38,7 +38,6 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
             userTokenHandler(res)
             return res
         } catch (error) {
-            console.log(error.message)
         } finally {
             setLoading(false)
         }
@@ -51,7 +50,6 @@ export const AuthProvider = ({children}: { children: ReactNode }) => {
             userTokenHandler(res)
             return res
         } catch (error) {
-            console.log(error.message)
         } finally {
             setLoading(false)
         }

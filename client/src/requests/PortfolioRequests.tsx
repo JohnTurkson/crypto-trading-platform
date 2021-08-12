@@ -76,7 +76,6 @@ export const createTrade = async (
 
 export const listTrades = async (user: string, portfolio: string, authorization: string) => {
     const listTradesRequest: ListTradesRequest = {user: user, authorization: authorization, portfolio: portfolio}
-    console.log(listTradesRequest)
     return postApi<ListTradesResponse, ListTradesRequest>("/ListTrades", listTradesRequest)
 }
 
