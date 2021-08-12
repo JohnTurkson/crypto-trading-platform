@@ -67,7 +67,7 @@ export function Chart(props: ChartProps) {
             const interval = 1000
             if (json.time - mostRecentTime <= interval) return
             if (json.asset !== asset) return
-            currData.push([new Date(json.time), parseFloat(json.price)])
+            currData.push([Date.now() - 2.52e+7, parseFloat(json.price)])
             setData([data, currData])
             setData(currData)
             let newConfig = config

@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react"
 import { Button, Container, makeStyles, Tab, Tabs, TextField, Toolbar, Typography } from "@material-ui/core"
-import { Alert, Autocomplete } from "@material-ui/lab"
+import { Alert, Autocomplete, Color } from "@material-ui/lab"
 import { createTrade, getPortfolioAssets, getSupportedAssets, getUserPortfolioIds } from "../requests/PortfolioRequests"
 import { useAuth } from "../context/Auth"
 import OrdersTable from "../containers/OrdersTable"
 import PortfolioSelect from "./PortfolioSelect"
 import { Link } from "react-router-dom"
+import { Asset } from "../../../server/src/data/Asset"
 
 const useStyles = makeStyles(theme => ({
+    banner: {
+        marginBottom: "16px",
+    },
     tabContainer: {
         minWidth: "500px",
         display: "flex",
@@ -15,7 +19,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center",
     },
     tradesContainer: {
-        marginTop: "100px"
+        marginTop: "100px",
     },
     selection: {
         minWidth: "200px",
@@ -55,17 +59,20 @@ export function Trade() {
     const [selectedCurrency, setSelectedCurrency] = useState(null)
     const [selectedAsset, setSelectedAsset] = useState(null)
     const [quantity, setQuantity] = useState("")
-    const [userAssets, setUserAssets] = useState([])
+    const [price, setPrice] = useState("")
+    const [userAssets, setUserAssets] = useState([] as Asset[])
     const [loadingPortfolios, setLoadingPortfolios] = useState<boolean>(true)
-    const [showWarning, setShowWarning] = useState(false)
-
+    const [showBanner, setShowBanner] = useState(false)
+    const [banner, setBanner] = useState("")
+    const [bannerType, setBannerType] = useState("")
+    
     const ws = useRef(null)
     
     const [priceData, setPriceData] = useState({})
     
     const {userId} = useAuth()
     const {authToken} = useAuth()
-
+    
     useEffect(() => {
         ws.current = new WebSocket("wss://crypto-data-stream.johnturkson.com")
         return () => {
@@ -83,7 +90,7 @@ export function Trade() {
             setPriceData(currData)
         }
     }, [priceData])
-
+    
     useEffect(() => {
         const getPortfoliosAndAssets = async () => {
             const data = await getUserPortfolioIds(userId)
@@ -92,73 +99,73 @@ export function Trade() {
                 setSelectedPortfolioId(data[0].id)
             }
             setLoadingPortfolios(false)
-
-            if(data.length > 0) {
+            
+            if (data.length > 0) {
                 if (data[0].id !== "") {
                     const assets = await getPortfolioAssets(data[0].id)
                     setUserAssets(assets)
                 }
             }
         }
-
+        
         getPortfoliosAndAssets()
     }, [])
-
+    
     const updateCurrencyOptions = async (tab) => {
         setCurrencyOptions(["Loading..."])
-        switch (tab) {
-            case TradeCode.BUY:
+        if (tab === TradeCode.BUY) {
+            const supportedAssets = await getSupportedAssets()
+            setCurrencyOptions(supportedAssets)
+        } else if (tab === TradeCode.SELL) {
+            const assets = await getPortfolioAssets(selectedPortfolioId)
+            if (assets !== null) {
                 const supportedAssets = await getSupportedAssets()
-                setCurrencyOptions(supportedAssets)
-                break
-            case TradeCode.SELL:
-                const assets = await getPortfolioAssets(selectedPortfolioId)
-                if(assets !== null) {
-                    const currencyOptions = assets.map(asset => {
-                        return asset.name
-                    }).filter(assetName => {
-                        return assetName !== "USD"
-                    })
-                    setCurrencyOptions(currencyOptions)
-                }
-                break
-            default:
-                break
+                const currencyOptions = assets.map(asset => asset.name).filter(assetName => supportedAssets.includes(assetName))
+                setCurrencyOptions(currencyOptions)
+                setUserAssets(assets)
+            }
         }
     }
-
+    
     useEffect(() => {
         updateCurrencyOptions(selectedTab)
     }, [selectedPortfolioId])
     
-    const tradeHandler = async(tab) => {
-        if(portfolios.length > 0) {
+    const tradeHandler = async (tab) => {
+        if (portfolios.length > 0) {
             const ids = (portfolios).map((portfolio) => portfolio.id)
             const portfolioId = ids.find((id) => selectedPortfolioId === id)
-            switch (tab) {
-                case TradeCode.BUY:
-                    await createTrade(userId, authToken,
-                        portfolioId,
-                        selectedCurrency + "-USD",
-                        "buy",
-                        quantity,
-                        priceData[selectedCurrency].toString())
-
-                    break
-                case TradeCode.SELL:
-                    await createTrade(userId, authToken,
-                        portfolioId,
-                        selectedCurrency + "-USD",
-                        "sell",
-                        quantity,
-                        priceData[selectedCurrency].toString())
-                    break
-                default:
-                    break
+            
+            if (quantity === "0") {
+                setShowBanner(true)
+                setBannerType("error")
+                setBanner("Invalid Quantity")
+                return
             }
+            
+            if (price === "0") {
+                setShowBanner(true)
+                setBannerType("error")
+                setBanner("Invalid Price")
+                return
+            }
+            
+            const trade = await createTrade(
+                userId,
+                authToken,
+                portfolioId,
+                selectedCurrency + "-USD",
+                tab === TradeCode.BUY ? "buy" : "sell",
+                quantity,
+                price
+            )
+            
+            setShowBanner(true)
+            setBannerType(trade.success ? "success" : "error")
+            setBanner(trade.success ? "Trade Created" : (trade?.error ?? "Something went wrong"))
         }
     }
-
+    
     const handleSelectionChange = (event) => {
         const value = event.target.value
         const handleAssets = async (value) => {
@@ -167,17 +174,18 @@ export function Trade() {
         }
         handleAssets(value)
     }
-
-    const min = 0;
-    const max = selectedAsset === null ? 0 : selectedAsset.amount;
-
+    
+    const min = 0
+    const max = selectedAsset === null ? 0 : selectedAsset.amount
+    
     return (
         <div className={classes.parentContainer}>
-            <Container>
-            {showWarning
-            ? <Alert severity="warning">The trade you made might not fulfill due to insufficient funds!</Alert> : ""}
+            <Container className={classes.banner}>
+                {showBanner ? <Alert severity={bannerType as Color}>{banner}</Alert> : ""}
             </Container>
-            <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId} setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios} onChange={handleSelectionChange}/>
+            <PortfolioSelect portfolios={portfolios} portfolioId={selectedPortfolioId}
+                             setPortfolioId={setSelectedPortfolioId} isLoading={loadingPortfolios}
+                             onChange={handleSelectionChange}/>
             {portfolios.length === 0 ? (<Button component={Link} to="/overview" variant="contained" color="primary">
                 Create Portfolio
             </Button>) : ""}
@@ -187,8 +195,10 @@ export function Trade() {
                           onChange={(event, index) => {
                               setSelectedTab(index)
                               updateCurrencyOptions(index)
-                              setQuantity("")
                               setSelectedCurrency(null)
+                              setQuantity("")
+                              setPrice("")
+                              setShowBanner(false)
                           }}
                           textColor="primary"
                           indicatorColor="primary">
@@ -205,13 +215,12 @@ export function Trade() {
                         className={`${classes.tradeInput} ${classes.selection}`}
                         options={currencyOptions}
                         onChange={(event, value) => {
+                            setShowBanner(false)
                             if (value === null) {
                                 setQuantity("")
                             }
                             if (selectedTab === TradeCode.SELL) {
-                                const userAsset = (userAssets.find(asset => {
-                                    return asset.name === value
-                                }))
+                                const userAsset = (userAssets.find(asset => asset.name === value))
                                 setQuantity(userAsset.amount)
                                 setSelectedAsset(userAsset)
                             }
@@ -224,18 +233,70 @@ export function Trade() {
                         value={quantity}
                         inputProps={{min, max}}
                         onChange={(event) => {
-                            let value = event.target.value
+                            setShowBanner(false)
                             
+                            let value = event.target.value
+                            if (isNaN(+value)) {
+                                setQuantity(quantity)
+                                return
+                            }
                             if (selectedTab === TradeCode.SELL) {
                                 if (value !== "") {
-                                    if (parseInt(value) > max) value = max.toString()
-                                    if (parseInt(value) < min) value = min.toString()
+                                    if (parseFloat(value) > max) {
+                                        setShowBanner(true)
+                                        setBannerType("warning")
+                                        setBanner("This trade may not fulfill due to insufficient balance.")
+                                    } else if (parseFloat(value) < min) {
+                                        value = min.toString()
+                                    }
+                                }
+                            } else if (selectedTab === TradeCode.BUY) {
+                                setShowBanner(false)
+                                if (parseFloat(value) === 0) {
+                                    value = ""
                                 }
                             }
                             setQuantity(value)
                         }}
                         disabled={!currencyOptions.includes(selectedCurrency)}
                         label="Quantity"/>
+                    <TextField
+                        className={classes.tradeInput}
+                        variant="outlined"
+                        value={price}
+                        onChange={event => {
+                            setShowBanner(false)
+                            let value = event.target.value
+                            if (value === "") {
+                                value = ""
+                            } else if (isNaN(+value)) {
+                                value = price
+                            } else if (parseFloat(value) < 0) {
+                                value = price
+                            }
+                            
+                            const currency = userAssets.filter(asset => asset.name === "USD")[0]?.amount
+                            
+                            if (currency !== undefined && selectedTab === TradeCode.BUY) {
+                                if (parseFloat(quantity) * parseFloat(value) > parseFloat(currency)) {
+                                    setShowBanner(true)
+                                    setBannerType("warning")
+                                    setBanner("This trade may not fulfill due to insufficient balance.")
+                                }
+                            }
+                            
+                            if (selectedTab === TradeCode.SELL) {
+                                if (parseFloat(quantity) > parseFloat(selectedAsset.amount)) {
+                                    setShowBanner(true)
+                                    setBannerType("warning")
+                                    setBanner("This trade may not fulfill due to insufficient balance.")
+                                }
+                            }
+                            
+                            setPrice(value)
+                        }}
+                        disabled={quantity === "" || quantity === "0"}
+                        label="Price"/>
                 </Container>
                 
                 <Typography>{
@@ -257,8 +318,7 @@ export function Trade() {
                 <h4>Recent Trades</h4>
                 <OrdersTable portfolios={portfolios} selectedPortfolioId={selectedPortfolioId}/>
             </Container>
-            </div>
-
+        </div>
     )
 }
 
