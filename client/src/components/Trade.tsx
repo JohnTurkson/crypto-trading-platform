@@ -122,6 +122,7 @@ export function Trade() {
                 const supportedAssets = await getSupportedAssets()
                 const currencyOptions = assets.map(asset => asset.name).filter(assetName => supportedAssets.includes(assetName))
                 setCurrencyOptions(currencyOptions)
+                setUserAssets(assets)
             }
         }
     }
